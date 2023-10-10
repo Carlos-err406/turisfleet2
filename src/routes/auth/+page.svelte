@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { lock, user } from '$lib/icons';
 	import { toastInvalidCredentials } from '$lib/utils';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
@@ -39,7 +40,7 @@
 	bind:this={form}
 >
 	<header class="card-header flex items-center gap-3 w-full justify-center">
-		<img src="/img/logo.png" alt="logo" width="50" />
+		<img src="/logo.png" alt="logo" width="50" />
 		<h1 class="text-2xl font-bold">Login</h1>
 	</header>
 	<section class="p-4 flex flex-col">
@@ -48,28 +49,38 @@
 				Useranme
 				<span class="text-red-500">*</span>
 			</label>
-			<input
-				required
-				type="text"
-				id="username-input"
-				placeholder="username"
-				bind:value={username}
-				class="px-2 py-1 input variant-outline-primary outline-none"
-			/>
+			<div class="flex gap-0 items-center input w-full">
+				<span class="px-2">
+					{@html user}
+				</span>
+				<input
+					required
+					type="text"
+					id="username-input"
+					placeholder="username"
+					bind:value={username}
+					class="px-2 py-1 input w-full variant-outline-primary outline-none border-none"
+				/>
+			</div>
 		</div>
 		<div class="flex flex-col items-start">
 			<label class="ml-3" for="username-input">
 				Password
 				<span class="text-red-500">*</span>
 			</label>
-			<input
-				required
-				type="password"
-				id="password-input"
-				placeholder="password"
-				bind:value={password}
-				class="px-2 py-1 input variant-outline-primary outline-none"
-			/>
+			<div class="flex gap-0 items-center input w-full">
+				<span class="px-2">
+					{@html lock}
+				</span>
+				<input
+					required
+					type="password"
+					id="password-input"
+					placeholder="password"
+					bind:value={password}
+					class="px-2 py-1 input w-full variant-outline-primary outline-none border-none"
+				/>
+			</div>
 		</div>
 	</section>
 	<footer class="card-footer flex justify-center">

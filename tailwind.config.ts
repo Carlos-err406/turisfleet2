@@ -21,9 +21,10 @@ const config = {
 	}, plugins: [
 		skeleton({
 			themes: {
-				custom: [
-					myCustomTheme
-				]
+				// custom: [
+				// 	myCustomTheme
+				// ]
+				preset: [{ name: "vintage", enhancements: true }]
 			}
 		})
 	]

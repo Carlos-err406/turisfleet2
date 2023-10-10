@@ -18,3 +18,5 @@ export const layers = `<svg width="24" height="24" viewBox="0 0 24 24"><use href
 export const info = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/info.svg#info"></use></svg>`
 export const plusSquare = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/plus-square.svg#plus-square"></use></svg>`
 export const plus = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/plus.svg#plus"></use></svg>`
+export const user = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/user.svg#user"></use></svg>`
+export const lock = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/lock.svg#lock"></use></svg>`
