@@ -1,6 +1,6 @@
 <script>
 	import { AppShell } from '@skeletonlabs/skeleton';
-	import Navbar from '$components/Layout/Navbar.svelte';
+	import Navbar from '$components/Layout/Navbar/Navbar.svelte';
 	import Panel from '$components/Layout/Panel/Panel.svelte';
 </script>
 

@@ -1,4 +1,5 @@
 <script>
+	import Reports from './Reports.svelte';
 	import DrawerItem from './DrawerItem.svelte';
 
 	import { driver, group, inbox, info, layers, logout, pack, truck, users } from '$lib/icons';

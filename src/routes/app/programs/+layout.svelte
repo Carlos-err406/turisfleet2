@@ -1,5 +1,9 @@
+<script>
+	import { env } from '$env/dynamic/public';
+</script>
+
 <svelte:head>
-	<title>Programs | Turisfleet 2.0</title>
+	<title>Programs | {env.PUBLIC_APP_NAME}</title>
 </svelte:head>
 
 <slot />

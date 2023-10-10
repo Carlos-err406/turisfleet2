@@ -24,7 +24,7 @@ const config = {
 				// custom: [
 				// 	myCustomTheme
 				// ]
-				preset: [{ name: "vintage", enhancements: true }]
+				preset: [{ name: 'vintage', enhancements: true }]
 			}
 		})
 	]

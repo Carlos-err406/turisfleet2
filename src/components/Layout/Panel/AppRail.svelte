@@ -1,7 +1,9 @@
 <script>
+	import Reports from './Reports.svelte';
 	import { page } from '$app/stores';
 	import { driver, group, inbox, info, layers, truck, users } from '$lib/icons';
-	import { AppRail, AppRailAnchor, LightSwitch } from '@skeletonlabs/skeleton';
+	import { AppRail, AppRailAnchor, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton';
+	import { md, sm } from '$lib/stores/basic';
 </script>
 
 <AppRail class="shadow-sm">
@@ -49,6 +51,9 @@
 			<span>Situations</span>
 		</div>
 	</AppRailAnchor>
+	{#if $md}
+		<Reports />
+	{/if}
 	<svelte:fragment slot="trail">
 		<div class="w-full flex justify-center mb-3">
 			<LightSwitch />
