@@ -1,0 +1,17 @@
+<script>
+	import { AppShell } from '@skeletonlabs/skeleton';
+	import Navbar from '$components/Layout/Navbar.svelte';
+	import Panel from '$components/Layout/Panel/Panel.svelte';
+</script>
+
+<AppShell class="bg-blue-200/30">
+	<svelte:fragment slot="header">
+		<Navbar />
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<Panel />
+	</svelte:fragment>
+	<main class="px-2">
+		<slot />
+	</main>
+</AppShell>
