@@ -1,13 +1,12 @@
 <script lang="ts">
-	import { loggedUser } from '$lib/stores/basic';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { drawerSettings } from '$lib';
 	import { logout, menu } from '$lib/icons';
-	import { md, navHeight, sm, xs } from '$lib/stores/basic';
+	import { loggedUser, md, navHeight, sm, xs } from '$lib/stores/basic';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
-	import Reports from '../../Reports.svelte';
 	import { onMount } from 'svelte';
+	import Reports from '../../Reports.svelte';
 	const drawer = getDrawerStore();
 	let mounted = false;
 	onMount(() => (mounted = true));
@@ -31,16 +30,19 @@
 		</svelte:fragment>
 		<svelte:fragment slot="trail">
 			<div class="flex flex-col gap-0.5 items-start justify-center w-fit">
-				<span class="text-lg font-semibold">{$loggedUser?.username}</span>
-				<span class="text-sm text-surface-500-400-token">{$loggedUser?.role_name}</span>
+				{#if $loggedUser}
+					
+					<span class="text-lg font-semibold">{$loggedUser.username}</span>
+					<span class="text-sm text-surface-500-400-token">{$loggedUser.role_name}</span>
+				{/if}
 			</div>
 			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>
 				{@html logout}
 				<span>Log out </span>
 			</button>
-			{#if mounted && ($xs || $sm) && !$md}
+			<div class="block md:hidden">
 				<Reports placement="bottom-start" />
-			{/if}
+			</div>
 		</svelte:fragment>
 	</AppBar>
 </div>

@@ -43,9 +43,11 @@
 	</AppRailAnchor>
 	<ProgramsPopup />
 	<SituationsPopup />
-	{#if $md}
+	<!-- {#if $md} -->
+	<div class="hidden md:block">
 		<Reports placement="right" />
-	{/if}
+	</div>
+	<!-- {/if} -->
 	<svelte:fragment slot="trail">
 		<div class="w-full flex justify-center mb-3">
 			<LightSwitch />

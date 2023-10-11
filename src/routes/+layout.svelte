@@ -6,11 +6,11 @@
 	import CreateSpecificProgram from '$components/Forms/CreateProgramSpecific.svelte';
 	import CreateRequest from '$components/Forms/CreateRequest.svelte';
 	import CreateSituation from '$components/Forms/CreateSituation.svelte';
-	import CreateSituationDriver from '$components/Forms/CreateSituationDriver.svelte';
 	import CreateSituationCar from '$components/Forms/CreateSituationCar.svelte';
+	import CreateSituationDriver from '$components/Forms/CreateSituationDriver.svelte';
 	import CreateUser from '$components/Forms/CreateUser.svelte';
-	import { Modals } from '$lib';
-	import { clientWidth } from '$lib/stores/basic';
+	import { Modals, authService } from '$lib';
+	import { clientWidth, loggedUser } from '$lib/stores/basic';
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
 	import {
 		Modal,
@@ -20,6 +20,7 @@
 		storePopup,
 		type ModalComponent
 	} from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 	import { scale } from 'svelte/transition';
 	import '../app.postcss';
 
@@ -40,6 +41,7 @@
 		[Modals.CREATE_SITUATION_DRIVER]: { ref: CreateSituationDriver },
 		[Modals.CREATE_PROGRAM_SPECIFIC]: { ref: CreateSpecificProgram }
 	};
+	onMount(() => authService.getUser().then((user) => ($loggedUser = user)));
 </script>
 
 <svelte:window bind:innerWidth={$clientWidth} />

@@ -1,5 +1,4 @@
 import CustomError from '../CustomError';
-import { ErrorCode } from '../types/ErrorCodes';
 import BaseService from './BaseService';
 
 export default class AuthService extends BaseService {
@@ -43,6 +42,10 @@ export default class AuthService extends BaseService {
     public async logout() {
         await this.refresh();
         return this.delete(this.url('/logout'));
+    }
+
+    public async getUser(): Promise<LoggedUserDTO> {
+        return await fetch(this.url('/refresh')).then((response) => response.json())
     }
 }
 

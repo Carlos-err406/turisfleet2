@@ -12,12 +12,12 @@
 
 	const handleSumbit = async () => {
 		try {
-			$loggedUser = await authService.login({ username, password });
+			$loggedUser = await authService.login({ username, password })
 			goto('/app/users');
 		} catch (e: any) {
 			const { exceptionID, message } = e;
 			toastStore.trigger({
-				timeout:3000,
+				timeout: 3000,
 				message,
 				classes: 'variant-ghost-error'
 			});
@@ -72,5 +72,3 @@
 		<button class="btn variant-ghost-primary">Login</button>
 	</footer>
 </form>
-
-
