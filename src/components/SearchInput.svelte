@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	export let searchValue = '';
+	export let disabled = false;
 	const handleSearch = () => {
 		console.log(searchValue);
 		dispatch('search', searchValue);
@@ -12,12 +13,13 @@
 
 <form class="flex gap-0" on:submit={handleSearch}>
 	<input
+		{disabled}
 		type="text"
 		placeholder="search"
 		class="outline-none input rounded-r-none pl-4"
 		bind:value={searchValue}
 	/>
-	<button class="btn variant-filled btn-icon p-2 rounded-l-none">
+	<button {disabled} class="btn variant-filled p-2 rounded-l-none">
 		{@html search}
 	</button>
 </form>

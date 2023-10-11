@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { lock, user } from '$lib/icons';
 	import { toastInvalidCredentials } from '$lib/utils';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
@@ -10,26 +11,10 @@
 
 	const handleSumbit = () => {
 		if (username != 'admin' || password != 'admin') {
-			setFormError();
-			triggerInvalidCredentialsToast();
+			toastInvalidCredentials(toastStore);
 		} else {
-			goto('/app/orders');
+			goto('/app/users');
 		}
-	};
-
-	let form: HTMLFormElement;
-	let submitButton: HTMLButtonElement;
-	const triggerInvalidCredentialsToast = () => {
-		toastInvalidCredentials(toastStore, resetFormStyle);
-	};
-
-	const setFormError = () => {
-		form.classList.add('variant-glass-error');
-		submitButton.classList.add('variant-ghost-error');
-	};
-	const resetFormStyle = () => {
-		form.classList.remove('variant-glass-error');
-		submitButton.classList.remove('variant-ghost-error');
 	};
 </script>
 
@@ -37,18 +22,14 @@
 	class="card shadow-md variant-outline-surface w-1/5"
 	on:submit|preventDefault={handleSumbit}
 	use:focusTrap={true}
-	bind:this={form}
 >
 	<header class="card-header flex items-center gap-3 w-full justify-center">
 		<img src="/logo.png" alt="logo" width="50" />
-		<h1 class="text-2xl font-bold">Login</h1>
+		<h1 class="text-2xl font-bold">{PUBLIC_APP_NAME}</h1>
 	</header>
-	<section class="p-4 flex flex-col">
-		<div class="flex flex-col items-start">
-			<label class="ml-3" for="username-input">
-				Useranme
-				<span class="text-red-500">*</span>
-			</label>
+	<section class="p-4 flex flex-col gap-5">
+		<div class="flex flex-col items-start gap-1">
+			<label class="ml-3" for="username-input"> Useranme </label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
 					{@html user}
@@ -63,11 +44,8 @@
 				/>
 			</div>
 		</div>
-		<div class="flex flex-col items-start">
-			<label class="ml-3" for="username-input">
-				Password
-				<span class="text-red-500">*</span>
-			</label>
+		<div class="flex flex-col items-start gap-1">
+			<label class="ml-3" for="username-input"> Password </label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
 					{@html lock}
@@ -84,6 +62,6 @@
 		</div>
 	</section>
 	<footer class="card-footer flex justify-center">
-		<button class="btn variant-ghost-primary" bind:this={submitButton}>Login</button>
+		<button class="btn variant-ghost-primary">Login</button>
 	</footer>
 </form>

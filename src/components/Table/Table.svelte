@@ -4,6 +4,7 @@
 	import type { PaginationSettings, TableSource } from '@skeletonlabs/skeleton';
 	import { Paginator, Table, tableMapperValues } from '@skeletonlabs/skeleton';
 	import { onDestroy, onMount } from 'svelte';
+	import NoData from './NoData.svelte';
 	import TableActions from './TableActions.svelte';
 
 	export let tableName: string;
@@ -12,8 +13,6 @@
 	export let data: any[] = [];
 	let removeListenerFunctions: (() => void)[] = [];
 	onMount(() => {
-		// setSelectAllClickListener();
-		// setRowClickListeners();
 		setOrderClickListeners();
 	});
 
@@ -50,6 +49,7 @@
 	</div>`;
 
 	const tableTotal = (total: number) => `<code class="code">${total}</code>`;
+	const fillFooter = (body: any[]) => body[0].map((_: string) => '').slice(2);
 	const parseForTable = (): TableSource => {
 		let head: string[] = [];
 		let body: any[] = [];
@@ -59,7 +59,7 @@
 			head = [...headers.map(header)];
 			body = tableMapperValues(data, keys);
 			meta = tableMapperValues(data, ['id']);
-			foot = ['Total', tableTotal(body.length)];
+			foot = ['Total', tableTotal(body.length), ...fillFooter(body)];
 		}
 		return { head, body, foot, meta };
 	};
@@ -73,29 +73,34 @@
 	} satisfies PaginationSettings;
 </script>
 
-<TableActions on:insert-click>
+<TableActions disableSearch={source.body.length === 0} on:insert>
 	{tableName}
 </TableActions>
-<div
-	class="table-wrapper"
-	style="--nav-height: {$navHeight}px; --actions-height: {$actionsHeight}px"
->
-	<Table {source} class="table-compact table-interactive" interactive on:selected />
-</div>
-<Paginator
-	select="select min-w-[150px] w-fit outline-none"
-	regionControl="min-w-fit btn-group !mt-0"
-	class="!flex-row"
-	bind:settings={paginationSettings}
-	showNumerals
-	maxNumerals={5}
-	on:page
-	on:amount
-/>
+{#if source.body.length > 0}
+	<div
+		class="table-wrapper border-surface-50 dark:!border-0"
+		style="--nav-height: {$navHeight}px; --actions-height: {$actionsHeight}px"
+	>
+		<Table {source} class="table-compact table-interactive" interactive on:selected />
+	</div>
+	<Paginator
+		select="select min-w-[150px] w-fit outline-none"
+		regionControl="min-w-fit btn-group !mt-0"
+		class="!flex-row"
+		bind:settings={paginationSettings}
+		showNumerals
+		maxNumerals={5}
+		on:page
+		on:amount
+	/>
+{:else}
+	<NoData />
+{/if}
 
 <style>
 	.table-wrapper {
 		border-radius: 4px;
+		border: 0.1rem solid;
 		overflow-y: auto;
 		margin-bottom: 10px;
 		max-height: calc(100vh - var(--nav-height) - var(--actions-height) - 20px - 41px - 26px);

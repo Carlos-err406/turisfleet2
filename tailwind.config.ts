@@ -1,34 +1,35 @@
-
 import { join } from 'path';
 import type { Config } from 'tailwindcss';
 
 // 1. Import the Skeleton plugin
 import { skeleton } from '@skeletonlabs/tw-plugin';
-import { myCustomTheme } from './custom-theme'
+import { myCustomTheme } from './custom-theme';
 const config = {
 	// 2. Opt for dark mode to be handled via the class method
 	darkMode: 'class',
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// 3. Append the path to the Skeleton package
-		join(require.resolve(
-			'@skeletonlabs/skeleton'),
-			'../**/*.{html,js,svelte,ts}'
-		)
+		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-		extend: {},
-	}, plugins: [
+		extend: {}
+	},
+	plugins: [
 		skeleton({
 			themes: {
 				// custom: [
 				// 	myCustomTheme
 				// ]
-				preset: [{ name: 'vintage', enhancements: true }]
+				preset: [
+					{ name: 'vintage', enhancements: true }
+					// { name: 'gold-nouveau', enhancements: true },
+					// { name: 'hamlindigo', enhancements: true },
+					// { name: 'seafoam', enhancements: false }
+				]
 			}
 		})
 	]
 } satisfies Config;
 
 export default config;
-

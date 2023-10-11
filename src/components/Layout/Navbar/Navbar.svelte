@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { clientWidth, md, sm, xs } from '$lib/stores/basic';
-	import Reports from './../Panel/Reports.svelte';
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { drawerSettings } from '$lib';
 	import { logout, menu } from '$lib/icons';
-	import { navHeight } from '$lib/stores/basic';
+	import { md, navHeight, sm, xs } from '$lib/stores/basic';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
+	import Reports from '../../Reports.svelte';
+	import { onMount } from 'svelte';
 	const drawer = getDrawerStore();
+	let mounted = false;
+	onMount(() => (mounted = true));
 	const handleShowMenuClick = () => {
 		!$drawer.open && drawer.open(drawerSettings());
 	};
@@ -23,7 +25,7 @@
 				<div class="flex-none">
 					<img src="/logo.png" alt="logo" width="40" />
 				</div>
-				<h3 class="h3">{env.PUBLIC_APP_NAME}</h3>
+				<h3 class="h3">{PUBLIC_APP_NAME}</h3>
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="trail">
@@ -31,8 +33,8 @@
 				{@html logout}
 				<span>Log out </span>
 			</button>
-			{#if ($xs || $sm) && !$md}
-				<Reports />
+			{#if mounted && ($xs || $sm) && !$md}
+				<Reports placement="bottom-start" />
 			{/if}
 		</svelte:fragment>
 	</AppBar>

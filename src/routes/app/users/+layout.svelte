@@ -1,9 +1,9 @@
 <script>
-	import { env } from '$env/dynamic/public';
+	import { PUBLIC_APP_NAME } from '$env/static/public';
 </script>
 
 <svelte:head>
-	<title>Users | {env.PUBLIC_APP_NAME}</title>
+	<title>Users | {PUBLIC_APP_NAME}</title>
 </svelte:head>
 
 <slot />

@@ -1,8 +1,8 @@
-import { derived, writable } from "svelte/store";
+import { derived, writable } from 'svelte/store';
 
-export const navHeight = writable<number>(0)
-export const actionsHeight = writable<number>(0)
-export const clientWidth = writable<number>(0)
+export const navHeight = writable<number>(0);
+export const actionsHeight = writable<number>(0);
+export const clientWidth = writable<number>(0);
 
 export const xs = derived(clientWidth, ($clientWidth) => $clientWidth < 640);
 export const sm = derived(clientWidth, ($clientWidth) => $clientWidth >= 640);

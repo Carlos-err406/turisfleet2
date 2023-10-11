@@ -8,54 +8,26 @@ body {
 	@apply h-full overflow-hidden;
 }
 
-@keyframes shake {
-	0% {
-		transform: translateY(0);
-	}
-	25% {
-		transform: translateY(3px);
-	}
-	50% {
-		transform: translateY(-3px);
-	}
-	75% {
-		transform: translateY(3px);
-	}
-	100% {
-		transform: translateY(0);
-	}
+input {
+	@apply outline-none py-1 px-2 input;
+}
+select {
+	@apply outline-none !py-1 select;
 }
 
-@keyframes ride {
-	0% {
-		transform: translateX(0px);
-	}
-	50% {
-		transform: translateX(4px);
-	}
-	100% {
-		transform: translateX(0px);
-	}
+.flash {
+	@apply font-semibold;
 }
-@keyframes down {
-	0% {
-		transform: translateY(0px);
-	}
-	50% {
-		transform: translateY(4px);
-	}
-	100% {
-		transform: translateY(0px);
-	}
+.flash.error {
+	@apply variant-filled-error;
 }
-@keyframes rotate {
-	0% {
-		transform: rotate(0deg);
-	}
-	50% {
-		transform: rotate(45deg);
-	}
-	100% {
-		transform: rotate(0deg);
-	}
+.flash.warning {
+	@apply variant-filled-warning;
+}
+.flash.success {
+	@apply variant-filled-success;
+}
+
+.dark ::-webkit-calendar-picker-indicator {
+	@apply invert;
 }
