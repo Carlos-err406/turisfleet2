@@ -1,7 +1,7 @@
 export enum ErrorCode {
     INVALID_CREDENTIALS = '00000',
     UNAUTHORIZED = '00001',
-    '00002' = '00002',
+    NOT_FOUND = '00002',
     '00003' = '00003',
     '00004' = '00004',
     '00005' = '00005',

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { loggedUser } from '$lib/stores/basic';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { drawerSettings } from '$lib';
 	import { logout, menu } from '$lib/icons';
@@ -29,6 +30,10 @@
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="trail">
+			<div class="flex flex-col gap-0.5 items-start justify-center w-fit">
+				<span class="text-lg font-semibold">{$loggedUser?.username}</span>
+				<span class="text-sm text-surface-500-400-token">{$loggedUser?.role_name}</span>
+			</div>
 			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>
 				{@html logout}
 				<span>Log out </span>

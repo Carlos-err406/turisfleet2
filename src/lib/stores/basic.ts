@@ -14,4 +14,4 @@ export const xl = derived(clientWidth, ($clientWidth) => $clientWidth >= 1280);
 export const xxl = derived(clientWidth, ($clientWidth) => $clientWidth >= 1536);
 
 
-export const loggedUser = localStorageStore<LoggedUserDTO | null>('loggedUser', null, { storage: 'session', })
+export const loggedUser = localStorageStore<LoggedUserDTO | null>('loggedUser', null, { storage: 'session' })
