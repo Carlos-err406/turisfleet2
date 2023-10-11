@@ -26,7 +26,7 @@
 </script>
 
 <form
-	class="card shadow-md variant-outline-surface w-1/5"
+	class="card shadow-md variant-outline-surface sm:w-3/5 md:w-2/5 lg:w-1/5"
 	on:submit|preventDefault={handleSumbit}
 	use:focusTrap={true}
 >
