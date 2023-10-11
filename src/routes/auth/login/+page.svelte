@@ -1,19 +1,26 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
+	import { authService } from '$lib';
 	import { lock, user } from '$lib/icons';
-	import { toastInvalidCredentials } from '$lib/utils';
+	import { loggedUser } from '$lib/stores/basic';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
 	let username: string = '';
 	let password: string = '';
 
-	const handleSumbit = () => {
-		if (username != 'admin' || password != 'admin') {
-			toastInvalidCredentials(toastStore);
-		} else {
+	const handleSumbit = async () => {
+		try {
+			$loggedUser = await authService.login({ username, password });
 			goto('/app/users');
+		} catch (e: any) {
+			const { exceptionID, message } = e;
+			toastStore.trigger({
+				timeout:3000,
+				message,
+				classes: 'variant-ghost-error'
+			});
 		}
 	};
 </script>
@@ -65,3 +72,5 @@
 		<button class="btn variant-ghost-primary">Login</button>
 	</footer>
 </form>
+
+

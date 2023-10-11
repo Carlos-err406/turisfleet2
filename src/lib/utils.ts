@@ -1,24 +1,14 @@
 import { goto } from '$app/navigation';
+import { authService } from '$lib';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import dayjs from 'dayjs';
 import { spring } from 'svelte/motion';
 import { writable } from 'svelte/store';
 
 export const handleLogout = () => {
+	authService.logout()
 	goto('/auth/login');
 };
-
-export const toastInvalidCredentials = (toastStore: ToastStore, onClose?: () => void) =>
-	toastStore.trigger({
-		message: 'Invalid credentials',
-		background: 'variant-ghost-error',
-		timeout: 3000,
-		callback: ({ status }) => {
-			if (status === 'closed') {
-				onClose?.();
-			}
-		}
-	});
 
 export interface HeightSpringOptions {
 	stiffness: number;

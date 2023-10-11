@@ -1,11 +1,11 @@
 // place files you want to import through the `$lib` alias in this folder.
-
-import type { DrawerSettings, ModalSettings } from '@skeletonlabs/skeleton';
+import type { DrawerSettings } from '@skeletonlabs/skeleton';
+import AuthService from './services/AuthService';
+export const authService = AuthService.getInstance()
 
 export const drawerSettings = (settings?: Partial<DrawerSettings>): DrawerSettings => ({
 	id: 'drawer-1',
 	width: 'w-fit',
-	// padding: 'py-2',
 	...settings
 });
 
@@ -21,3 +21,4 @@ export enum Modals {
 	CREATE_PROGRAM = 'createProgram',
 	CREATE_PROGRAM_SPECIFIC = 'createProgramSpecific'
 }
+
