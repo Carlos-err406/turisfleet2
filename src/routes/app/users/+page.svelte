@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import Table from '$components/Table/Table.svelte';
-	import { Modals } from '$lib';
+	import { Modals } from '$lib/components/Modals';
+	import Table from '$lib/components/Table/Table.svelte';
 	import { getFlashStore } from '$lib/stores/flashes';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	const modalStore = getModalStore();
 	const data: any[] = [];
 	const headers: string[] = [];

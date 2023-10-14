@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	import Dropdown from './../Dropdown.svelte';
+	import Dropdown from '../../Inputs/Dropdown.svelte';
 	export interface GroupCreate {
 		country: string;
 		tourist_amount: number;
@@ -10,8 +10,8 @@
 	import countries from '$data/countries.json';
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
-	import ModalBase from './../Layout/ModalBase.svelte';
-	import BaseForm from './BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
+	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: GroupCreate = {

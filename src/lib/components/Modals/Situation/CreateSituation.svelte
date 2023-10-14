@@ -11,11 +11,11 @@
 </script>
 
 <script lang="ts">
-	import Dropdown from '$components/Dropdown.svelte';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import ModalBase from './../Layout/ModalBase.svelte';
-	import BaseForm from './BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
+	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: SituationCreate = {

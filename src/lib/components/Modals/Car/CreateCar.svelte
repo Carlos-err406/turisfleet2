@@ -10,12 +10,12 @@
 </script>
 
 <script lang="ts">
-	import Dropdown from './../Dropdown.svelte';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import BaseForm from '$lib/components/Modals/BaseForm.svelte';
 	import type flashStore from '$lib/stores/flashes';
 	import { LicenseCategory } from '$lib/types/LicenceTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import ModalBase from './../Layout/ModalBase.svelte';
-	import BaseForm from './BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: CarCreate = {

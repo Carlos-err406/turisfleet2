@@ -13,7 +13,6 @@ export default abstract class BaseService {
 		throw Error('cant get instance of abstract class');
 	}
 
-
 	protected url(extra = '', apiVersion = 'v1') {
 		return `/api/${apiVersion}/${this.service}${extra}`;
 	}

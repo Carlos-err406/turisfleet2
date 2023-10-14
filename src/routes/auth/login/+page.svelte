@@ -12,7 +12,7 @@
 
 	const handleSumbit = async () => {
 		try {
-			$loggedUser = await authService.login({ username, password })
+			$loggedUser = await authService.login({ username, password });
 			goto('/app/users');
 		} catch (e: any) {
 			const { exceptionID, message } = e;

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Table from '$components/Table/Table.svelte';
-	import { Modals } from '$lib';
+	import Table from '$lib/components/Table/Table.svelte';
+	import { Modals } from '$lib/components/Modals';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	const data: any[] = [];

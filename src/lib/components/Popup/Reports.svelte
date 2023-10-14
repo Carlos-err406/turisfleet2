@@ -1,8 +1,8 @@
 <script lang="ts">
-	import PopupItem from './PopupItem.svelte';
 	import { fileText } from '$lib/icons';
-	import Popup from './Popup.svelte';
 	import type { Placement } from '@floating-ui/dom';
+	import Popup from './Popup.svelte';
+	import PopupItem from './PopupItem.svelte';
 	export let placement: Placement = 'bottom';
 	const handleDriversList = () => {};
 	const handleCarsList = () => {};

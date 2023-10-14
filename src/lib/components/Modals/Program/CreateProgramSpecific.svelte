@@ -9,15 +9,15 @@
 </script>
 
 <script lang="ts">
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import DurationInput, {
 		durationObjToStr,
 		type DurationInputValue
-	} from '$components/DurationInput.svelte';
+	} from '$lib/components/Inputs/DurationInput.svelte';
+	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import ModalBase from '$components/Layout/ModalBase.svelte';
-	import BaseForm from './BaseForm.svelte';
-	import Dropdown from '$components/Dropdown.svelte';
+	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: SpecificProgramCreate = {

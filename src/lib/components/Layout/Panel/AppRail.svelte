@@ -1,6 +1,6 @@
 <script>
 	import ProgramsPopup from './ProgramsPopup.svelte';
-	import Reports from '../../Reports.svelte';
+	import Reports from '../../Popup/Reports.svelte';
 	import { page } from '$app/stores';
 	import { driver, group, inbox, info, layers, truck, users } from '$lib/icons';
 	import { AppRail, AppRailAnchor, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton';

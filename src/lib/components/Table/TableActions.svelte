@@ -2,7 +2,7 @@
 	import { actionsHeight } from '$lib/stores/basic';
 	import { createEventDispatcher } from 'svelte';
 	import ButtonInsert from '../Button/ButtonInsert.svelte';
-	import SearchInput from '../SearchInput.svelte';
+	import SearchInput from '$lib/components/Inputs/SearchInput.svelte';
 	import TableTitle from './TableTitle.svelte';
 	export let disableSearch = false;
 	let searchValue: string;

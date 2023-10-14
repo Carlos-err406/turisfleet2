@@ -6,7 +6,7 @@ import { spring } from 'svelte/motion';
 import { writable } from 'svelte/store';
 
 export const handleLogout = () => {
-	authService.logout()
+	authService.logout();
 	goto('/auth/login');
 };
 

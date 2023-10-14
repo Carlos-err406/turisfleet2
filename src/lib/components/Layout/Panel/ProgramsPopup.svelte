@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import Popup from '$components/Popup.svelte';
-	import PopupItem from '$components/PopupItem.svelte';
+	import Popup from '$lib/components/Popup/Popup.svelte';
+	import PopupItem from '$lib/components/Popup/PopupItem.svelte';
 	import { layers } from '$lib/icons';
 	const routes = {
 		programs: '/app/programs',
