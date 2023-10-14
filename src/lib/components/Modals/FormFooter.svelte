@@ -8,6 +8,7 @@
 <button type="button" class="btn variant-outline-primary" on:click={secondary}>
 	<slot name="secondary">Cancel</slot>
 </button>
+<slot />
 <button type="submit" class="btn variant-filled-primary" on:click={primary}>
 	<slot name="primary">Submit</slot>
 </button>

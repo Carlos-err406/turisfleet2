@@ -9,6 +9,8 @@ import CreateSituation from './Situation/CreateSituation.svelte';
 import CreateSituationCar from './Situation/CreateSituationCar.svelte';
 import CreateSituationDriver from './Situation/CreateSituationDriver.svelte';
 import CreateUser from './User/CreateUser.svelte';
+import EditUser from './User/EditUser.svelte';
+import ChangePassword from './User/ChangePassword.svelte';
 
 export enum Modals {
 	CREATE_USER = 'createUser',
@@ -20,7 +22,9 @@ export enum Modals {
 	CREATE_SITUATION_DRIVER = 'createSituationDriver',
 	CREATE_REQUEST = 'createRequest',
 	CREATE_PROGRAM = 'createProgram',
-	CREATE_PROGRAM_SPECIFIC = 'createProgramSpecific'
+	CREATE_PROGRAM_SPECIFIC = 'createProgramSpecific',
+	EDIT_USER = 'editUser',
+	CHANGE_PASSWORD = "changePassword",
 }
 
 const modalRegistry: Record<Modals, ModalComponent> = {
@@ -33,7 +37,9 @@ const modalRegistry: Record<Modals, ModalComponent> = {
 	[Modals.CREATE_SITUATION]: { ref: CreateSituation },
 	[Modals.CREATE_SITUATION_CAR]: { ref: CreateSituationCar },
 	[Modals.CREATE_SITUATION_DRIVER]: { ref: CreateSituationDriver },
-	[Modals.CREATE_PROGRAM_SPECIFIC]: { ref: CreateSpecificProgram }
+	[Modals.CREATE_PROGRAM_SPECIFIC]: { ref: CreateSpecificProgram },
+	[Modals.EDIT_USER]: { ref: EditUser },
+	[Modals.CHANGE_PASSWORD]: { ref: ChangePassword }
 };
 
 export default modalRegistry;

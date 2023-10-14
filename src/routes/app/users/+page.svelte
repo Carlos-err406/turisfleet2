@@ -18,8 +18,22 @@
 			console.log(r);
 		});
 	};
+
+	const handleEdit = () => {
+		new Promise<any>((resolve) => {
+			modalStore.trigger({
+				type: 'component',
+				component: Modals.EDIT_USER,
+				meta: { flashes: getFlashStore(), values: { username: 'test' } },
+				response: (r) => resolve(r)
+			});
+		}).then((r) => {
+			console.log(r);
+		});
+	};
 </script>
 
 <div class="overflow-hidden">
 	<Table tableName="Users" {data} {headers} keys={headers} on:insert={handleCreate} />
 </div>
+<button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>
