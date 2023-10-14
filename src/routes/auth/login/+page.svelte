@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
-	import { authService } from '$lib';
+	import { authService } from '$lib/services';
 	import { lock, user } from '$lib/icons';
 	import { loggedUser } from '$lib/stores/basic';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';

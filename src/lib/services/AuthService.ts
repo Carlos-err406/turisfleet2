@@ -1,53 +1,52 @@
 import CustomError from '../CustomError';
-import BaseService from './BaseService';
+import * as proxy from './Base/ProxyService';
+import { GET } from './Base/LocalService'
+export const login = async (auth: LoginDTO): Promise<LoggedUserDTO> => {
+	//TODO change endpoint when api is ready
+	//   const response = await fetch('/proxy', {
+	const response = await fetch('/api/auth/login', {
+		method: 'POST',
+		body: JSON.stringify(auth),
+		headers: {
+			'Content-Type': 'application/json',
+			[proxy.ENDPOINT_HEADER]: '/login',
+		},
+	});
 
-export default class AuthService extends BaseService {
-	protected static instance: AuthService;
-
-	private constructor() {
-		super();
-		this.service = 'auth';
+	const json = await response.json();
+	if (response.status === 401) {
+		const { exceptionID, message } = json;
+		throw new CustomError(exceptionID, message);
 	}
 
-	public static getInstance(): AuthService {
-		if (!AuthService.instance) return new AuthService();
-		return AuthService.instance;
-	}
+	return json;
+};
 
-	public async login(auth: LoginDTO): Promise<LoggedUserDTO> {
-		return await fetch(this.url('/login'), {
-			method: 'POST',
-			body: JSON.stringify(auth),
-			headers: { 'Content-Type': 'application/json' }
-		}).then(async (response) => {
-			const json = await response.json();
-			if (response.status === 401) {
-				const { exceptionID, message } = json;
-				throw new CustomError(exceptionID, message);
-			}
-			return json;
-		});
-	}
+export const refresh = async () => {
+	//TODO change endpoint when api is ready
+	const proxyEndpoint = "/api/auth/refresh";
+	// const proxyEndpoint = "/proxy";
+	const refreshEndpoint = "/refresh";
+	const headers = { "Content-Type": "application/json", [proxy.ENDPOINT_HEADER]: refreshEndpoint };
 
-	public async refresh() {
-		return await fetch(this.url('/refresh'), {
-			method: 'POST',
-			body: JSON.stringify({}),
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		});
-	}
+	const response = await fetch(proxyEndpoint, {
+		method: "POST",
+		body: null,
+		headers: headers
+	});
 
-	public async logout() {
-		await this.refresh();
-		return this.delete(this.url('/logout'));
-	}
-
-	public async getUser(): Promise<LoggedUserDTO> {
-		return await fetch(this.url('/refresh')).then((response) => response.json());
-	}
+	return response;
 }
+
+export const logout = async () => {
+	await refresh();
+	return proxy.PROXY_DELETE('/logout');
+}
+
+export const getUser = async (): Promise<LoggedUserDTO> => {
+	return await GET("/auth/refresh")
+}
+
 
 export interface LoginDTO {
 	username: string;

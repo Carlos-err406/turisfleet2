@@ -18,3 +18,4 @@ export const loggedUser = persist(
 	createSessionStorage(false),
 	'user'
 );
+

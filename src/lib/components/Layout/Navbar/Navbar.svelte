@@ -1,17 +1,14 @@
 <script lang="ts">
 	import { PUBLIC_APP_NAME } from '$env/static/public';
-	import { drawerSettings } from '$lib';
+	import { getDrawerSettings } from '$lib';
 	import Reports from '$lib/components/Popup/Reports.svelte';
 	import { logout, menu } from '$lib/icons';
 	import { loggedUser, navHeight } from '$lib/stores/basic';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
 	const drawer = getDrawerStore();
-	let mounted = false;
-	onMount(() => (mounted = true));
 	const handleShowMenuClick = () => {
-		!$drawer.open && drawer.open(drawerSettings());
+		!$drawer.open && drawer.open(getDrawerSettings());
 	};
 </script>
 

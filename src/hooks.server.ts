@@ -6,9 +6,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { pathname } = event.url;
 	await handleRedirectionWrapper(pathname, event.fetch, event.cookies);
 	const response = await resolve(event);
-	pathname.includes('/api') &&
-		env.LOGGING == '1' &&
+
+	if (env.LOGGING === '1' && (pathname.includes('/proxy') || pathname.includes('/api'))) {
 		log(event.request.method, response.status, pathname);
+	}
+
 	return response;
 };
 
@@ -32,7 +34,7 @@ const handleRedirectionWrapper = async (pathname: string, fetch: any, cookies: C
 };
 
 const handleRedirection = async (cookies: Cookies, fetch: any, url?: string) =>
-	fetch('/api/v1/auth/refresh', {
+	fetch('/api/auth/refresh', {
 		method: 'POST',
 		headers: {
 			Cookie: getCookiesHeader(cookies)

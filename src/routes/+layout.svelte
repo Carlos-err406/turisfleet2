@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { authService } from '$lib';
+	import { authService } from '$lib/services';
 	import modalRegistry from '$lib/components/Modals';
 	import { clientWidth, loggedUser } from '$lib/stores/basic';
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';

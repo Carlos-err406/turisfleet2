@@ -1,5 +1,5 @@
 import { goto } from '$app/navigation';
-import { authService } from '$lib';
+import { authService } from '$lib/services';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import dayjs from 'dayjs';
 import { spring } from 'svelte/motion';
