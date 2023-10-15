@@ -40,7 +40,7 @@
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
 			<svelte:fragment slot="title">Edit User</svelte:fragment>
 			<div>
-				<label for="user-edit-username">Username</label>
+				<label data-required="true" for="user-edit-username">Username</label>
 				<input
 					required
 					type="text"

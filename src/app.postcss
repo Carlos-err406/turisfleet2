@@ -34,3 +34,8 @@ select {
 .dark input[type='search']::-webkit-search-cancel-indicator {
 	@apply invert;
 }
+
+label[data-required='true']::after {
+	content: ' *';
+	color: orange
+}

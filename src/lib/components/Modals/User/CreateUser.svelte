@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface UserCreate {
+	export interface IUserCreate {
 		username: string;
 		password: string;
 		id_role: number;
@@ -15,7 +15,7 @@
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let passwordConf = '';
-	let values: UserCreate = {
+	let values: IUserCreate = {
 		username: '',
 		password: '',
 		id_role: 1
@@ -48,7 +48,7 @@
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
 			<svelte:fragment slot="title">Create User</svelte:fragment>
 			<div>
-				<label for="user-create-username">Username</label>
+				<label data-required="true" for="user-create-username">Username</label>
 				<input
 					required
 					type="text"
@@ -59,7 +59,7 @@
 			</div>
 			<Dropdown required options={[]} on:select={onRoleSelection} placeholder="role">Role</Dropdown>
 			<div>
-				<label for="user-create-password">Password</label>
+				<label data-required="true" for="user-create-password">Password</label>
 				<input
 					required
 					type="password"
@@ -69,7 +69,7 @@
 				/>
 			</div>
 			<div>
-				<label for="user-create-password-conf">Password confirmation</label>
+				<label data-required="true" for="user-create-password-conf">Password confirmation</label>
 				<input
 					required
 					type="password"

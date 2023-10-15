@@ -12,7 +12,7 @@
 		return result.trim();
 	};
 
-	export const durationStrToObj = (duration: string): object => {
+	export const durationStrToObj = (duration: string): DurationInputValue => {
 		let result: any = {
 			days: '0',
 			hours: '0',
@@ -39,7 +39,7 @@
 </script>
 
 <div>
-	<label for=""><slot>Duration (days : hours : minutes)</slot></label>
+	<label for="" data-required={required}><slot>Duration (days : hours : minutes)</slot></label>
 	<div class="flex items-center gap-1">
 		<input
 			class="input"

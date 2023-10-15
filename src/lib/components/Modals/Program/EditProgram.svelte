@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface IProgramCreate {
+	export interface IProgramEdit {
 		name: string;
 	}
 </script>
@@ -11,9 +11,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: IProgramCreate = {
-		name: ''
-	};
+	let values: IProgramEdit = $modalStore[0].meta.values;
 	const close = () => {
 		modalStore.close();
 	};
@@ -21,23 +19,22 @@
 	const validate = () => {
 		return true;
 	};
-	const create = () => {
+	const edit = () => {
 		validate() && console.log(values);
 	};
 </script>
 
 {#if $modalStore[0]}
 	<ModalBase modalW="w-modal-slim">
-		<BaseForm footerCols={1} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Program</svelte:fragment>
-
+		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">Edit Program</svelte:fragment>
 			<div>
-				<label for="program-create-name">Program name</label>
+				<label data-required="true" for="program-edit-name">Program name</label>
 				<input
 					placeholder="program name"
 					required
 					type="text"
-					id="program-create-name"
+					id="program-edit-name"
 					bind:value={values.name}
 				/>
 			</div>

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface ISpecificProgramCreate {
+	export interface ISpecificProgramEdit {
 		id_program: string | number;
 		description: string;
 		start: Date | string;
@@ -12,7 +12,8 @@
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import DurationInput, {
 		durationObjToStr,
-		type DurationInputValue
+		type DurationInputValue,
+		durationStrToObj
 	} from '$lib/components/Inputs/DurationInput.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import type flashStore from '$lib/stores/flashes';
@@ -20,14 +21,8 @@
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: ISpecificProgramCreate = {
-		id_program: '',
-		description: '',
-		start: '',
-		duration: '',
-		km: 0
-	};
-	let durationObj: DurationInputValue;
+	let values: ISpecificProgramEdit = $modalStore[0].meta.values;
+	let durationObj: DurationInputValue = durationStrToObj(values.duration);
 	const close = () => {
 		modalStore.close();
 	};
@@ -39,7 +34,7 @@
 		const durationStr = durationObjToStr(durationObj);
 		values.duration = durationStr;
 	};
-	const create = () => {
+	const edit = () => {
 		parse();
 		validate() && console.log(values);
 	};
@@ -50,37 +45,37 @@
 
 {#if $modalStore[0]}
 	<ModalBase>
-		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Specific Program</svelte:fragment>
+		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">Edit Specific Program</svelte:fragment>
 			<Dropdown placeholder="program" required options={[]} on:select>Program</Dropdown>
 			<div>
-				<label data-required="true" for="specific-program-create-description">Description</label>
+				<label data-required="true" for="specific-program-edit-description">Description</label>
 				<input
 					placeholder="description"
 					required
 					type="text"
-					id="specific-program-create-description"
+					id="specific-program-edit-description"
 					bind:value={values.description}
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-start">Start</label>
+				<label data-required="true" for="specific-program-edit-start">Start</label>
 				<input
 					placeholder="starts at"
 					required
 					type="time"
-					id="specific-program-create-start"
+					id="specific-program-edit-start"
 					bind:value={values.start}
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-distance">Distance KM</label>
+				<label data-required="true" for="specific-program-edit-distance">Distance KM</label>
 				<div class="input-group flex items-center">
 					<input
 						placeholder="km"
 						required
 						type="number"
-						id="specific-program-create-distance"
+						id="specific-program-edit-distance"
 						bind:value={values.km}
 						min="0"
 						max="600"
@@ -89,7 +84,7 @@
 				</div>
 			</div>
 			<div class="col-span-2">
-				<DurationInput required bind:value={durationObj} />
+				<DurationInput bind:value={durationObj} />
 			</div>
 		</BaseForm>
 	</ModalBase>

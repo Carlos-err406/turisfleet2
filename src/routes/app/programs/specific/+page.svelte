@@ -3,6 +3,7 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import { Modals } from '$lib/components/Modals';
 	import { getFlashStore } from '$lib/stores/flashes';
+	import type { ISpecificProgramEdit } from '$lib/components/Modals/Program/EditProgramSpecific.svelte';
 	const modalStore = getModalStore();
 	const data: any[] = [];
 	const headers: string[] = [];
@@ -18,8 +19,28 @@
 			console.log(r);
 		});
 	};
+	const handleEdit = () => {
+		const clickedSpecificProgram: ISpecificProgramEdit = {
+			id_program: '',
+			description: 'run4theh1111z',
+			start: '13:30',
+			duration: '1 days 6 hours 4 minutes',
+			km: 100
+		};
+		new Promise<any>((resolve) => {
+			modalStore.trigger({
+				type: 'component',
+				component: Modals.EDIT_PROGRAM_SPECIFIC,
+				meta: { flashes: getFlashStore(), values: clickedSpecificProgram },
+				response: (r) => resolve(r)
+			});
+		}).then((r) => {
+			console.log(r);
+		});
+	};
 </script>
 
 <div class="overflow-hidden">
 	<Table tableName="Specific programs" {data} {headers} keys={headers} on:insert={handleCreate} />
 </div>
+<button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

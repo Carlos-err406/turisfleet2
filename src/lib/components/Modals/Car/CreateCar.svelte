@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface CarCreate {
+	export interface ICarCreate {
 		plate_number: string;
 		brand: string;
 		seat_amount: number;
@@ -18,7 +18,7 @@
 	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: CarCreate = {
+	let values: ICarCreate = {
 		plate_number: '',
 		brand: '',
 		seat_amount: 4,
@@ -51,7 +51,7 @@
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
 			<svelte:fragment slot="title">Create Car</svelte:fragment>
 			<div>
-				<label for="car-create-plate">Plate number</label>
+				<label data-required="true" for="car-create-plate">Plate number</label>
 				<input
 					placeholder="plate number"
 					required
@@ -68,7 +68,7 @@
 				on:select={onLicenseSelection}>Licence</Dropdown
 			>
 			<div>
-				<label for="car-create-brand">Brand</label>
+				<label data-required="true" for="car-create-brand">Brand</label>
 				<input
 					placeholder="brand"
 					required
@@ -78,7 +78,7 @@
 				/>
 			</div>
 			<div>
-				<label for="car-create-seat-amount">Seat amount</label>
+				<label data-required="true" for="car-create-seat-amount">Seat amount</label>
 				<input
 					placeholder="seat amount"
 					required
@@ -90,7 +90,7 @@
 				/>
 			</div>
 			<div>
-				<label for="car-create-available-km">Available KM</label>
+				<label data-required="true" for="car-create-available-km">Available KM</label>
 				<div class="input-group flex items-center">
 					<input
 						placeholder="available km"
@@ -104,9 +104,9 @@
 					<span class=" px-3">KM</span>
 				</div>
 			</div>
-			<Dropdown placeholder="driver" required options={[]} on:select={onDriverSelection}
-				>Driver</Dropdown
-			>
+			<Dropdown placeholder="driver" required options={[]} on:select={onDriverSelection}>
+				Driver
+			</Dropdown>
 		</BaseForm>
 	</ModalBase>
 {/if}

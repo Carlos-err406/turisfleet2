@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface ISituationCreate {
+	export interface ISituationEdit {
 		situation_name: string;
 		situation_type: 'C' | 'D' | 'CD';
 	}
@@ -18,10 +18,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: ISituationCreate = {
-		situation_name: '',
-		situation_type: 'CD'
-	};
+	let values: ISituationEdit = $modalStore[0].meta.values;
 	const close = () => {
 		modalStore.close();
 	};
@@ -29,7 +26,7 @@
 	const validate = () => {
 		return true;
 	};
-	const create = () => {
+	const edit = () => {
 		validate() && console.log(values);
 	};
 	const onSituationSelection = ({ detail }: CustomEvent) => {
@@ -39,15 +36,15 @@
 
 {#if $modalStore[0]}
 	<ModalBase modalW="w-modal-slim">
-		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Situation</svelte:fragment>
+		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">Edit Situation</svelte:fragment>
 			<div>
-				<label data-required="true" for="situation-create-name">Situation name</label>
+				<label data-required="true" for="situation-edit-name">Situation name</label>
 				<input
 					placeholder="name"
 					required
 					type="text"
-					id="situation-create-name"
+					id="situation-edit-name"
 					bind:value={values.situation_name}
 				/>
 			</div>

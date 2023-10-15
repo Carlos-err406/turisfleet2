@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface IDriverSituationCreate {
+	export interface IDriverSituationEdit {
 		driver_id_driver: number;
 		situation_id_situation: number;
 		date: Date | string;
@@ -8,20 +8,15 @@
 </script>
 
 <script lang="ts">
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
-	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import type flashStore from '$lib/stores/flashes';
 	import { tomorrow } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: IDriverSituationCreate = {
-		driver_id_driver: 0,
-		situation_id_situation: 0,
-		date: '',
-		return_date: null
-	};
+	let values: IDriverSituationEdit = $modalStore[0].meta.values;
 
 	const close = () => {
 		modalStore.close();
@@ -30,7 +25,7 @@
 	const validate = () => {
 		return true;
 	};
-	const create = () => {
+	const edit = () => {
 		validate() && console.log(values);
 	};
 
@@ -44,19 +39,18 @@
 
 {#if $modalStore[0]}
 	<ModalBase>
-		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Driver Situation</svelte:fragment>
-
+		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">Edit Driver Situation</svelte:fragment>
 			<Dropdown placeholder="driver" input={''} required options={[]} on:select={onDriverSelection}>
 				Select Driver
 			</Dropdown>
-			<Dropdown
-				placeholder="situation"
-				input={''}
-				required
-				options={[]}
-				on:select={onSituationSelection}>Situation</Dropdown
-			>
+            <Dropdown
+                placeholder="situation"
+                input={''}
+                required
+                options={[]}
+                on:select={onSituationSelection}>Situation</Dropdown
+            >
 			<div>
 				<label data-required="true" for="driver-situation-date">Date</label>
 				<input

@@ -22,11 +22,20 @@
 	};
 
 	const validate = () => {
+		if (values.password !== currentPassword) {
+			flashes.trigger({
+				message: 'Passwords must match',
+				type: 'error'
+			});
+			return false;
+		}
 		return true;
 	};
 	const edit = () => {
-		validate() && console.log(values);
-        close()
+		console.log(values);
+		if (validate()) {
+			close();
+		}
 	};
 </script>
 
@@ -35,20 +44,20 @@
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
 			<svelte:fragment slot="title">Change Password</svelte:fragment>
 			<div>
-				<label for="user-edit-current-password">Current password</label>
+				<label data-required="true" for="user-edit-current-password">Current password</label>
 				<input
 					required
-					type="text"
+					type="password"
 					id="user-edit-current-password"
 					placeholder="current password"
 					bind:value={currentPassword}
 				/>
 			</div>
 			<div>
-				<label for="user-edit-password">New Password</label>
+				<label data-required="true" for="user-edit-password">New Password</label>
 				<input
 					required
-					type="text"
+					type="password"
 					id="user-edit-password"
 					placeholder="password"
 					bind:value={values.password}

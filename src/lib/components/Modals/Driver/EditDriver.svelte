@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface IDriverCreate {
+	export interface IDriverEdit {
 		id_number: string;
 		name: string;
 		address: string;
@@ -9,24 +9,18 @@
 
 <script lang="ts">
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import SelectMultipleInput from '$lib/components/Inputs/SelectMultipleInput.svelte';
 	import type flashStore from '$lib/stores/flashes';
 	import { LicenseCategory } from '$lib/types/LicenceTypes';
+	import { validateID } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const values: IDriverEdit = $modalStore[0].meta.values;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({ label: key, value }));
 
-	let values: IDriverCreate = {
-		id_number: '',
-		name: '',
-		address: '',
-		id_categories: [LicenseCategory.B]
-	};
 	const close = () => {
 		modalStore.close();
 	};
@@ -38,48 +32,24 @@
 		});
 	};
 	const validate = () => {
-		const { id_number } = values;
-		if (id_number.length !== 11) {
-			triggerInvalidID();
-			return false;
-		}
-
-		const [year, month, day] = [
-			parseInt(id_number.slice(0, 2)),
-			parseInt(id_number.slice(2, 4)),
-			parseInt(id_number.slice(4, 6))
-		];
-
-		const date = dayjs(`${month}-${day}-${year}`);
-		let isValid = true;
-		if (day > 31) isValid = false;
-		else if (month == 2 && day > 29) isValid = false;
-		else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
-		else if ([4, 6, 8, 11].includes(month) && day > 30) isValid = false;
-		if (!isValid || !date.isValid()) {
-			triggerInvalidID();
-		}
-		return isValid;
+		return validateID(values.id_number, triggerInvalidID);
 	};
-	const create = () => {
+	const edit = () => {
 		validate() && console.log(values);
-	};
-	const onLicenseSelection = ({ detail }: CustomEvent) => {
-		values.id_categories = detail;
 	};
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase>
-		<BaseForm footerCols={2} on:submit={create} on:secondary={close} {flashes}>
-			<svelte:fragment slot="title">Create Driver</svelte:fragment>
+	<ModalBase modalW="w-modal">
+		<BaseForm footerCols={2} on:submit={edit} on:secondary={close} {flashes}>
+			<svelte:fragment slot="title">Edit Driver</svelte:fragment>
 			<div>
-				<label data-required="true" for="driver-create-name">Name</label>
+				<label data-required="true" for="driver-edit-name">Name</label>
 				<input
 					placeholder="name"
 					required
 					type="text"
-					id="driver-create-name"
+					id="driver-edit-name"
 					bind:value={values.name}
 				/>
 			</div>
@@ -88,11 +58,11 @@
 				Licence categories
 			</SelectMultipleInput>
 			<div class="col-span-1">
-				<label for="driver-create-address">Address</label>
+				<label for="driver-edit-address">Address</label>
 				<textarea
 					class="textarea px-2 max-h-48"
 					placeholder="address"
-					id="driver-create-address"
+					id="driver-edit-address"
 					bind:value={values.address}
 				/>
 			</div>

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface CarSituationCreate {
+	export interface ICarSituationCreate {
 		car_id_car: number;
 		situation_id_situation: number;
 		date: Date | string;
@@ -16,7 +16,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: CarSituationCreate = {
+	let values: ICarSituationCreate = {
 		car_id_car: 0,
 		situation_id_situation: 0,
 		date: '',
@@ -45,10 +45,10 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Car situation</svelte:fragment>
+			<svelte:fragment slot="title">Create Car Situation</svelte:fragment>
 
 			<Dropdown placeholder="car" input={''} required options={[]} on:select={onCarSelection}>
-				CreateCar
+				Select Car
 			</Dropdown>
 			<Dropdown
 				placeholder="situation"
@@ -58,7 +58,7 @@
 				on:select={onSituationSelection}>Situation</Dropdown
 			>
 			<div>
-				<label for="car-situation-date">Date</label>
+				<label data-required="true" for="car-situation-date">Date</label>
 				<input
 					placeholder="date"
 					required
@@ -70,7 +70,7 @@
 				/>
 			</div>
 			<div>
-				<label for="car-situation-date">Return Date</label>
+				<label data-required="true" for="car-situation-date">Return Date</label>
 				<input
 					placeholder="date"
 					required

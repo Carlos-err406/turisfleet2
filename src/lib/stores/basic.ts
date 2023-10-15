@@ -1,7 +1,7 @@
 import type { LoggedUserDTO } from '$lib/services/AuthService';
-import { createSessionStorage, persist } from '@macfja/svelte-persistent-store';
+import { createSessionStorage, persist, disableWarnings } from '@macfja/svelte-persistent-store';
 import { derived, writable } from 'svelte/store';
-
+disableWarnings()
 export const navHeight = writable<number>(0);
 export const actionsHeight = writable<number>(0);
 export const clientWidth = writable<number>(0);

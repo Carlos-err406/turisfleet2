@@ -52,7 +52,7 @@
 			</div>
 		</div>
 		<div class="flex flex-col items-start gap-1">
-			<label class="ml-3" for="username-input"> Password </label>
+			<label class="ml-3" for="password-input"> Password </label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
 					{@html lock}

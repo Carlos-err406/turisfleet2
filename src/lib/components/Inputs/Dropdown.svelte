@@ -30,17 +30,18 @@
 	export let event: 'focus-click' | 'click' | 'hover' | 'focus-blur' = 'click';
 	export let required = false;
 	export let input = '';
-
+	export let value: string = '';
 	const dispatch = createEventDispatcher();
 	const onSelection = ({ detail }: CustomEvent<AutocompleteOption<string>>) => {
 		input = detail.label;
+		value = detail.value;
 		dispatch('select', detail.value);
 	};
 	let settings: PopupSettings = { event, target, placement };
 </script>
 
 <div>
-	<label for={id}>
+	<label for={id} data-required={required}>
 		<slot />
 	</label>
 	<input

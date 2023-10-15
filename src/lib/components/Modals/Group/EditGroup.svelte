@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
 	import Dropdown from '../../Inputs/Dropdown.svelte';
-	export interface IGroupCreate {
+	export interface IGroupEdit {
 		country: string;
 		tourist_amount: number;
 	}
@@ -9,15 +9,12 @@
 <script lang="ts">
 	import countries from '$data/countries.json';
 	import type flashStore from '$lib/stores/flashes';
-	import { getModalStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
-	import ModalBase from '../ModalBase.svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: IGroupCreate = {
-		country: countries[0].value,
-		tourist_amount: 1
-	};
+	let values: IGroupEdit = $modalStore[0].meta.values;
 	const close = () => {
 		modalStore.close();
 	};
@@ -25,29 +22,37 @@
 	const validate = () => {
 		return true;
 	};
-	const create = () => {
+	const edit = () => {
 		validate() && console.log(values);
 	};
 
 	function onCountrySelection({ detail }: CustomEvent): void {
 		values.country = detail;
 	}
+	let countryLabel = countries.find(({ value }) => value === values.country)?.label;
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase>
-		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Group</svelte:fragment>
-			<Dropdown placeholder="country" required options={countries} on:select={onCountrySelection}>
+	<ModalBase modalW="w-modal-slim">
+		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">Edit Group</svelte:fragment>
+			<Dropdown
+				placeholder="country"
+				required
+				options={countries}
+				on:select={onCountrySelection}
+				bind:value={values.country}
+				input={countryLabel}
+			>
 				Country
 			</Dropdown>
 			<div>
-				<label data-required="true" for="group-create-tourist-amount">Tourist amount</label>
+				<label data-required="true" for="group-edit-tourist-amount">Tourist amount</label>
 				<input
 					placeholder="tourist amount"
 					required
 					type="number"
-					id="group-create-tourist-amount"
+					id="group-edit-tourist-amount"
 					bind:value={values.tourist_amount}
 				/>
 			</div>
