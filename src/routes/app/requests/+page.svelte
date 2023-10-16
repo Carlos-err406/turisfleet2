@@ -2,6 +2,7 @@
 	import { Modals } from '$lib/components/Modals';
 	import type { IRequestEdit } from '$lib/components/Modals/Request/EditRequest.svelte';
 	import Table from '$lib/components/Table/Table.svelte';
+	import i18n from '$lib/i18n';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { tomorrow } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -43,6 +44,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Requests" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.requests')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

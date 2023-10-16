@@ -19,6 +19,7 @@
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: ISpecificProgramEdit = $modalStore[0].meta.values;
@@ -46,12 +47,16 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Specific Program</svelte:fragment>
-			<Dropdown placeholder="program" required options={[]} on:select>Program</Dropdown>
+			<svelte:fragment slot="title">{i18n.t('title.editSpecificProgram')}</svelte:fragment>
+			<Dropdown placeholder={i18n.t('placeholder.program')} required options={[]} on:select>
+				{i18n.t('label.program')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="specific-program-edit-description">Description</label>
+				<label data-required="true" for="specific-program-edit-description">
+					{i18n.t('label.description')}
+				</label>
 				<input
-					placeholder="description"
+					placeholder={i18n.t('placeholder.description')}
 					required
 					type="text"
 					id="specific-program-edit-description"
@@ -59,17 +64,15 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-edit-start">Start</label>
-				<input
-					placeholder="starts at"
-					required
-					type="time"
-					id="specific-program-edit-start"
-					bind:value={values.start}
-				/>
+				<label data-required="true" for="specific-program-edit-start">
+					{i18n.t('label.startsAt')}
+				</label>
+				<input required type="time" id="specific-program-edit-start" bind:value={values.start} />
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-edit-distance">Distance KM</label>
+				<label data-required="true" for="specific-program-edit-distance">
+					{i18n.t('label.distanceKM')}
+				</label>
 				<div class="input-group flex items-center">
 					<input
 						placeholder="km"
@@ -84,7 +87,7 @@
 				</div>
 			</div>
 			<div class="col-span-2">
-				<DurationInput bind:value={durationObj} />
+				<DurationInput required bind:value={durationObj} />
 			</div>
 		</BaseForm>
 	</ModalBase>

@@ -8,10 +8,11 @@
 
 <script lang="ts">
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import ModalBase from '../ModalBase.svelte';
 	import BaseForm from '../BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let passwordConf = '';
@@ -27,7 +28,7 @@
 	const validate = () => {
 		if (passwordConf !== values.password) {
 			flashes.trigger({
-				message: 'Passwords must match',
+				message: i18n.t('flashes.passwordsMustMatch'),
 				type: 'error'
 			});
 			return false;
@@ -46,36 +47,43 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create User</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.createUser')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-create-username">Username</label>
+				<label data-required="true" for="user-create-username">{i18n.t('label.username')}</label>
 				<input
 					required
 					type="text"
 					id="user-create-username"
-					placeholder="username"
+					placeholder={i18n.t('placeholder.username')}
 					bind:value={values.username}
 				/>
 			</div>
-			<Dropdown required options={[]} on:select={onRoleSelection} placeholder="role">Role</Dropdown>
+			<Dropdown
+				required
+				options={[]}
+				on:select={onRoleSelection}
+				placeholder={i18n.t('placeholder.role')}>{i18n.t('label.role')}</Dropdown
+			>
 			<div>
-				<label data-required="true" for="user-create-password">Password</label>
+				<label data-required="true" for="user-create-password">{i18n.t('label.password')}</label>
 				<input
 					required
 					type="password"
 					id="user-create-password"
 					bind:value={values.password}
-					placeholder="password"
+					placeholder={i18n.t('placeholder.password')}
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="user-create-password-conf">Password confirmation</label>
+				<label data-required="true" for="user-create-password-conf"
+					>{i18n.t('label.passwordConfirmation')}</label
+				>
 				<input
 					required
 					type="password"
 					id="user-create-password-conf"
 					bind:value={passwordConf}
-					placeholder="password confirmation"
+					placeholder={i18n.t('placeholder.passwordConfirmation')}
 				/>
 			</div>
 		</BaseForm>

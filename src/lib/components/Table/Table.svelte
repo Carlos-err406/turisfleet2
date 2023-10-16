@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { downSimple } from '$lib/icons';
-	import { actionsHeight, navHeight } from '$lib/stores/basic';
+	import { actionsHeight, navHeight } from '$lib/stores';
 	import type { PaginationSettings, TableSource } from '@skeletonlabs/skeleton';
 	import { Paginator, Table, tableMapperValues } from '@skeletonlabs/skeleton';
 	import { onDestroy, onMount } from 'svelte';
 	import NoData from './NoData.svelte';
 	import TableActions from './TableActions.svelte';
 
-	export let tableName: string;
 	export let headers: string[] = [];
 	export let keys: string[] = [];
 	export let data: any[] = [];
@@ -74,7 +73,10 @@
 </script>
 
 <TableActions disableSearch={source.body.length === 0} on:insert>
-	{tableName}
+	<slot name="table-name" />
+	<svelte:fragment slot="insert">
+		<slot name="insert" />
+	</svelte:fragment>
 </TableActions>
 {#if source.body.length > 0}
 	<div

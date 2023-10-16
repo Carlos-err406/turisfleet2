@@ -10,6 +10,7 @@
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: ICarEdit = $modalStore[0].meta.values;
@@ -30,11 +31,16 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
+	<ModalBase>
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Car</svelte:fragment>
-			<Dropdown placeholder="driver" required options={[]} on:select={onDriverSelection}>
-				Driver
+			<svelte:fragment slot="title">{i18n.t('title.editCar')}</svelte:fragment>
+			<Dropdown
+				placeholder={i18n.t('placeholder.driver')}
+				required
+				options={[]}
+				on:select={onDriverSelection}
+			>
+				{i18n.t('label.driver')}
 			</Dropdown>
 		</BaseForm>
 	</ModalBase>

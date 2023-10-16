@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { LOGGING } from '$env/static/private';
 import { getCookiesHeader, log } from '$lib/server-utils';
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
 
@@ -7,7 +7,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	await handleRedirectionWrapper(pathname, event.fetch, event.cookies);
 	const response = await resolve(event);
 
-	if (env.LOGGING === '1' && (pathname.includes('/proxy') || pathname.includes('/api'))) {
+	if (LOGGING === '1' && (pathname.includes('/proxy') || pathname.includes('/api'))) {
 		log(event.request.method, response.status, pathname);
 	}
 

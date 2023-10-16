@@ -15,7 +15,7 @@ export interface HeightSpringOptions {
 	damping: number;
 }
 export const tomorrow = () => dayjs().add(1, 'day').format('YYYY-MM-DD');
-export const today = () => dayjs().format('YYYY-MM-DD')
+export const today = () => dayjs().format('YYYY-MM-DD');
 
 export function springHeight(
 	element: HTMLElement,
@@ -35,10 +35,9 @@ export function springHeight(
 }
 
 export const validateID = (id: string, onInvalid: () => void) => {
-
 	if (id.length !== 11) {
-		onInvalid()
-		return false
+		onInvalid();
+		return false;
 	}
 
 	const [year, month, day] = [
@@ -54,8 +53,8 @@ export const validateID = (id: string, onInvalid: () => void) => {
 	else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
 	else if ([4, 6, 8, 11].includes(month) && day > 30) isValid = false;
 	if (!isValid || !date.isValid()) {
-		onInvalid()
-		return false
+		onInvalid();
+		return false;
 	}
-	return true
-} 
+	return true;
+};

@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import Popup from '$lib/components/Popup/Popup.svelte';
 	import PopupItem from '$lib/components/Popup/PopupItem.svelte';
+	import i18n from '$lib/i18n';
 	import { info } from '$lib/icons';
 	const routes = {
 		situations: '/app/situations',
@@ -28,13 +29,15 @@
 	<svelte:fragment slot="icon">
 		{@html info}
 	</svelte:fragment>
-	<svelte:fragment slot="title">Situations</svelte:fragment>
-	<PopupItem active={situationsActive} on:click={handleSituationsClick}>Situations</PopupItem>
+	<svelte:fragment slot="title">{i18n.t('label.situations')}</svelte:fragment>
+	<PopupItem active={situationsActive} on:click={handleSituationsClick}>
+		{i18n.t('label.situations')}
+	</PopupItem>
 
 	<PopupItem active={carSituationsActive} on:click={handleCarSituationsClick}>
-		Car Situations
+		{i18n.t('label.carSituations')}
 	</PopupItem>
 	<PopupItem active={driverSituationsActive} on:click={handleDriverSituationsClick}>
-		Driver Situations
+		{i18n.t('label.driverSituations')}
 	</PopupItem>
 </Popup>

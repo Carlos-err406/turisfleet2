@@ -18,6 +18,7 @@
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: ISpecificProgramCreate = {
@@ -51,12 +52,16 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Specific Program</svelte:fragment>
-			<Dropdown placeholder="program" required options={[]} on:select>Program</Dropdown>
+			<svelte:fragment slot="title">{i18n.t('title.createSpecificProgram')}</svelte:fragment>
+			<Dropdown placeholder={i18n.t('placeholder.program')} required options={[]} on:select>
+				{i18n.t('label.program')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="specific-program-create-description">Description</label>
+				<label data-required="true" for="specific-program-create-description">
+					{i18n.t('label.description')}
+				</label>
 				<input
-					placeholder="description"
+					placeholder={i18n.t('placeholder.description')}
 					required
 					type="text"
 					id="specific-program-create-description"
@@ -64,17 +69,15 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-start">Start</label>
-				<input
-					placeholder="starts at"
-					required
-					type="time"
-					id="specific-program-create-start"
-					bind:value={values.start}
-				/>
+				<label data-required="true" for="specific-program-create-start">
+					{i18n.t('label.startsAt')}
+				</label>
+				<input required type="time" id="specific-program-create-start" bind:value={values.start} />
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-distance">Distance KM</label>
+				<label data-required="true" for="specific-program-create-distance">
+					{i18n.t('label.distanceKM')}
+				</label>
 				<div class="input-group flex items-center">
 					<input
 						placeholder="km"

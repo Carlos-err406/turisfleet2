@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-	import Dropdown from '../../Inputs/Dropdown.svelte';
 	export interface IGroupCreate {
 		country: string;
 		tourist_amount: number;
@@ -8,10 +7,12 @@
 
 <script lang="ts">
 	import countries from '$data/countries.json';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import type flashStore from '$lib/stores/flashes';
-	import { getModalStore, type AutocompleteOption } from '@skeletonlabs/skeleton';
-	import ModalBase from '../ModalBase.svelte';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: IGroupCreate = {
@@ -37,14 +38,23 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Group</svelte:fragment>
-			<Dropdown placeholder="country" required options={countries} on:select={onCountrySelection}>
-				Country
+			<svelte:fragment slot="title">{i18n.t('title.createGroup')}</svelte:fragment>
+			<input type="text" hidden />
+			<Dropdown
+				event="click"
+				placeholder={i18n.t('placeholder.country')}
+				required
+				options={countries}
+				on:select={onCountrySelection}
+			>
+				{i18n.t('label.country')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="group-create-tourist-amount">Tourist amount</label>
+				<label data-required="true" for="group-create-tourist-amount"
+					>{i18n.t('label.touristAmount')}</label
+				>
 				<input
-					placeholder="tourist amount"
+					placeholder={i18n.t('placeholder.touristAmount')}
 					required
 					type="number"
 					id="group-create-tourist-amount"

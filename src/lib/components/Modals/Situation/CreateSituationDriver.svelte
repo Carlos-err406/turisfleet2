@@ -14,6 +14,7 @@
 	import { tomorrow } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: IDriverSituationCreate = {
@@ -45,22 +46,29 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Driver Situation</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.createDriverSituation')}</svelte:fragment>
 
-			<Dropdown placeholder="driver" input={''} required options={[]} on:select={onDriverSelection}>
-				Select Driver
-			</Dropdown>
 			<Dropdown
-				placeholder="situation"
-				input={''}
+				placeholder={i18n.t('placeholder.driver')}
 				required
 				options={[]}
-				on:select={onSituationSelection}>Situation</Dropdown
+				on:select={onDriverSelection}
 			>
+				{i18n.t('label.driver')}
+			</Dropdown>
+			<Dropdown
+				placeholder={i18n.t('placeholder.situation')}
+				required
+				options={[]}
+				on:select={onSituationSelection}
+			>
+				{i18n.t('label.situation')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="driver-situation-date">Date</label>
+				<label data-required="true" for="driver-situation-date">
+					{i18n.t('label.date')}
+				</label>
 				<input
-					placeholder="date"
 					required
 					type="date"
 					min={tomorrow()}
@@ -70,9 +78,10 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="driver-situation-date">Return Date</label>
+				<label data-required="true" for="driver-situation-date">
+					{i18n.t('label.returnDate')}
+				</label>
 				<input
-					placeholder="date"
 					required
 					type="date"
 					class=""

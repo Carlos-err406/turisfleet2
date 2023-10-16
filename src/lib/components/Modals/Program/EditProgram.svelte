@@ -9,6 +9,7 @@
 	import type flashStore from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: IProgramEdit = $modalStore[0].meta.values;
@@ -25,13 +26,13 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
+	<ModalBase>
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Program</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.editProgram')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="program-edit-name">Program name</label>
+				<label data-required="true" for="program-edit-name">{i18n.t('label.programName')}</label>
 				<input
-					placeholder="program name"
+					placeholder={i18n.t('placeholder.programName')}
 					required
 					type="text"
 					id="program-edit-name"

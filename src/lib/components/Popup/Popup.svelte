@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { md } from '$lib/stores/basic';
+	import { md } from '$lib/stores';
 	import type { Placement } from '@floating-ui/dom';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import { v4 } from 'uuid';
@@ -12,7 +12,7 @@
 
 <div
 	use:popup={settings}
-	class="px-3 py-1 cursor-pointer app-rail-wrapper w-full flex flex-col justify-center items-stretch text-center space-y-1 md:aspect-square bg-primary-hover-token"
+	class="py-1 md:my-1 md:py-3 cursor-pointer app-rail-wrapper w-full flex flex-col justify-center items-stretch text-center aspect-auto bg-primary-hover-token"
 	class:bg-primary-active-token={active}
 >
 	<div class="app-rail-label font-bold text-xs">

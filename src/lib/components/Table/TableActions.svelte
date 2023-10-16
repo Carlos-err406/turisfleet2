@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { actionsHeight } from '$lib/stores/basic';
+	import { actionsHeight } from '$lib/stores';
 	import { createEventDispatcher } from 'svelte';
 	import ButtonInsert from '../Button/ButtonInsert.svelte';
 	import SearchInput from '$lib/components/Inputs/SearchInput.svelte';

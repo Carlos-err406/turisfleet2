@@ -3,9 +3,11 @@
 	import { getDrawerSettings } from '$lib';
 	import Reports from '$lib/components/Popup/Reports.svelte';
 	import { logout, menu } from '$lib/icons';
-	import { loggedUser, navHeight } from '$lib/stores/basic';
+	import { loggedUser, navHeight } from '$lib/stores';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
+	import LangButton from '../Panel/LangButton.svelte';
+	import i18n from '$lib/i18n';
 	const drawer = getDrawerStore();
 	const handleShowMenuClick = () => {
 		!$drawer.open && drawer.open(getDrawerSettings());
@@ -26,6 +28,9 @@
 			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="trail">
+			<div class="block md:hidden">
+				<LangButton />
+			</div>
 			<div class="flex flex-col gap-0.5 items-start justify-center w-fit">
 				{#if $loggedUser}
 					<span class="text-lg font-semibold">{$loggedUser.username}</span>
@@ -34,11 +39,8 @@
 			</div>
 			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>
 				{@html logout}
-				<span>Log out </span>
+				<span>{i18n.t('button.logout')} </span>
 			</button>
-			<div class="block md:hidden">
-				<Reports placement="bottom-start" />
-			</div>
 		</svelte:fragment>
 	</AppBar>
 </div>

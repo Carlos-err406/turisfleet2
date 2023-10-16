@@ -6,6 +6,7 @@
 	import type { ICarSituationEdit } from '$lib/components/Modals/Situation/EditSituationCar.svelte';
 	import { tomorrow } from '$lib/utils';
 	import dayjs from 'dayjs';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const data: any[] = [];
 	const headers: string[] = [];
@@ -43,6 +44,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Car Situations" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.carSituations')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

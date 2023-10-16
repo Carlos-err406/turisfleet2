@@ -3,11 +3,6 @@
 		situation_name: string;
 		situation_type: 'C' | 'D' | 'CD';
 	}
-	const situations = [
-		{ label: 'Car', value: 'C' },
-		{ label: 'Driver', value: 'D' },
-		{ label: 'Car and Driver', value: 'CD' }
-	];
 </script>
 
 <script lang="ts">
@@ -16,6 +11,8 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalBase from '../ModalBase.svelte';
 	import BaseForm from '../BaseForm.svelte';
+	import i18n from '$lib/i18n';
+	import { situations } from './situations';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: ISituationEdit = $modalStore[0].meta.values;
@@ -35,13 +32,15 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
+	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Situation</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.editSituation')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="situation-edit-name">Situation name</label>
+				<label data-required="true" for="situation-edit-name">
+					{i18n.t('label.situationName')}
+				</label>
 				<input
-					placeholder="name"
+					placeholder={i18n.t('placeholder.situationName')}
 					required
 					type="text"
 					id="situation-edit-name"
@@ -49,13 +48,13 @@
 				/>
 			</div>
 			<Dropdown
-				placeholder="type"
+				placeholder={i18n.t('placeholder.situationType')}
 				input={situations[2].label}
 				required
 				options={situations}
 				on:select={onSituationSelection}
 			>
-				Situation Type
+				{i18n.t('label.situationType')}
 			</Dropdown>
 		</BaseForm>
 	</ModalBase>

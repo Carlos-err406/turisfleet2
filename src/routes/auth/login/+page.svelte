@@ -3,8 +3,9 @@
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { authService } from '$lib/services';
 	import { lock, user } from '$lib/icons';
-	import { loggedUser } from '$lib/stores/basic';
+	import { loading, loggedUser } from '$lib/stores';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
+	import i18n from '$lib/i18n';
 	const toastStore = getToastStore();
 
 	let username: string = '';
@@ -12,7 +13,9 @@
 
 	const handleSumbit = async () => {
 		try {
+			$loading = true;
 			$loggedUser = await authService.login({ username, password });
+			$loading = false;
 			goto('/app/users');
 		} catch (e: any) {
 			const { exceptionID, message } = e;
@@ -36,7 +39,9 @@
 	</header>
 	<section class="p-4 flex flex-col gap-5">
 		<div class="flex flex-col items-start gap-1">
-			<label class="ml-3" for="username-input"> Useranme </label>
+			<label data-required="true" class="ml-3" for="username-input">
+				{i18n.t('label.username')}
+			</label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
 					{@html user}
@@ -45,14 +50,16 @@
 					required
 					type="text"
 					id="username-input"
-					placeholder="username"
+					placeholder={i18n.t('placeholder.username')}
 					bind:value={username}
 					class="px-2 py-1 input w-full variant-outline-primary outline-none border-none"
 				/>
 			</div>
 		</div>
 		<div class="flex flex-col items-start gap-1">
-			<label class="ml-3" for="password-input"> Password </label>
+			<label data-required="true" class="ml-3" for="password-input">
+				{i18n.t('label.password')}
+			</label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
 					{@html lock}
@@ -61,7 +68,7 @@
 					required
 					type="password"
 					id="password-input"
-					placeholder="password"
+					placeholder={i18n.t('placeholder.password')}
 					bind:value={password}
 					class="px-2 py-1 input w-full variant-outline-primary outline-none border-none"
 				/>
@@ -69,6 +76,8 @@
 		</div>
 	</section>
 	<footer class="card-footer flex justify-center">
-		<button class="btn variant-ghost-primary">Login</button>
+		<button class="btn variant-ghost-primary">
+			{i18n.t('button.login')}
+		</button>
 	</footer>
 </form>

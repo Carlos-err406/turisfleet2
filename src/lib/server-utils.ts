@@ -6,8 +6,8 @@ import jwt from 'jsonwebtoken';
 import { CustomHttpError } from './CustomError';
 import { ErrorCode } from './types/ErrorCodes';
 export enum Cookie {
-	TOKEN = 'Turisfleet-Token',
-	REFRESH = 'Turisfleet-RefreshToken'
+	TOKEN = 'TF-Token',
+	REFRESH = 'TF-RefreshToken'
 }
 
 export const getCookieSettings = (

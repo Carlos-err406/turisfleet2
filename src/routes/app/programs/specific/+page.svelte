@@ -4,6 +4,7 @@
 	import { Modals } from '$lib/components/Modals';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import type { ISpecificProgramEdit } from '$lib/components/Modals/Program/EditProgramSpecific.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const data: any[] = [];
 	const headers: string[] = [];
@@ -41,6 +42,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Specific programs" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.specificPrograms')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

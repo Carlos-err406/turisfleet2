@@ -6,11 +6,10 @@
 
 <script lang="ts">
 	import type flashStore from '$lib/stores/flashes';
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import FormFooter from '../FormFooter.svelte';
-	import { Modals } from '..';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let currentPassword: string = '';
@@ -22,44 +21,51 @@
 	};
 
 	const validate = () => {
+		flashes.reset();
 		if (values.password !== currentPassword) {
 			flashes.trigger({
-				message: 'Passwords must match',
+				message: i18n.t('flashes.passwordsMustMatch'),
 				type: 'error'
 			});
 			return false;
 		}
 		return true;
 	};
-	const edit = () => {
-		console.log(values);
+	const change = () => {
 		if (validate()) {
+			flashes.trigger({
+				message: i18n.t('flashes.passwordChanged'),
+				type: 'success'
+			});
+			$modalStore[0].response?.(true);
 			close();
 		}
 	};
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
-		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Change Password</svelte:fragment>
+	<ModalBase>
+		<BaseForm footerCols={1} {flashes} on:submit={change} on:secondary={close}>
+			<svelte:fragment slot="title">{i18n.t('title.changePassword')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-edit-current-password">Current password</label>
+				<label data-required="true" for="user-edit-current-password">
+					{i18n.t('label.currentPassword')}
+				</label>
 				<input
 					required
 					type="password"
 					id="user-edit-current-password"
-					placeholder="current password"
+					placeholder={i18n.t('placeholder.currentPassword')}
 					bind:value={currentPassword}
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="user-edit-password">New Password</label>
+				<label data-required="true" for="user-edit-password">{i18n.t('label.newPassword')}</label>
 				<input
 					required
 					type="password"
 					id="user-edit-password"
-					placeholder="password"
+					placeholder={i18n.t('placeholder.newPassword')}
 					bind:value={values.password}
 				/>
 			</div>

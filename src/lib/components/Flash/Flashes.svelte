@@ -5,7 +5,6 @@
 	import Flash from './Flash.svelte';
 	import { springHeight } from '$lib/utils';
 	export let flashes: typeof flashStore;
-	onMount(() => flashes.reset());
 	const handleFlashClick = ({ detail }: CustomEvent<FlashType>) => {
 		flashes.remove(detail.id);
 	};

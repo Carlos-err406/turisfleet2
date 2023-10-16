@@ -5,8 +5,8 @@
 </script>
 
 <script lang="ts">
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
-	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
@@ -29,23 +29,23 @@
 		const changePasswordSettings: ModalSettings = {
 			type: 'component',
 			component: Modals.CHANGE_PASSWORD,
-			meta: { flashes: getFlashStore() }
+			meta: { flashes, values }
 		};
 		$modalStore = [changePasswordSettings, ...$modalStore];
 	};
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
+	<ModalBase>
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit User</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.editUser')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-edit-username">Username</label>
+				<label data-required="true" for="user-edit-username">{i18n.t('label.username')}</label>
 				<input
 					required
 					type="text"
 					id="user-edit-username"
-					placeholder="username"
+					placeholder={i18n.t('placeholder.username')}
 					bind:value={values.username}
 				/>
 			</div>
@@ -56,7 +56,7 @@
 						class="btn variant-outline-primary"
 						on:click={triggerChangePassword}
 					>
-						<slot name="primary">Change Password</slot>
+						<slot name="primary">{i18n.t('button.changePassword')}</slot>
 					</button>
 				</FormFooter>
 			</svelte:fragment>

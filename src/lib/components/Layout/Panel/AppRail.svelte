@@ -1,55 +1,51 @@
 <script>
-	import ProgramsPopup from './ProgramsPopup.svelte';
+	import i18n from '$lib/i18n';
+	import { driver, group, inbox, truck, users } from '$lib/icons';
+	import { AppRail, LightSwitch } from '@skeletonlabs/skeleton';
 	import Reports from '../../Popup/Reports.svelte';
-	import { page } from '$app/stores';
-	import { driver, group, inbox, info, layers, truck, users } from '$lib/icons';
-	import { AppRail, AppRailAnchor, AppRailTile, LightSwitch } from '@skeletonlabs/skeleton';
-	import { md, sm } from '$lib/stores/basic';
+	import AppRailItem from './AppRailItem.svelte';
+	import LangButton from './LangButton.svelte';
+	import ProgramsPopup from './ProgramsPopup.svelte';
 	import SituationsPopup from './SituationsPopup.svelte';
 </script>
 
-<AppRail class="shadow-sm">
-	<AppRailAnchor href="/app/users" selected={$page.url.pathname === '/app/users'}>
-		<div class="flex flex-col items-center justify-center gap-2">
+<AppRail class="shadow-sm w-fit overflow-y-auto">
+	<AppRailItem href="/app/users">
+		<svelte:fragment slot="icon">
 			{@html users}
-			<span>Users</span>
-		</div>
-	</AppRailAnchor><AppRailAnchor
-		href="/app/drivers"
-		selected={$page.url.pathname === '/app/drivers'}
-	>
-		<div class="flex flex-col items-center justify-center gap-2">
+		</svelte:fragment>
+		{i18n.t('label.users')}
+	</AppRailItem>
+	<AppRailItem href="/app/drivers">
+		<svelte:fragment slot="icon">
 			{@html driver}
-			<span>Drivers</span>
-		</div>
-	</AppRailAnchor>
-	<AppRailAnchor href="/app/cars" selected={$page.url.pathname === '/app/cars'}>
-		<div class="flex flex-col items-center justify-center gap-2">
+		</svelte:fragment>
+		{i18n.t('label.drivers')}
+	</AppRailItem>
+	<AppRailItem href="/app/cars">
+		<svelte:fragment slot="icon">
 			{@html truck}
-			<span>Cars</span>
-		</div>
-	</AppRailAnchor>
-	<AppRailAnchor href="/app/groups" selected={$page.url.pathname === '/app/groups'}>
-		<div class="flex flex-col items-center justify-center gap-2">
+		</svelte:fragment>
+		{i18n.t('label.cars')}
+	</AppRailItem>
+	<AppRailItem href="/app/groups">
+		<svelte:fragment slot="icon">
 			{@html group}
-			<span>Groups</span>
-		</div>
-	</AppRailAnchor>
-	<AppRailAnchor href="/app/requests" selected={$page.url.pathname === '/app/requests'}>
-		<div class="flex flex-col items-center justify-center gap-2">
+		</svelte:fragment>
+		{i18n.t('label.groups')}
+	</AppRailItem>
+	<AppRailItem href="/app/requests">
+		<svelte:fragment slot="icon">
 			{@html inbox}
-			<span>Requests</span>
-		</div>
-	</AppRailAnchor>
+		</svelte:fragment>
+		{i18n.t('label.requests')}
+	</AppRailItem>
 	<ProgramsPopup />
 	<SituationsPopup />
-	<!-- {#if $md} -->
-	<div class="hidden md:block">
-		<Reports placement="right" />
-	</div>
-	<!-- {/if} -->
+	<Reports placement="right" />
 	<svelte:fragment slot="trail">
-		<div class="w-full flex justify-center mb-3">
+		<div class="w-full flex flex-col items-center justify-end mb-3 gap-3">
+			<LangButton />
 			<LightSwitch />
 		</div>
 	</svelte:fragment>

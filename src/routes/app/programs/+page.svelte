@@ -3,8 +3,8 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import { Modals } from '$lib/components/Modals';
 	import { getFlashStore } from '$lib/stores/flashes';
-	import type { IRequestEdit } from '$lib/components/Modals/Request/EditRequest.svelte';
-	import type { IProgramEdit } from '$lib/components/Modals/Program/editProgram.svelte';
+	import type { IProgramEdit } from '$lib/components/Modals/Program/EditProgram.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const data: any[] = [];
 	const headers: string[] = [];
@@ -38,6 +38,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Programs" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.programs')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

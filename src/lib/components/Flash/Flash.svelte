@@ -10,7 +10,8 @@
 </script>
 
 <button
-	class="btn flash {flash.type}"
+	tabindex="-1"
+	class="btn flash outline-none {flash.type}"
 	type="button"
 	on:click={handleClick}
 	in:scale={{ duration: 200 }}

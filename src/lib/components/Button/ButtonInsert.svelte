@@ -1,4 +1,5 @@
 <script lang="ts">
+	import i18n from '$lib/i18n';
 	import { plus } from '$lib/icons';
 </script>
 
@@ -6,5 +7,5 @@
 	<div class="flex-none">
 		{@html plus}
 	</div>
-	<span>Insert <slot /></span>
+	<span>{i18n.t('button.insert')} <slot /></span>
 </button>

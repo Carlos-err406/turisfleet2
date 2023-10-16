@@ -12,6 +12,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: IGroupEdit = $modalStore[0].meta.values;
@@ -33,23 +34,25 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal-slim">
-		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Group</svelte:fragment>
+	<ModalBase>
+		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
+			<svelte:fragment slot="title">{i18n.t('title.editGroup')}</svelte:fragment>
 			<Dropdown
-				placeholder="country"
+				placeholder={i18n.t('placeholder.country')}
 				required
 				options={countries}
 				on:select={onCountrySelection}
 				bind:value={values.country}
 				input={countryLabel}
 			>
-				Country
+				{i18n.t('label.country')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="group-edit-tourist-amount">Tourist amount</label>
+				<label data-required="true" for="group-edit-tourist-amount"
+					>{i18n.t('label.touristAmount')}</label
+				>
 				<input
-					placeholder="tourist amount"
+					placeholder={i18n.t('placeholder.touristAmount')}
 					required
 					type="number"
 					id="group-edit-tourist-amount"

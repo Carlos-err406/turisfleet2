@@ -11,11 +11,12 @@
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
 	import SelectMultipleInput from '$lib/components/Inputs/SelectMultipleInput.svelte';
 	import type flashStore from '$lib/stores/flashes';
-	import { LicenseCategory } from '$lib/types/LicenceTypes';
+	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { validateID } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	const values: IDriverEdit = $modalStore[0].meta.values;
@@ -27,7 +28,7 @@
 
 	const triggerInvalidID = () => {
 		flashes.trigger({
-			message: 'Invalid Id number',
+			message: i18n.t('flashes.invalidID'),
 			type: 'error'
 		});
 	};
@@ -40,13 +41,13 @@
 </script>
 
 {#if $modalStore[0]}
-	<ModalBase modalW="w-modal">
+	<ModalBase>
 		<BaseForm footerCols={2} on:submit={edit} on:secondary={close} {flashes}>
-			<svelte:fragment slot="title">Edit Driver</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.editDriver')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="driver-edit-name">Name</label>
+				<label data-required="true" for="driver-edit-name">{i18n.t('label.name')}</label>
 				<input
-					placeholder="name"
+					placeholder={i18n.t('placeholder.name')}
 					required
 					type="text"
 					id="driver-edit-name"
@@ -55,13 +56,13 @@
 			</div>
 			<IdNumberInput bind:value={values.id_number} />
 			<SelectMultipleInput options={categories} required bind:value={values.id_categories}>
-				Licence categories
+				{i18n.t('label.licenseCategories')}
 			</SelectMultipleInput>
 			<div class="col-span-1">
-				<label for="driver-edit-address">Address</label>
+				<label for="driver-edit-address">{i18n.t('label.address')}</label>
 				<textarea
 					class="textarea px-2 max-h-48"
-					placeholder="address"
+					placeholder={i18n.t('placeholder.address')}
 					id="driver-edit-address"
 					bind:value={values.address}
 				/>

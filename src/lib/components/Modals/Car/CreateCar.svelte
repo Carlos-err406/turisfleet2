@@ -13,9 +13,10 @@
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import BaseForm from '$lib/components/Modals/BaseForm.svelte';
 	import type flashStore from '$lib/stores/flashes';
-	import { LicenseCategory } from '$lib/types/LicenceTypes';
+	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: ICarCreate = {
@@ -49,11 +50,11 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Car</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.createCar')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="car-create-plate">Plate number</label>
+				<label data-required="true" for="car-create-plate">{i18n.t('label.plateNumber')}</label>
 				<input
-					placeholder="plate number"
+					placeholder={i18n.t('placeholder.plateNumber')}
 					required
 					type="text"
 					id="car-create-plate"
@@ -61,16 +62,16 @@
 				/>
 			</div>
 			<Dropdown
-				placeholder="licence"
+				placeholder={i18n.t('placeholder.licenseCategory')}
 				input={LicenseCategory.B}
 				required
 				options={categories}
-				on:select={onLicenseSelection}>Licence</Dropdown
+				on:select={onLicenseSelection}>{i18n.t('label.licenseCategory')}</Dropdown
 			>
 			<div>
-				<label data-required="true" for="car-create-brand">Brand</label>
+				<label data-required="true" for="car-create-brand">{i18n.t('label.brand')}</label>
 				<input
-					placeholder="brand"
+					placeholder={i18n.t('placeholder.brand')}
 					required
 					type="text"
 					id="car-create-brand"
@@ -78,9 +79,10 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="car-create-seat-amount">Seat amount</label>
+				<label data-required="true" for="car-create-seat-amount">{i18n.t('label.seatAmount')}</label
+				>
 				<input
-					placeholder="seat amount"
+					placeholder={i18n.t('placeholder.seatAmount')}
 					required
 					type="number"
 					min="0"
@@ -90,10 +92,12 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="car-create-available-km">Available KM</label>
+				<label data-required="true" for="car-create-available-km"
+					>{i18n.t('label.availableKM')}</label
+				>
 				<div class="input-group flex items-center">
 					<input
-						placeholder="available km"
+						placeholder={i18n.t('placeholder.availableKM')}
 						required
 						type="number"
 						id="car-create-available-km"
@@ -104,8 +108,13 @@
 					<span class=" px-3">KM</span>
 				</div>
 			</div>
-			<Dropdown placeholder="driver" required options={[]} on:select={onDriverSelection}>
-				Driver
+			<Dropdown
+				placeholder={i18n.t('placeholder.driver')}
+				required
+				options={[]}
+				on:select={onDriverSelection}
+			>
+				{i18n.t('label.driver')}
 			</Dropdown>
 		</BaseForm>
 	</ModalBase>

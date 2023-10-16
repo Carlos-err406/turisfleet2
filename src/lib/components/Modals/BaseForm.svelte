@@ -1,4 +1,5 @@
 <script lang="ts">
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
 	import Flashes from './../Flash/Flashes.svelte';
 	import FormFooter from './FormFooter.svelte';
@@ -9,13 +10,20 @@
 <div class="grid grid-cols gap-y-3">
 	<h3 class="text-3xl"><slot name="title" /></h3>
 	<Flashes {flashes} />
-	<form action="" class="grid gap-y-4 gap-x-3" on:submit|preventDefault>
+	<form action="" autocomplete="off" class="grid gap-y-4 gap-x-3" on:submit|preventDefault>
 		<slot />
 		<div
 			class="flex items-center justify-end w-full mt-2 gap-3 font-semibold col-span-{footerCols} "
 		>
 			<slot name="footer">
-				<FormFooter on:primary on:secondary />
+				<FormFooter on:primary on:secondary>
+					<svelte:fragment slot="secondary">
+						<slot name="secondary">{i18n.t('button.cancel')}</slot>
+					</svelte:fragment>
+					<svelte:fragment slot="primary">
+						<slot name="primary">{i18n.t('button.submit')}</slot>
+					</svelte:fragment>
+				</FormFooter>
 			</slot>
 		</div>
 	</form>

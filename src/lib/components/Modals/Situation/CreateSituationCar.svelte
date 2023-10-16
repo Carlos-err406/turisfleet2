@@ -8,11 +8,12 @@
 </script>
 
 <script lang="ts">
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
 	import { tomorrow } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
-	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
@@ -45,22 +46,28 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Car Situation</svelte:fragment>
-
-			<Dropdown placeholder="car" input={''} required options={[]} on:select={onCarSelection}>
-				Select Car
-			</Dropdown>
+			<svelte:fragment slot="title">{i18n.t('title.createCarSituation')}</svelte:fragment>
 			<Dropdown
-				placeholder="situation"
-				input={''}
+				placeholder={i18n.t('placeholder.car')}
 				required
 				options={[]}
-				on:select={onSituationSelection}>Situation</Dropdown
+				on:select={onCarSelection}
 			>
+				{i18n.t('label.car')}
+			</Dropdown>
+			<Dropdown
+				placeholder={i18n.t('placeholder.situation')}
+				required
+				options={[]}
+				on:select={onSituationSelection}
+			>
+				{i18n.t('label.situation')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="car-situation-date">Date</label>
+				<label data-required="true" for="car-situation-date">
+					{i18n.t('label.date')}
+				</label>
 				<input
-					placeholder="date"
 					required
 					type="date"
 					min={tomorrow()}
@@ -70,9 +77,10 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="car-situation-date">Return Date</label>
+				<label data-required="true" for="car-situation-date">
+					{i18n.t('label.returnDate')}
+				</label>
 				<input
-					placeholder="date"
 					required
 					type="date"
 					class=""

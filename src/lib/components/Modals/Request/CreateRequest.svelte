@@ -14,6 +14,7 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
 	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
 	let values: RequestCreate = {
@@ -37,13 +38,19 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
-			<svelte:fragment slot="title">Create Request</svelte:fragment>
-			<Dropdown placeholder="group" required options={[]} on:select>Group</Dropdown>
-			<Dropdown placeholder="specific program" options={[]} on:select>Specific Program</Dropdown>
+			<svelte:fragment slot="title">{i18n.t('title.createRequest')}</svelte:fragment>
+			<Dropdown placeholder={i18n.t('placeholder.group')} required options={[]} on:select>
+				{i18n.t('label.group')}
+			</Dropdown>
+			<Dropdown placeholder={i18n.t('placeholder.specificProgram')} options={[]} on:select>
+				{i18n.t('label.specificProgram')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="request-create-start-date">Start date</label>
+				<label data-required="true" for="request-create-start-date"
+					>{i18n.t('label.startDate')}</label
+				>
 				<input
-					placeholder="start date"
+					placeholder={i18n.t('placeholder.startDate')}
 					required
 					type="date"
 					id="request-create-start-date"
@@ -52,9 +59,11 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="request-create-tourist-amount">Tourist amount</label>
+				<label data-required="true" for="request-create-tourist-amount"
+					>{i18n.t('label.touristAmount')}</label
+				>
 				<input
-					placeholder="tourist amount"
+					placeholder={i18n.t('placeholder.touristAmount')}
 					required
 					type="number"
 					min="1"

@@ -4,6 +4,7 @@
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { ICarEdit } from '$lib/components/Modals/Car/EditCar.svelte';
+	import i18n from '$lib/i18n';
 	const data: any[] = [];
 	const headers: string[] = [];
 	const modalStore = getModalStore();
@@ -32,6 +33,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Cars" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.cars')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

@@ -4,7 +4,8 @@
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { IDriverEdit } from '$lib/components/Modals/Driver/EditDriver.svelte';
-	import { LicenseCategory } from '$lib/types/LicenceTypes';
+	import { LicenseCategory } from '$lib/types/LicenseTypes';
+	import i18n from '$lib/i18n';
 	const data: any[] = [];
 	const headers: string[] = [];
 	const modalStore = getModalStore();
@@ -36,7 +37,11 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Drivers" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.drivers')}
+		</svelte:fragment>
+	</Table>
 </div>
 
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

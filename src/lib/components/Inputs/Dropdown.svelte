@@ -6,17 +6,19 @@
 </script>
 
 <script lang="ts">
-	import { v4 } from 'uuid';
-	import { createEventDispatcher } from 'svelte';
+	import i18n from '$lib/i18n';
+	import { downSimple } from '$lib/icons';
+	import type { Placement } from '@floating-ui/dom';
 	import {
+		Autocomplete,
 		popup,
 		type AutocompleteOption,
 		type PopupSettings,
-		Autocomplete,
 		type Transition
 	} from '@skeletonlabs/skeleton';
-	import type { Placement } from '@floating-ui/dom';
+	import { createEventDispatcher } from 'svelte';
 	import type { SlideParams } from 'svelte/transition';
+	import { v4 } from 'uuid';
 	export let options: DropdownOptions[];
 	export let placeholder = '';
 	export let target = v4();
@@ -38,33 +40,46 @@
 		dispatch('select', detail.value);
 	};
 	let settings: PopupSettings = { event, target, placement };
+	let inputElement: HTMLInputElement;
 </script>
 
-<div>
+<div class="">
 	<label for={id} data-required={required}>
 		<slot />
 	</label>
-	<input
-		{required}
-		{id}
-		class="input autocomplete"
-		type="search"
-		name="autocomplete-search"
-		bind:value={input}
-		{placeholder}
-		use:popup={settings}
-	/>
-	<div class="card shadow-lg rounded max-h-[290px] overflow-auto" data-popup={target}>
+	<div class="input-group flex items-center pr-1">
+		<input
+			{id}
+			{required}
+			{placeholder}
+			class="input autocomplete"
+			type="text"
+			name="autocomplete-search"
+			bind:value={input}
+			use:popup={settings}
+			bind:this={inputElement}
+		/>
+		<button class="btn !p-0" type="button" tabindex="-1" on:click={() => inputElement.click()}>
+			{@html downSimple}
+		</button>
+	</div>
+	<div
+		class="card w-fit max-w-sm shadow-lg rounded max-h-[290px] overflow-auto"
+		data-popup={target}
+		tabindex="-1"
+	>
 		<Autocomplete
-			regionEmpty="p-2"
 			{transitions}
 			{transitionInParams}
 			{transitionOutParams}
 			{transitionIn}
 			{transitionOut}
-			bind:input
 			{options}
+			bind:input
+			regionEmpty="p-2 w-fit"
+			emptyState={i18n.t('misc.noEntriesFound')}
 			on:selection={onSelection}
+			on:click
 		/>
 	</div>
 </div>

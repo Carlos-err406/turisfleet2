@@ -30,6 +30,8 @@
 </script>
 
 <script lang="ts">
+	import i18n from '$lib/i18n';
+
 	export let required = false;
 	export let value: DurationInputValue = {
 		days: '',
@@ -39,7 +41,7 @@
 </script>
 
 <div>
-	<label for="" data-required={required}><slot>Duration (days : hours : minutes)</slot></label>
+	<label for="" data-required={required}><slot>{i18n.t('label.duration')}</slot></label>
 	<div class="flex items-center gap-1">
 		<input
 			class="input"
@@ -48,7 +50,7 @@
 			min="0"
 			max="9999999"
 			bind:value={value.days}
-			placeholder="days"
+			placeholder={i18n.t('placeholder.days')}
 		/>
 		<span class="input-group-divider">:</span>
 		<input
@@ -58,7 +60,7 @@
 			min="0"
 			max="9999999"
 			bind:value={value.hours}
-			placeholder="hours"
+			placeholder={i18n.t('placeholder.hours')}
 		/>
 		<span class="input-group-divider">:</span>
 		<input
@@ -68,7 +70,7 @@
 			min="0"
 			max="99999999"
 			bind:value={value.minutes}
-			placeholder="minutes"
+			placeholder={i18n.t('placeholder.minutes')}
 		/>
 	</div>
 </div>

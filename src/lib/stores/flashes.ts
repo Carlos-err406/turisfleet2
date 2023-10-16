@@ -9,7 +9,7 @@ export interface FlashType extends FlashMessage {
 	id: string;
 }
 export const getFlashStore = () => {
-	const { update, subscribe, set } = writable<FlashType[]>();
+	const { update, subscribe, set } = writable<FlashType[]>([]);
 
 	const trigger = (flash: FlashMessage) => {
 		const id = v4();

@@ -2,6 +2,7 @@
 	import { Modals } from '$lib/components/Modals';
 	import type { IUserEdit } from '$lib/components/Modals/User/EditUser.svelte';
 	import Table from '$lib/components/Table/Table.svelte';
+	import i18n from '$lib/i18n';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	const modalStore = getModalStore();
@@ -36,6 +37,10 @@
 </script>
 
 <div class="overflow-hidden">
-	<Table tableName="Users" {data} {headers} keys={headers} on:insert={handleCreate} />
+	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+		<svelte:fragment slot="table-name">
+			{i18n.t('title.users')}
+		</svelte:fragment>
+	</Table>
 </div>
 <button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

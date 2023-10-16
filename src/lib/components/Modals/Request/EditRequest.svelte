@@ -10,8 +10,9 @@
 
 <script lang="ts">
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
-	import { today, tomorrow } from '$lib/utils';
+	import { today } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
@@ -33,13 +34,18 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
-			<svelte:fragment slot="title">Edit Request</svelte:fragment>
-			<Dropdown placeholder="copilot" required options={[]} on:select>Copilot</Dropdown>
-			<Dropdown placeholder="car" required options={[]} on:select>Car</Dropdown>
+			<svelte:fragment slot="title">{i18n.t('title.editRequest')}</svelte:fragment>
+			<Dropdown placeholder={i18n.t('placeholder.copilot')} required options={[]} on:select>
+				{i18n.t('label.copilot')}
+			</Dropdown>
+			<Dropdown placeholder={i18n.t('placeholder.car')} required options={[]} on:select>
+				{i18n.t('label.car')}
+			</Dropdown>
 			<div>
-				<label data-required="true" for="request-edit-start-date">Date</label>
+				<label data-required="true" for="request-edit-start-date">{i18n.t('label.startDate')}</label
+				>
 				<input
-					placeholder="start date"
+					placeholder={i18n.t('placeholder.startDate')}
 					required
 					type="date"
 					id="request-edit-start-date"
@@ -48,9 +54,11 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="request-edit-tourist-amount">Tourist amount</label>
+				<label data-required="true" for="request-edit-tourist-amount"
+					>{i18n.t('label.touristAmount')}</label
+				>
 				<input
-					placeholder="tourist amount"
+					placeholder={i18n.t('placeholder.touristAmount')}
 					required
 					type="number"
 					min="1"
@@ -60,8 +68,13 @@
 				/>
 			</div>
 			<div class="col-span-2">
-				<Dropdown placeholder="specific program" required options={[]} on:select>
-					Specific program
+				<Dropdown
+					placeholder={i18n.t('placeholder.specificProgram')}
+					required
+					options={[]}
+					on:select
+				>
+					{i18n.t('label.specificProgram')}
 				</Dropdown>
 			</div>
 		</BaseForm>

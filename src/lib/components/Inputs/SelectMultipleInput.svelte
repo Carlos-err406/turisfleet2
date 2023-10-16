@@ -6,16 +6,20 @@
 	export let value: any[] = [];
 	export let options: DropdownOptions[] = [];
 	export let id = v4();
-	const handleItemClick = (item: typeof value) => {
+	const handleChipClick = (item: typeof value) => {
 		value = value.filter((i) => item !== i);
 	};
 </script>
 
 <div class="flex flex-col">
 	<label for={id} data-required={required}> <slot /></label>
-	<select {id} {required} class="select pr-2" multiple bind:value on:select>
+	<select {id} {required} class="select pr-2" multiple bind:value on:select|preventDefault>
 		{#each options as { label, value } (label)}
-			<option class="rounded" {value}>{label}</option>
+			<option
+				on:click|preventDefault
+				class="rounded !text-white focus:text-white active:text-white"
+				{value}>{label}</option
+			>
 		{/each}
 	</select>
 	<div class="flex justify-center my-2">
@@ -25,7 +29,7 @@
 					type="button"
 					class="btn py-0 px-2 variant-filled-surface"
 					transition:scale
-					on:click={() => handleItemClick(i)}
+					on:click={() => handleChipClick(i)}
 				>
 					{i} &Cross;
 				</button>
@@ -33,4 +37,3 @@
 		</div>
 	</div>
 </div>
-<!-- </div> -->

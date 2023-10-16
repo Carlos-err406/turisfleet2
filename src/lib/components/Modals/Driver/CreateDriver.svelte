@@ -9,10 +9,10 @@
 
 <script lang="ts">
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import SelectMultipleInput from '$lib/components/Inputs/SelectMultipleInput.svelte';
+	import i18n from '$lib/i18n';
 	import type flashStore from '$lib/stores/flashes';
-	import { LicenseCategory } from '$lib/types/LicenceTypes';
+	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
@@ -33,7 +33,7 @@
 
 	const triggerInvalidID = () => {
 		flashes.trigger({
-			message: 'Invalid Id number',
+			message: i18n.t('flashes.invalidID'),
 			type: 'error'
 		});
 	};
@@ -72,11 +72,11 @@
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} on:submit={create} on:secondary={close} {flashes}>
-			<svelte:fragment slot="title">Create Driver</svelte:fragment>
+			<svelte:fragment slot="title">{i18n.t('title.createDriver')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="driver-create-name">Name</label>
+				<label data-required="true" for="driver-create-name">{i18n.t('label.name')}</label>
 				<input
-					placeholder="name"
+					placeholder={i18n.t('placeholder.name')}
 					required
 					type="text"
 					id="driver-create-name"
@@ -85,13 +85,13 @@
 			</div>
 			<IdNumberInput bind:value={values.id_number} />
 			<SelectMultipleInput options={categories} required bind:value={values.id_categories}>
-				Licence categories
+				{i18n.t('label.licenseCategories')}
 			</SelectMultipleInput>
 			<div class="col-span-1">
-				<label for="driver-create-address">Address</label>
+				<label for="driver-create-address">{i18n.t('label.address')}</label>
 				<textarea
-					class="textarea px-2 max-h-48"
-					placeholder="address"
+					class="textarea px-2 max-h-[157px]"
+					placeholder={i18n.t('placeholder.address')}
 					id="driver-create-address"
 					bind:value={values.address}
 				/>

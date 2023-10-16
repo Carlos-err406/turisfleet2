@@ -1,4 +1,5 @@
 <script lang="ts">
+	import i18n from '$lib/i18n';
 	import { search } from '$lib/icons';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
@@ -15,7 +16,7 @@
 	<input
 		{disabled}
 		type="text"
-		placeholder="search"
+		placeholder={i18n.t('placeholder.search')}
 		class="outline-none input rounded-r-none pl-4"
 		bind:value={searchValue}
 	/>
