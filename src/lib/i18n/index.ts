@@ -46,6 +46,7 @@ const i18n = rosetta({
 			driverSituations: 'Driver Situations'
 		},
 		label: {
+			selectADate:"Select a date",
 			language: 'Language',
 			copilot: 'Copilot',
 			newPassword: 'New password',
@@ -157,6 +158,7 @@ const i18n = rosetta({
 			invalidID: 'Invalid ID number',
 			passwordsMustMatch: 'Passwords must match'
 		},
+
 		misc: {
 			noData: 'No Data to display',
 			noEntriesFound: 'No entries found',
@@ -207,6 +209,7 @@ i18n.set('es', {
 		driverSituations: 'Situaciones del conductor'
 	},
 	label: {
+		selectADate:"Seleccione una fecha",
 		language: 'Idioma',
 		copilot: 'Copiloto',
 		newPassword: 'Nueva contraseña',
