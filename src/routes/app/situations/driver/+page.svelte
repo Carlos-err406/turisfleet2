@@ -1,52 +1,58 @@
 <script lang="ts">
-	import { Modals } from '$lib/components/Modals';
-	import type { IDriverSituationEdit } from '$lib/components/Modals/Situation/EditSituationDriver.svelte';
+	import {
+		toastSuccessfullyCreated,
+		toastSuccessfullyDeleted,
+		toastSuccessfullyEdited
+	} from '$lib';
+	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
-	import { getFlashStore } from '$lib/stores/flashes';
-	import { tomorrow } from '$lib/utils';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import dayjs from 'dayjs';
-	const modalStore = getModalStore();
+	import { getModalStore,getToastStore } from '@skeletonlabs/skeleton';
+const toastStore = getToastStore()
 	const data: any[] = [];
 	const headers: string[] = [];
-	const handleCreate = () => {
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.CREATE_SITUATION_DRIVER,
-				meta: { flashes: getFlashStore() },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+	const modalStore = getModalStore();
+
+	const handleCreateDriverSituation = () => {
+		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, (created) => {
+			console.log(created);
+			toastSuccessfullyCreated(toastStore);
 		});
 	};
-	const handleEdit = () => {
-		const clickedDriverSituation: IDriverSituationEdit = {
-			driver_id_driver: 0,
-			situation_id_situation: 0,
-			date: tomorrow(),
-			return_date: dayjs('Dic 20, 2023').toDate()
-		};
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.EDIT_SITUATION_DRIVER,
-				meta: { flashes: getFlashStore(), values: clickedDriverSituation },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+
+	const handleEditDriverSituation = ({ detail }: CustomEvent) => {
+		handleEdit(modalStore, Modals.EDIT_SITUATION_DRIVER, detail, (edited) => {
+			console.log(edited);
+			toastSuccessfullyEdited(toastStore);
 		});
 	};
+
+	const handleDeleteDriverSituation = ({ detail }: CustomEvent) => {
+		const target = detail.name;
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, (deleted) => {
+			console.log(deleted);
+			toastSuccessfullyDeleted(toastStore);
+		});
+	};
+
+	const handlePageChange = ({ detail }: CustomEvent) => {};
+	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 
 <div class="overflow-hidden">
-	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+	<Table
+		{data}
+		{headers}
+		on:insert={handleCreateDriverSituation}
+		on:edit={handleEditDriverSituation}
+		on:delete={handleDeleteDriverSituation}
+		on:page={handlePageChange}
+		on:amount={handleAmountChange}
+		on:change-order={handleOrderChange}
+	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.driverSituations')}
 		</svelte:fragment>
 	</Table>
 </div>
-<button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

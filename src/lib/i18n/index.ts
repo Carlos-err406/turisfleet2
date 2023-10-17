@@ -46,7 +46,7 @@ const i18n = rosetta({
 			driverSituations: 'Driver Situations'
 		},
 		label: {
-			selectADate:"Select a date",
+			selectADate: 'Select a date',
 			language: 'Language',
 			copilot: 'Copilot',
 			newPassword: 'New password',
@@ -154,11 +154,17 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
+			created: 'Successfully created',
+			deleted: 'Successfully deleted',
+			updated: 'Successfully updated',
 			passwordChanged: 'Password successfully updated',
 			invalidID: 'Invalid ID number',
 			passwordsMustMatch: 'Passwords must match'
 		},
 
+		table: {
+			header: {}
+		},
 		misc: {
 			noData: 'No Data to display',
 			noEntriesFound: 'No entries found',
@@ -209,7 +215,7 @@ i18n.set('es', {
 		driverSituations: 'Situaciones del conductor'
 	},
 	label: {
-		selectADate:"Seleccione una fecha",
+		selectADate: 'Seleccione una fecha',
 		language: 'Idioma',
 		copilot: 'Copiloto',
 		newPassword: 'Nueva contraseña',
@@ -317,9 +323,15 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		created: 'Creado satisfactoriamente',
+		deleted: 'Eliminado satisfactoriamente',
+		updated: 'Actualizado satisfactoriamente',
 		passwordChanged: 'Contraseña actualizada satisfactoriamente',
 		invalidID: 'Número de carnet de identidad inválido',
 		passwordsMustMatch: 'Las contraseñas deben coincidir'
+	},
+	table: {
+		header: {}
 	},
 	misc: {
 		noData: 'Sin datos para mostrar',

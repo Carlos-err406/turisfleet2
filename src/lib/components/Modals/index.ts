@@ -1,29 +1,30 @@
-import type { ModalComponent } from '@skeletonlabs/skeleton';
+import { getFlashStore } from '$lib/stores/flashes';
+import type { ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
 import CreateCar from './Car/CreateCar.svelte';
+import EditCar from './Car/EditCar.svelte';
+import DeleteConfirmation from './DeleteConfirmation.svelte';
 import CreateDriver from './Driver/CreateDriver.svelte';
+import EditDriver from './Driver/EditDriver.svelte';
 import CreateGroup from './Group/CreateGroup.svelte';
+import EditGroup from './Group/EditGroup.svelte';
+import LanguageSelection from './Lang/LangSelection.svelte';
 import CreateProgram from './Program/CreateProgram.svelte';
 import CreateSpecificProgram from './Program/CreateProgramSpecific.svelte';
+import EditProgram from './Program/EditProgram.svelte';
+import EditProgramSpecific from './Program/EditProgramSpecific.svelte';
+import DateSelect from './Reports/DateSelect.svelte';
+import RequestSelect from './Reports/RequestSelect.svelte';
 import CreateRequest from './Request/CreateRequest.svelte';
+import EditRequest from './Request/EditRequest.svelte';
 import CreateSituation from './Situation/CreateSituation.svelte';
 import CreateSituationCar from './Situation/CreateSituationCar.svelte';
 import CreateSituationDriver from './Situation/CreateSituationDriver.svelte';
-import CreateUser from './User/CreateUser.svelte';
-import LanguageSelection from './Lang/LangSelection.svelte';
-import ChangePassword from './User/ChangePassword.svelte';
-import EditCar from './Car/EditCar.svelte';
-import DeleteConfirmation from './DeleteConfirmation.svelte';
-import EditDriver from './Driver/EditDriver.svelte';
-import EditGroup from './Group/EditGroup.svelte';
-import EditProgram from './Program/EditProgram.svelte';
-import EditProgramSpecific from './Program/EditProgramSpecific.svelte';
-import EditRequest from './Request/EditRequest.svelte';
 import EditSituation from './Situation/EditSituation.svelte';
 import EditSituationCar from './Situation/EditSituationCar.svelte';
 import EditSituationDriver from './Situation/EditSituationDriver.svelte';
+import ChangePassword from './User/ChangePassword.svelte';
+import CreateUser from './User/CreateUser.svelte';
 import EditUser from './User/EditUser.svelte';
-import DateSelect from './Reports/DateSelect.svelte';
-import RequestSelect from './Reports/RequestSelect.svelte';
 
 export enum Modals {
 	CREATE_USER = 'createUser',
@@ -82,3 +83,55 @@ const modalRegistry: Record<Modals, ModalComponent> = {
 };
 
 export default modalRegistry;
+
+export const handleCreate = <T>(
+	modalStore: ModalStore,
+	modal: Modals,
+	onResolve: (r: T) => void
+) => {
+	new Promise<any>((resolve) => {
+		modalStore.trigger({
+			type: 'component',
+			component: modal,
+			meta: { flashes: getFlashStore() },
+			response: (r: T) => r && resolve(r)
+		});
+	}).then((r: T) => {
+		onResolve(r);
+	});
+};
+
+export const handleEdit = <T>(
+	modalStore: ModalStore,
+	modal: Modals,
+	values: T,
+	onResolve: (r: T) => void
+) => {
+	new Promise<any>((resolve) => {
+		modalStore.trigger({
+			type: 'component',
+			component: modal,
+			meta: { flashes: getFlashStore(), values },
+			response: (r: T) => r && resolve(r)
+		});
+	}).then((r: T) => {
+		onResolve(r);
+	});
+};
+export const handleDelete = <T>(
+	modalStore: ModalStore,
+	modal: Modals,
+	target: string,
+	onResolve: (r: T) => void
+) => {
+	new Promise<any>((resolve) => {
+		modalStore.trigger({
+			type: 'component',
+			component: modal,
+			meta: { flashes: getFlashStore(), values: { target } },
+			response: (r: T) => r && resolve(r)
+		});
+	}).then((r: T) => {
+		onResolve(r);
+	});
+};

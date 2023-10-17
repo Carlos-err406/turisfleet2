@@ -23,3 +23,5 @@ export const lock = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="
 export const globe = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/globe.svg#globe"></use></svg>`;
 export const settings = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/settings.svg#settings"></use></svg>`;
 export const alertTriangle = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/alert-triangle.svg#alertTriangle"></use></svg>`;
+export const trash = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/trash.svg#trash"></use></svg>`;
+export const edit = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/edit.svg#edit"></use></svg>`;

@@ -23,7 +23,11 @@
 		return true;
 	};
 	const edit = () => {
-		validate() && console.log(values);
+		if (validate()) {
+			// TODO just do it!
+			$modalStore[0].response?.(values);
+			close();
+		}
 	};
 	const triggerChangePassword = () => {
 		const changePasswordSettings: ModalSettings = {

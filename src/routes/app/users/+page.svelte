@@ -1,46 +1,57 @@
 <script lang="ts">
-	import { Modals } from '$lib/components/Modals';
-	import type { IUserEdit } from '$lib/components/Modals/User/EditUser.svelte';
+	import {
+		toastSuccessfullyCreated,
+		toastSuccessfullyDeleted,
+		toastSuccessfullyEdited
+	} from '$lib';
+	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
-	import { getFlashStore } from '$lib/stores/flashes';
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore,getToastStore } from '@skeletonlabs/skeleton';
+const toastStore = getToastStore()
+	const data: any[] = [{ username: 'USERNAME' }];
+	const headers: string[] = ['username'];
 	const modalStore = getModalStore();
-	const data: any[] = [];
-	const headers: string[] = [];
-	const handleCreate = () => {
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.CREATE_USER,
-				meta: { flashes: getFlashStore() },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+
+	const handleCreateUser = () => {
+		handleCreate(modalStore, Modals.CREATE_USER, (created) => {
+			console.log(created);
+			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
-	const handleEdit = () => {
-		const clickedUser: IUserEdit = { username: 'charlie' };
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.EDIT_USER,
-				meta: { flashes: getFlashStore(), values: clickedUser },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+	const handleEditUser = ({ detail }: CustomEvent) => {
+		handleEdit(modalStore, Modals.EDIT_USER, detail, (edited) => {
+			console.log(edited);
+			toastSuccessfullyEdited(toastStore);
 		});
 	};
+
+	const handleDeleteUser = ({ detail }: CustomEvent) => {
+		console.log(detail.username);
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, detail.username, (r) => {
+			console.log(r);
+			toastSuccessfullyDeleted(toastStore);
+		});
+	};
+	const handlePageChange = ({ detail }: CustomEvent) => {};
+	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 
 <div class="overflow-hidden">
-	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+	<Table
+		{data}
+		{headers}
+		on:insert={handleCreateUser}
+		on:edit={handleEditUser}
+		on:delete={handleDeleteUser}
+		on:page={handlePageChange}
+		on:amount={handleAmountChange}
+		on:change-order={handleOrderChange}
+	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.users')}
 		</svelte:fragment>
 	</Table>
 </div>
-<button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

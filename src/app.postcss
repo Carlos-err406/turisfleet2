@@ -1,4 +1,3 @@
-/* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -38,4 +37,68 @@ select {
 label[data-required='true']::after {
 	content: ' *';
 	color: orange;
+}
+
+table {
+	width: 100%;
+	background-color: rgb(var(--color-surface-100));
+	border-radius: var(--theme-rounded-container);
+}
+table thead {
+	border-bottom-width: 1px;
+	border-color: rgb(var(--color-surface-500) / 0.2);
+	background-color: rgb(var(--color-surface-200));
+}
+table tfoot {
+	background-color: rgb(var(--color-surface-100));
+}
+table thead tr {
+	text-align: left;
+	text-transform: capitalize;
+}
+table thead th {
+	padding: 1rem /* 16px */;
+	font-weight: 700;
+}
+table tbody tr {
+	border-bottom-width: 1px;
+	border-color: rgb(var(--color-surface-500) / 0.2);
+}
+table tbody tr:nth-child(even) {
+	background-color: rgb(var(--color-surface-500) / 0.05);
+}
+
+table tbody td {
+	white-space: nowrap;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	padding-top: 1rem;
+	padding-bottom: 1rem;
+	vertical-align: top;
+	font-size: 0.875rem;
+	line-height: 1.25rem;
+}
+
+table tfoot tr {
+	text-align: left;
+	text-transform: capitalize;
+}
+table tfoot th,
+table tfoot td {
+	padding: 1rem;
+}
+table tfoot th,
+table tfoot td {
+	padding: 1rem;
+}
+
+.dark table {
+	background-color: rgb(var(--color-surface-800));
+}
+.dark table thead {
+	background-color: rgb(var(--color-surface-700));
+}
+
+.dark table tfoot {
+	background-color: rgb(var(--color-surface-800));
 }

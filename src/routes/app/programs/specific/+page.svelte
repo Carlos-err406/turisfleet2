@@ -1,51 +1,59 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import {
+		toastSuccessfullyCreated,
+		toastSuccessfullyDeleted,
+		toastSuccessfullyEdited
+	} from '$lib';
+	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
-	import { Modals } from '$lib/components/Modals';
-	import { getFlashStore } from '$lib/stores/flashes';
-	import type { ISpecificProgramEdit } from '$lib/components/Modals/Program/EditProgramSpecific.svelte';
 	import i18n from '$lib/i18n';
-	const modalStore = getModalStore();
+	import { getModalStore,getToastStore } from '@skeletonlabs/skeleton';
+const toastStore = getToastStore()
 	const data: any[] = [];
 	const headers: string[] = [];
-	const handleCreate = () => {
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.CREATE_PROGRAM_SPECIFIC,
-				meta: { flashes: getFlashStore() },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+
+	const modalStore = getModalStore();
+
+	const handleCreateSpecificProgram = () => {
+		handleCreate(modalStore, Modals.CREATE_PROGRAM_SPECIFIC, (created) => {
+			console.log(created);
+			toastSuccessfullyCreated(toastStore);
 		});
 	};
-	const handleEdit = () => {
-		const clickedSpecificProgram: ISpecificProgramEdit = {
-			id_program: '',
-			description: 'run4theh1111z',
-			start: '13:30',
-			duration: '1 days 6 hours 4 minutes',
-			km: 100
-		};
-		new Promise<any>((resolve) => {
-			modalStore.trigger({
-				type: 'component',
-				component: Modals.EDIT_PROGRAM_SPECIFIC,
-				meta: { flashes: getFlashStore(), values: clickedSpecificProgram },
-				response: (r) => resolve(r)
-			});
-		}).then((r) => {
-			console.log(r);
+
+	const handleEditSpecificProgram = ({ detail }: CustomEvent) => {
+		handleEdit(modalStore, Modals.EDIT_PROGRAM_SPECIFIC, detail, (edited) => {
+			console.log(edited);
+			toastSuccessfullyEdited(toastStore);
 		});
 	};
+
+	const handleDeleteSpecificProgram = ({ detail }: CustomEvent) => {
+		const target = detail.name;
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, (deleted) => {
+			console.log(deleted);
+			toastSuccessfullyDeleted(toastStore);
+		});
+	};
+
+	const handlePageChange = ({ detail }: CustomEvent) => {};
+	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 
 <div class="overflow-hidden">
-	<Table {data} {headers} keys={headers} on:insert={handleCreate}>
+	<Table
+		{data}
+		{headers}
+		on:insert={handleCreateSpecificProgram}
+		on:edit={handleEditSpecificProgram}
+		on:delete={handleDeleteSpecificProgram}
+		on:page={handlePageChange}
+		on:amount={handleAmountChange}
+		on:change-order={handleOrderChange}
+	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.specificPrograms')}
 		</svelte:fragment>
 	</Table>
 </div>
-<button class="btn variant-filled-primary" on:click={handleEdit}>show edit modal</button>

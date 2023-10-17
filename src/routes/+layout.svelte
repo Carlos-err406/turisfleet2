@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Loading from '$lib/components/Layout/Loading.svelte';
 	import modalRegistry from '$lib/components/Modals';
 	import { clientWidth, lang } from '$lib/stores';
 	import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/dom';
@@ -11,7 +12,6 @@
 	} from '@skeletonlabs/skeleton';
 	import { scale } from 'svelte/transition';
 	import '../app.postcss';
-	import Loading from '$lib/components/Layout/Loading.svelte';
 
 	if (!$lang) $lang = 'en';
 
