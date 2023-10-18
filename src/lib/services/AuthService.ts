@@ -1,60 +1,41 @@
-import CustomError from '../CustomError';
+import CustomError from '$lib/CustomError';
+import { ErrorCode } from '$lib/types/ErrorCodes';
 import * as proxy from './Base/ProxyService';
-import { GET } from './Base/LocalService';
-export const login = async (auth: LoginDTO): Promise<LoggedUserDTO> => {
-	//TODO change endpoint when api is ready
-	//   const response = await fetch('/proxy', {
-	const response = await fetch('/api/auth/login', {
+import type { RoleType } from './UserService';
+
+export const login = async (auth: ILogin): Promise<ILoggedUser> => {
+	const response = await fetch(proxy.URL, {
 		method: 'POST',
 		body: JSON.stringify(auth),
 		headers: {
-			'Content-Type': 'application/json',
-			[proxy.ENDPOINT_HEADER]: '/login'
+			[proxy.ENDPOINT_HEADER]: '/security/login',
+			'Content-Type': 'application/json'
 		}
 	});
-
-	const json = await response.json();
 	if (response.status === 401) {
-		const { exceptionID, message } = json;
-		throw new CustomError(exceptionID, message);
-	}
-
-	return json;
+		throw new CustomError(ErrorCode.UNAUTHORIZED, 'unauthorized');
+	} else return response.json();
 };
 
 export const refresh = async () => {
-	//TODO change endpoint when api is ready
-	const proxyEndpoint = '/api/auth/refresh';
-	// const proxyEndpoint = "/proxy";
-	const refreshEndpoint = '/refresh';
-	const headers = { 'Content-Type': 'application/json', [proxy.ENDPOINT_HEADER]: refreshEndpoint };
-
-	const response = await fetch(proxyEndpoint, {
-		method: 'POST',
+	return fetch(proxy.buildUrl('', '/refresh'), {
 		body: null,
-		headers: headers
+		method: 'POST',
+		headers: { [proxy.ENDPOINT_HEADER]: '/security/refresh' }
 	});
-
-	return response;
 };
 
 export const logout = async () => {
 	await refresh();
-	return proxy.PROXY_DELETE('/logout');
+	return proxy.PROXY_DELETE('/security/logout');
 };
 
-export const getUser = async (): Promise<LoggedUserDTO> => {
-	return await GET('/auth/refresh');
-};
-
-export interface LoginDTO {
+export interface ILogin {
 	username: string;
 	password: string;
-	// captcha: string;
 }
-export interface LoggedUserDTO {
+export interface ILoggedUser {
 	id_user: number;
-	role_name: 'administrator' | 'driver' | 'agent' | 'support' | '';
-	id_role: number;
+	role: RoleType;
 	username: string;
 }

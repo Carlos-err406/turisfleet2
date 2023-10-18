@@ -5,17 +5,21 @@
 </script>
 
 <script lang="ts">
-	import type flashStore from '$lib/stores/flashes';
+	import i18n from '$lib/i18n';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let currentPassword: string = '';
 	let values: IChangePassword = {
 		password: ''
 	};
+	flashes.trigger({
+		message: 'work in progress',
+		type: 'warning'
+	});
 	const close = () => {
 		modalStore.close();
 	};
@@ -48,7 +52,7 @@
 		<BaseForm footerCols={1} {flashes} on:submit={change} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.changePassword')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-edit-current-password">
+				<label class="required" for="user-edit-current-password">
 					{i18n.t('label.currentPassword')}
 				</label>
 				<input
@@ -60,7 +64,7 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="user-edit-password">{i18n.t('label.newPassword')}</label>
+				<label class="required" for="user-edit-password">{i18n.t('label.newPassword')}</label>
 				<input
 					required
 					type="password"

@@ -34,7 +34,7 @@
 			<div class="flex flex-col gap-0.5 items-start justify-center w-fit">
 				{#if $loggedUser}
 					<span class="text-lg font-semibold">{$loggedUser.username}</span>
-					<span class="text-sm text-surface-500-400-token">{$loggedUser.role_name}</span>
+					<span class="text-sm text-surface-500-400-token">{$loggedUser.role}</span>
 				{/if}
 			</div>
 			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>

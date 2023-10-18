@@ -46,6 +46,10 @@ const i18n = rosetta({
 			driverSituations: 'Driver Situations'
 		},
 		label: {
+			administrator: 'Administrator',
+			agent: 'Agent',
+			support: 'support',
+			createOne: 'Create one',
 			selectADate: 'Select a date',
 			language: 'Language',
 			copilot: 'Copilot',
@@ -57,7 +61,7 @@ const i18n = rosetta({
 			situationType: 'Situation type',
 			situationName: 'Name of the situation',
 			car: 'Car',
-			carAndDriver: 'Car and driver',
+			car_driver: 'Car and driver',
 			duration: 'Duration (days : hours : minutes)',
 			distanceKM: 'Distance in KM',
 			program: 'Program',
@@ -154,6 +158,16 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
+			noProgramsToCreateSpecificProgramFrom: 'No programs to create specific program from',
+			noProgramsToEditSpecificProgramFrom: 'No programs to create specific program from',
+			noDriverToAssignToCar: 'No driver to assign to car',
+			invalidPlateNumber: 'Invalid plate number, should start with a letter followed by 6 digits',
+			noCarsToCreateSituations: 'No cars to create situations from',
+			noCarsToEditSituations: 'No cars to create situations from',
+			noDriversToCreateSituations: 'No drivers to create situations from',
+			noDriversToEditSituations: 'No drivers to create situations from',
+			noSituationTypesToCreateSituations: 'No situation types to create situations from',
+			noSituationTypesToEditSituations: 'No situation types to create situations from',
 			created: 'Successfully created',
 			deleted: 'Successfully deleted',
 			updated: 'Successfully updated',
@@ -163,7 +177,36 @@ const i18n = rosetta({
 		},
 
 		table: {
-			header: {}
+			header: {
+				duration_flat:"Duration",
+				role_i18n: 'Role',
+				role: 'Role',
+				username: 'Username',
+				license_categories_flat: 'License categories',
+				date: 'Date',
+				return_date: 'Return date',
+				description: 'Description',
+				situation_type_i18n: 'Situation type',
+				start: 'Starts at',
+				duration: 'Duration',
+				km: 'Kilometers',
+				license_categories: 'Categories',
+				situation_name: 'Situation name',
+				situation_type: 'Situation type',
+				program_name: 'Program name',
+				category: 'Category',
+				plate_number: 'Plate number',
+				brand: 'Brand',
+				license: 'License',
+				seat_amount: 'Seat amount',
+				available_km: 'Available KM',
+				id_number: 'ID number',
+				name: 'Name',
+				license_category: 'License category',
+				address: 'Address',
+				tourist_amount: 'Tourist amount',
+				country: 'Country'
+			}
 		},
 		misc: {
 			noData: 'No Data to display',
@@ -215,6 +258,10 @@ i18n.set('es', {
 		driverSituations: 'Situaciones del conductor'
 	},
 	label: {
+		administrator: 'Administrador',
+		agent: 'Agente',
+		support: 'Soporte',
+		createOne: 'Crear uno',
 		selectADate: 'Seleccione una fecha',
 		language: 'Idioma',
 		copilot: 'Copiloto',
@@ -226,7 +273,7 @@ i18n.set('es', {
 		situationType: 'Tipo de situación',
 		situationName: 'Nombre de la situación',
 		car: 'Coche',
-		carAndDriver: 'Coche y conductor',
+		car_driver: 'Coche y conductor',
 		duration: 'Duración (días : horas : minutos)',
 		distanceKM: 'Distancia en KM',
 		program: 'Programa',
@@ -323,6 +370,19 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		noProgramsToCreateSpecificProgramFrom:
+			'No hay programas con los que crear programas específicos',
+		noProgramsToEditSpecificProgramFrom:
+			'No hay programas con los que editar programas específicos',
+		noDriverToAssignToCar: 'No hay conductores para asignar al coche',
+		invalidPlateNumber:
+			'Número de chapa inválido, debe comenzar con una letra seguida por 6 dígitos',
+		noCarsToCreateSituations: 'No hay coches para crear situaciones',
+		noCarsToEditSituations: 'No hay coches para editar situaciones',
+		noDriversToCreateSituations: 'No hay conductores para crear situaciones',
+		noDriversToEditSituations: 'No hay conductores para editar situaciones',
+		noSituationTypesToCreateSituations: 'No hay tipos de situaciones para crear situaciones',
+		noSituationTypesToEditSituations: 'No hay tipos de situaciones para editar situaciones',
 		created: 'Creado satisfactoriamente',
 		deleted: 'Eliminado satisfactoriamente',
 		updated: 'Actualizado satisfactoriamente',
@@ -331,7 +391,36 @@ i18n.set('es', {
 		passwordsMustMatch: 'Las contraseñas deben coincidir'
 	},
 	table: {
-		header: {}
+		header: {
+			duration_flat:"Duración",
+			role_i18n: 'Rol',
+			role: 'Rol',
+			username: 'Nombre de usuario',
+			license_categories_flat: 'Categorías de licencia',
+			date: 'Fecha',
+			return_date: 'Fecha de retorno',
+			situation_type_i18n: 'Tipo de situación',
+			description: 'Descripción',
+			start: 'Comienza a la(s)',
+			duration: 'Duración',
+			km: 'Kilómetros',
+			license_categories: 'Categorías',
+			situation_name: 'Nombre de la situación',
+			situation_type: 'Tipo de situación',
+			program_name: 'Nombre del programa',
+			category: 'Categoría',
+			plate_number: 'Número de chapa',
+			brand: 'Marca',
+			license: 'Licencia',
+			seat_amount: 'Cantidad de asientos',
+			available_km: 'KM Disponibles',
+			id_number: 'Carnet',
+			name: 'Nombre',
+			license_category: 'Licencia',
+			address: 'Dirección',
+			tourist_amount: 'Cantidad de turistas',
+			country: 'País'
+		}
 	},
 	misc: {
 		noData: 'Sin datos para mostrar',

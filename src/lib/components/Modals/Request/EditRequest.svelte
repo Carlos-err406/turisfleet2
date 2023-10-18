@@ -11,13 +11,13 @@
 <script lang="ts">
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
-	import type flashStore from '$lib/stores/flashes';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { today } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IRequestEdit = $modalStore[0].meta.values;
 	const close = () => {
 		modalStore.close();
@@ -42,8 +42,7 @@
 				{i18n.t('label.car')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="request-edit-start-date">{i18n.t('label.startDate')}</label
-				>
+				<label class="required" for="request-edit-start-date">{i18n.t('label.startDate')}</label>
 				<input
 					placeholder={i18n.t('placeholder.startDate')}
 					required
@@ -54,7 +53,7 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="request-edit-tourist-amount"
+				<label class="required" for="request-edit-tourist-amount"
 					>{i18n.t('label.touristAmount')}</label
 				>
 				<input

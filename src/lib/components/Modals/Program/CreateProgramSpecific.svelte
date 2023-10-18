@@ -1,38 +1,56 @@
-<script context="module" lang="ts">
-	export interface ISpecificProgramCreate {
-		id_program: string | number;
-		description: string;
-		start: Date | string;
-		duration: string; //interval
-		km: number;
-	}
-</script>
-
 <script lang="ts">
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import Dropdown, { type DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
 	import DurationInput, {
 		durationObjToStr,
 		type DurationInputValue
 	} from '$lib/components/Inputs/DurationInput.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
-	import type flashStore from '$lib/stores/flashes';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import BaseForm from '../BaseForm.svelte';
 	import i18n from '$lib/i18n';
+	import type { FlashStore } from '$lib/stores/flashes';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import BaseForm from '../BaseForm.svelte';
+	import type { IProgram, ISpecificProgramCreate } from '$lib/services/ProgramService';
+	import { createOneFromToast } from '$lib';
+	import { driverService, programService } from '$lib/services';
+	import { onMount } from 'svelte';
+	import { Modals } from '..';
+	import { loading } from '$lib/stores';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const toastStore = getToastStore();
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
+	const onResolve: (r: any) => void = $modalStore[0].meta.onResolve;
 	let values: ISpecificProgramCreate = {
-		id_program: '',
 		description: '',
 		start: '',
 		duration: '',
 		km: 0
 	};
+	let selectedProgram: number;
+	let programs: IProgram[] = [];
+	let programOptions: DropdownOption[] = [];
 	let durationObj: DurationInputValue;
 	const close = () => {
 		modalStore.close();
 	};
+	onMount(async () => {
+		programs = await programService.getAllPrograms();
+		if (programs.length === 0) {
+			createOneFromToast({
+				stores: { toast: toastStore, modal: modalStore },
+				toastMessage: i18n.t('flashes.noProgramsToCreateSpecificProgramFrom'),
+				modalToReopen: Modals.CREATE_PROGRAM_SPECIFIC,
+				creationModal: Modals.CREATE_PROGRAM,
+				onResolve
+			});
+			close();
+		}
+		selectedProgram = programs[0]?.id_program;
 
+		programOptions = programs.map(({ id_program, program_name }) => ({
+			label: program_name,
+			value: id_program
+		}));
+	});
 	const validate = () => {
 		return true;
 	};
@@ -40,12 +58,20 @@
 		const durationStr = durationObjToStr(durationObj);
 		values.duration = durationStr;
 	};
-	const create = () => {
+	const create = async () => {
 		parse();
-		validate() && console.log(values);
-	};
-	const onProgramSelection = ({ detail }: CustomEvent) => {
-		values.id_program = detail;
+		if (validate()) {
+			$loading = true;
+			try {
+				const newSpecificProgram = await programService.createSpecificProgram(
+					selectedProgram,
+					values
+				);
+				$modalStore[0].response?.(newSpecificProgram);
+				close();
+			} catch (e) {}
+			$loading = false;
+		}
 	};
 </script>
 
@@ -53,14 +79,21 @@
 	<ModalBase>
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.createSpecificProgram')}</svelte:fragment>
-			<Dropdown placeholder={i18n.t('placeholder.program')} required options={[]} on:select>
+			<Dropdown
+				bind:value={selectedProgram}
+				placeholder={i18n.t('placeholder.program')}
+				required
+				options={programOptions}
+				on:select
+			>
 				{i18n.t('label.program')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="specific-program-create-description">
+				<label class="required" for="specific-program-create-description">
 					{i18n.t('label.description')}
 				</label>
 				<input
+					minlength="3"
 					placeholder={i18n.t('placeholder.description')}
 					required
 					type="text"
@@ -69,13 +102,13 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-start">
+				<label class="required" for="specific-program-create-start">
 					{i18n.t('label.startsAt')}
 				</label>
 				<input required type="time" id="specific-program-create-start" bind:value={values.start} />
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-create-distance">
+				<label class="required" for="specific-program-create-distance">
 					{i18n.t('label.distanceKM')}
 				</label>
 				<div class="input-group flex items-center">
@@ -85,8 +118,8 @@
 						type="number"
 						id="specific-program-create-distance"
 						bind:value={values.km}
-						min="0"
-						max="600"
+						min="1"
+						max="1000"
 					/>
 					<span class=" px-3">KM</span>
 				</div>

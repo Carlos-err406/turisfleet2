@@ -7,8 +7,9 @@
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
-	import { getModalStore,getToastStore } from '@skeletonlabs/skeleton';
-const toastStore = getToastStore()
+	import { loading } from '$lib/stores';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 	const data: any[] = [];
 	const headers: string[] = [];
 	const modalStore = getModalStore();
@@ -31,7 +32,11 @@ const toastStore = getToastStore()
 		const target = detail.name;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, (deleted) => {
 			console.log(deleted);
-			toastSuccessfullyDeleted(toastStore);
+			$loading = true;
+			try {
+				toastSuccessfullyDeleted(toastStore);
+			} catch (e) {}
+			$loading = false;
 		});
 	};
 

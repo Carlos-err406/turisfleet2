@@ -1,5 +1,11 @@
 import { LOGGING } from '$env/static/private';
-import { getCookiesHeader, log } from '$lib/server-utils';
+import {
+	CSRF_HEADER,
+	ENDPOINT_HEADER,
+	getCSRFRefreshHeader,
+	getCookiesHeader,
+	log
+} from '$lib/server-utils';
 import { redirect, type Cookies, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -8,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await resolve(event);
 
 	if (LOGGING === '1' && (pathname.includes('/proxy') || pathname.includes('/api'))) {
-		log(event.request.method, response.status, pathname);
+		log(event.request, response.status, pathname);
 	}
 
 	return response;
@@ -34,10 +40,13 @@ const handleRedirectionWrapper = async (pathname: string, fetch: any, cookies: C
 };
 
 const handleRedirection = async (cookies: Cookies, fetch: any, url?: string) =>
-	fetch('/api/auth/refresh', {
+	fetch('/proxy/refresh', {
 		method: 'POST',
+		body: null,
 		headers: {
-			Cookie: getCookiesHeader(cookies)
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFRefreshHeader(cookies),
+			[ENDPOINT_HEADER]: '/security/refresh'
 		}
 	}).then((r: Response) => {
 		if ([401, 400].includes(r.status)) {

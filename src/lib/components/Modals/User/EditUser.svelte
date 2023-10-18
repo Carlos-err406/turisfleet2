@@ -1,20 +1,16 @@
-<script context="module" lang="ts">
-	export interface IUserEdit {
-		username: string;
-	}
-</script>
-
 <script lang="ts">
 	import i18n from '$lib/i18n';
-	import type flashStore from '$lib/stores/flashes';
+	import type { IUser } from '$lib/services/UserService';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
 	import FormFooter from '../FormFooter.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import { userService } from '$lib/services';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	const values: IUserEdit = $modalStore[0].meta.values;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
+	const values: IUser = $modalStore[0].meta.values;
 	const close = () => {
 		modalStore.close();
 	};
@@ -22,10 +18,10 @@
 	const validate = () => {
 		return true;
 	};
-	const edit = () => {
+	const edit = async () => {
 		if (validate()) {
-			// TODO just do it!
-			$modalStore[0].response?.(values);
+			const user = await userService.editUser(values.id_user, values);
+			$modalStore[0].response?.(user);
 			close();
 		}
 	};
@@ -44,7 +40,7 @@
 		<BaseForm footerCols={1} {flashes} on:submit={edit} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.editUser')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-edit-username">{i18n.t('label.username')}</label>
+				<label class="required" for="user-edit-username">{i18n.t('label.username')}</label>
 				<input
 					required
 					type="text"

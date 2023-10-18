@@ -2,9 +2,9 @@
 	import { actionsHeight } from '$lib/stores';
 	import { createEventDispatcher } from 'svelte';
 	import ButtonInsert from '../Button/ButtonInsert.svelte';
-	import SearchInput from '$lib/components/Inputs/SearchInput.svelte';
+	// import SearchInput from '$lib/components/Inputs/SearchInput.svelte';
 	import TableTitle from './TableTitle.svelte';
-	export let disableSearch = false;
+	// export let disableSearch = false;
 	let searchValue: string;
 	const dispatch = createEventDispatcher();
 	const handleInsertClick = () => dispatch('insert');
@@ -18,7 +18,7 @@
 		<slot />
 	</TableTitle>
 	<div class="flex gap-4 justify-between">
-		<SearchInput bind:searchValue disabled={disableSearch} />
+		<!-- <SearchInput bind:searchValue disabled={disableSearch} /> -->
 		<ButtonInsert on:click={handleInsertClick}>
 			<slot name="insert" />
 		</ButtonInsert>

@@ -8,11 +8,11 @@
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import i18n from '$lib/i18n';
 	import { alertTriangle } from '$lib/icons';
-	import type flashStore from '$lib/stores/flashes';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from './BaseForm.svelte';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IConfirmationTarget = $modalStore[0].meta.values;
 
 	const close = () => {

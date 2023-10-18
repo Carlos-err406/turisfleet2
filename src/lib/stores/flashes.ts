@@ -1,4 +1,10 @@
-import { writable } from 'svelte/store';
+import {
+	writable,
+	type Subscriber,
+	type Invalidator,
+	type Unsubscriber,
+	type Updater
+} from 'svelte/store';
 import { v4 } from 'uuid';
 
 export interface FlashMessage {
@@ -8,7 +14,21 @@ export interface FlashMessage {
 export interface FlashType extends FlashMessage {
 	id: string;
 }
-export const getFlashStore = () => {
+
+export interface FlashStore {
+	set: (this: void, value: FlashType[]) => void;
+	subscribe: (
+		this: void,
+		run: Subscriber<FlashType[]>,
+		invalidate?: Invalidator<FlashType[]> | undefined
+	) => Unsubscriber;
+	update: (this: void, updater: Updater<FlashType[]>) => void;
+	trigger: (flash: FlashMessage) => void;
+	remove: (id: string) => void;
+	reset: () => void;
+}
+
+export const getFlashStore = (): FlashStore => {
 	const { update, subscribe, set } = writable<FlashType[]>([]);
 
 	const trigger = (flash: FlashMessage) => {

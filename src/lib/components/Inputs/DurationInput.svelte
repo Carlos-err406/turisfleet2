@@ -4,28 +4,26 @@
 		hours: string;
 		minutes: string;
 	}
-	export const durationObjToStr = (duration: object): string => {
-		let result = '';
-		Object.entries(duration).forEach(([key, value]) => {
-			result += `${value} ${key} `;
-		});
-		return result.trim();
+	export const durationObjToStr = (duration: DurationInputValue): string => {
+		const { hours, minutes, days } = duration;
+		const [hoursNum, minutesNum] = [parseInt(hours), parseInt(minutes)];
+		const formattedHours = hoursNum < 10 ? '0' + hoursNum : hoursNum.toString();
+		const formattedMinutes = minutesNum < 10 ? '0' + minutesNum : minutesNum.toString();
+		return `${days} days, ${formattedHours}:${formattedMinutes}:00`;
 	};
 
 	export const durationStrToObj = (duration: string): DurationInputValue => {
-		let result: any = {
-			days: '0',
-			hours: '0',
-			minutes: '0'
+		const days = duration.match(/(\d+)D/);
+		const _days = days ? parseInt(days[1]) : 0;
+		const seconds = duration.match(/T(\d+)S/);
+		const _seconds = seconds ? parseInt(seconds[1]) : 0;
+		const hours = (_seconds / 3600).toFixed(0);
+		const minutes = (_seconds % 3600) / 60;
+		return {
+			days: '' + _days,
+			hours: '' + hours,
+			minutes: '' + minutes
 		};
-		const arr = duration.trim().split(' ');
-		for (let i = 0; i < arr.length; i += 2) {
-			let key = arr[i + 1];
-			let value = parseInt(arr[i]);
-			result[key] = value;
-		}
-
-		return result;
 	};
 </script>
 
@@ -41,14 +39,15 @@
 </script>
 
 <div>
-	<label for="" data-required={required}><slot>{i18n.t('label.duration')}</slot></label>
+	<label for="" class:required><slot>{i18n.t('label.duration')}</slot></label>
 	<div class="flex items-center gap-1">
 		<input
 			class="input"
 			{required}
 			type="number"
 			min="0"
-			max="9999999"
+			step="1"
+			max="10"
 			bind:value={value.days}
 			placeholder={i18n.t('placeholder.days')}
 		/>
@@ -58,7 +57,8 @@
 			{required}
 			type="number"
 			min="0"
-			max="9999999"
+			step="1"
+			max="23"
 			bind:value={value.hours}
 			placeholder={i18n.t('placeholder.hours')}
 		/>
@@ -68,7 +68,8 @@
 			{required}
 			type="number"
 			min="0"
-			max="99999999"
+			step="1"
+			max="59"
 			bind:value={value.minutes}
 			placeholder={i18n.t('placeholder.minutes')}
 		/>

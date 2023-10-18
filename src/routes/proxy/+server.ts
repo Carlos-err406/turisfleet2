@@ -1,25 +1,38 @@
-import { API_URL } from '$env/static/private';
+import {
+	CSRF_HEADER,
+	ENDPOINT_HEADER,
+	buildURL,
+	getCSRFAccessHeader,
+	getCookiesHeader
+} from '$lib/server-utils';
 import type { RequestHandler } from '@sveltejs/kit';
-const ENDPOINT_HEADER = 'X-Endpoint';
-const buildURL = (endpoint: string, search = '') => API_URL + '/' + endpoint + search;
-export const GET: RequestHandler = async ({ url, request }) => {
+
+export const GET: RequestHandler = async ({ url, request, cookies }) => {
 	const { headers } = request;
 	const { search } = url;
 	let endpoint = headers.get(ENDPOINT_HEADER) || '';
 	return await fetch(buildURL(endpoint, search), {
-		method: 'GET'
+		method: 'GET',
+		headers: {
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFAccessHeader(cookies)
+		}
 	});
 };
-export const DELETE: RequestHandler = async ({ url, request }) => {
+export const DELETE: RequestHandler = async ({ url, request, cookies }) => {
 	const { search } = url;
 	const { headers } = request;
 	const endpoint = headers.get(ENDPOINT_HEADER) || '';
 	return await fetch(buildURL(endpoint, search), {
-		method: 'DELETE'
+		method: 'DELETE',
+		headers: {
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFAccessHeader(cookies)
+		}
 	});
 };
 
-export const POST: RequestHandler = async ({ url, request }) => {
+export const POST: RequestHandler = async ({ url, request, cookies }) => {
 	const { search } = url;
 	const { headers } = request;
 	const endpoint = headers.get(ENDPOINT_HEADER) || '';
@@ -28,11 +41,13 @@ export const POST: RequestHandler = async ({ url, request }) => {
 		method: 'POST',
 		body: JSON.stringify(body),
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFAccessHeader(cookies)
 		}
 	});
 };
-export const PUT: RequestHandler = async ({ url, request }) => {
+export const PUT: RequestHandler = async ({ url, request, cookies }) => {
 	const { search } = url;
 	const { headers } = request;
 	const endpoint = headers.get(ENDPOINT_HEADER) || '';
@@ -41,11 +56,13 @@ export const PUT: RequestHandler = async ({ url, request }) => {
 		method: 'PUT',
 		body: JSON.stringify(body),
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFAccessHeader(cookies)
 		}
 	});
 };
-export const PATCH: RequestHandler = async ({ url, request }) => {
+export const PATCH: RequestHandler = async ({ url, request, cookies }) => {
 	const { search } = url;
 	const { headers } = request;
 	const endpoint = headers.get(ENDPOINT_HEADER) || '';
@@ -54,7 +71,9 @@ export const PATCH: RequestHandler = async ({ url, request }) => {
 		method: 'PATCH',
 		body: JSON.stringify(body),
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			Cookie: getCookiesHeader(cookies),
+			[CSRF_HEADER]: getCSRFAccessHeader(cookies)
 		}
 	});
 };

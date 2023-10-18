@@ -1,9 +1,9 @@
 <script lang="ts">
 	import i18n from '$lib/i18n';
-	import type flashStore from '$lib/stores/flashes';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import Flashes from './../Flash/Flashes.svelte';
 	import FormFooter from './FormFooter.svelte';
-	export let flashes: typeof flashStore;
+	export let flashes: FlashStore;
 	export let footerCols = 1;
 </script>
 

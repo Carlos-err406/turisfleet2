@@ -1,10 +1,8 @@
 <script lang="ts">
-	import type { FlashType } from '$lib/stores/flashes';
-	import type flashStore from '$lib/stores/flashes';
-	import { onMount } from 'svelte';
-	import Flash from './Flash.svelte';
+	import type { FlashStore, FlashType } from '$lib/stores/flashes';
 	import { springHeight } from '$lib/utils';
-	export let flashes: typeof flashStore;
+	import Flash from './Flash.svelte';
+	export let flashes: FlashStore;
 	const handleFlashClick = ({ detail }: CustomEvent<FlashType>) => {
 		flashes.remove(detail.id);
 	};
@@ -13,11 +11,13 @@
 </script>
 
 {#if $flashes}
-	<div class="overflow-hidden" style="height: {$heightSpring}px;">
-		<div class="flex flex-col gap-2" bind:this={wrapper}>
-			{#each $flashes as flash (flash.id)}
-				<Flash {flash} on:click={handleFlashClick} />
-			{/each}
+	<div class="flex justify-center w-full">
+		<div class="overflow-hidden w-full" style="height: {$heightSpring}px;">
+			<div class="flex flex-col gap-2" bind:this={wrapper}>
+				{#each $flashes as flash (flash.id)}
+					<Flash {flash} on:click={handleFlashClick} />
+				{/each}
+			</div>
 		</div>
 	</div>
 {/if}

@@ -93,7 +93,7 @@ export const handleCreate = <T>(
 		modalStore.trigger({
 			type: 'component',
 			component: modal,
-			meta: { flashes: getFlashStore() },
+			meta: { flashes: getFlashStore(), onResolve },
 			response: (r: T) => r && resolve(r)
 		});
 	}).then((r: T) => {
@@ -111,7 +111,7 @@ export const handleEdit = <T>(
 		modalStore.trigger({
 			type: 'component',
 			component: modal,
-			meta: { flashes: getFlashStore(), values },
+			meta: { flashes: getFlashStore(), values, onResolve },
 			response: (r: T) => r && resolve(r)
 		});
 	}).then((r: T) => {
@@ -128,7 +128,7 @@ export const handleDelete = <T>(
 		modalStore.trigger({
 			type: 'component',
 			component: modal,
-			meta: { flashes: getFlashStore(), values: { target } },
+			meta: { flashes: getFlashStore(), values: { target }, onResolve },
 			response: (r: T) => r && resolve(r)
 		});
 	}).then((r: T) => {

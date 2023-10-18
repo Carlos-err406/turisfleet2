@@ -5,3 +5,5 @@ export * as groupService from './GroupService';
 export * as requestService from './RequestService';
 export * as situationService from './SituationService';
 export * as reportService from './ReportService';
+export * as userService from './UserService';
+export * as programService from './ProgramService';

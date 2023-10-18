@@ -9,7 +9,7 @@
 </script>
 
 <div>
-	<label for={id} data-required={required}>{i18n.t('label.idNumber')}</label>
+	<label for={id} class:required>{i18n.t('label.idNumber')}</label>
 	<input
 		{maxlength}
 		placeholder={i18n.t('placeholder.idNumber')}

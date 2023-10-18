@@ -1,25 +1,20 @@
-<script context="module" lang="ts">
-	export interface IDriverEdit {
-		id_number: string;
-		name: string;
-		address: string;
-		id_categories: LicenseCategory[];
-	}
-</script>
-
 <script lang="ts">
+	import type { DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
+	import DropdownMultiple from '$lib/components/Inputs/DropdownMultiple.svelte';
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
-	import SelectMultipleInput from '$lib/components/Inputs/SelectMultipleInput.svelte';
-	import type flashStore from '$lib/stores/flashes';
+	import i18n from '$lib/i18n';
+	import { driverService } from '$lib/services';
+	import type { IDriver, IDriverEdit } from '$lib/services/DriverService';
+	import { loading } from '$lib/stores';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { LicenseCategory } from '$lib/types/LicenseTypes';
-	import { validateID } from '$lib/utils';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	const values: IDriverEdit = $modalStore[0].meta.values;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
+	let values: IDriver = $modalStore[0].meta.values;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({ label: key, value }));
 
 	const close = () => {
@@ -32,20 +27,57 @@
 			type: 'error'
 		});
 	};
+
 	const validate = () => {
-		return validateID(values.id_number, triggerInvalidID);
+		const { id_number } = values;
+		if (id_number.length !== 11) {
+			triggerInvalidID();
+			return false;
+		}
+
+		const [year, month, day] = [
+			parseInt(id_number.slice(0, 2)),
+			parseInt(id_number.slice(2, 4)),
+			parseInt(id_number.slice(4, 6))
+		];
+
+		const date = dayjs(`${month}-${day}-${year}`);
+		let isValid = true;
+		if (day > 31) isValid = false;
+		else if (month == 2 && day > 29) isValid = false;
+		else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
+		else if ([4, 6, 8, 11].includes(month) && day > 30) isValid = false;
+		if (!isValid || !date.isValid()) {
+			triggerInvalidID();
+		}
+		return isValid;
 	};
-	const edit = () => {
-		validate() && console.log(values);
+	$: console.log(selectedCategories);
+	const edit = async () => {
+		if (validate()) {
+			values.license_categories = selectedCategories.map(({ value }) => {
+				return { license_category: value as LicenseCategory };
+			});
+			$loading = true;
+			try {
+				const driver = await driverService.editDriver(values.id_driver, values);
+				$modalStore[0].response?.(driver);
+				close();
+			} catch (e) {}
+			$loading = false;
+		}
 	};
+	let selectedCategories: DropdownOption[] = values.license_categories.map(
+		({ license_category }) => ({ label: license_category, value: license_category })
+	);
 </script>
 
 {#if $modalStore[0]}
 	<ModalBase>
 		<BaseForm footerCols={2} on:submit={edit} on:secondary={close} {flashes}>
 			<svelte:fragment slot="title">{i18n.t('title.editDriver')}</svelte:fragment>
-			<div>
-				<label data-required="true" for="driver-edit-name">{i18n.t('label.name')}</label>
+			<div class="col-span-1">
+				<label class="required" for="driver-edit-name">{i18n.t('label.name')}</label>
 				<input
 					placeholder={i18n.t('placeholder.name')}
 					required
@@ -55,18 +87,18 @@
 				/>
 			</div>
 			<IdNumberInput bind:value={values.id_number} />
-			<SelectMultipleInput options={categories} required bind:value={values.id_categories}>
-				{i18n.t('label.licenseCategories')}
-			</SelectMultipleInput>
 			<div class="col-span-1">
 				<label for="driver-edit-address">{i18n.t('label.address')}</label>
 				<textarea
-					class="textarea px-2 max-h-48"
+					class="textarea px-2 max-h-[157px]"
 					placeholder={i18n.t('placeholder.address')}
 					id="driver-edit-address"
 					bind:value={values.address}
 				/>
 			</div>
+			<DropdownMultiple options={categories} bind:selectedOptions={selectedCategories} required>
+				{i18n.t('label.licenseCategory')}
+			</DropdownMultiple>
 		</BaseForm>
 	</ModalBase>
 {/if}

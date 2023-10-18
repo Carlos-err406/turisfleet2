@@ -1,10 +1,10 @@
-import type { LoggedUserDTO } from '$lib/services/AuthService';
 import type { LanguageTypes } from '$lib/components/Modals/Lang/langTypes';
+import type { ILoggedUser } from '$lib/services/AuthService';
 import {
+	createLocalStorage,
 	createSessionStorage,
-	persist,
 	disableWarnings,
-	createLocalStorage
+	persist
 } from '@macfja/svelte-persistent-store';
 import { derived, writable } from 'svelte/store';
 disableWarnings();
@@ -24,7 +24,7 @@ export const lang = persist(writable<LanguageTypes>('en'), createLocalStorage(fa
 export const loading = writable<boolean>(false);
 
 export const loggedUser = persist(
-	writable<LoggedUserDTO | null>(),
+	writable<ILoggedUser | null>(),
 	createSessionStorage(false),
 	'tf-user'
 );

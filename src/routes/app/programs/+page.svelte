@@ -7,37 +7,68 @@
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
-	import { getModalStore,getToastStore } from '@skeletonlabs/skeleton';
-const toastStore = getToastStore()
-	const data: any[] = [];
-	const headers: string[] = [];
-
+	import { programService } from '$lib/services';
+	import type { IProgram } from '$lib/services/ProgramService';
+	import { loading } from '$lib/stores';
+	import { getPaginationStore } from '$lib/stores/pagination';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import { onMount, setContext } from 'svelte';
+	const toastStore = getToastStore();
 	const modalStore = getModalStore();
+	const paginationStore = getPaginationStore();
+	setContext('pagination', paginationStore);
+
+	let data: IProgram[] = [];
+	const headers: (keyof IProgram)[] = ['program_name'];
+
+	const getAll = async () => {
+		$loading = true;
+		try {
+			data = await programService.getPrograms($paginationStore);
+		} catch (e) {}
+		$loading = false;
+	};
+
+	onMount(getAll);
 
 	const handleCreateProgram = () => {
 		handleCreate(modalStore, Modals.CREATE_PROGRAM, (created) => {
 			console.log(created);
+			getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
-	const handleEditProgram = ({ detail }: CustomEvent) => {
+	const handleEditProgram = ({ detail }: CustomEvent<IProgram>) => {
 		handleEdit(modalStore, Modals.EDIT_PROGRAM, detail, (edited) => {
 			console.log(edited);
+			getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
-	const handleDeleteProgram = ({ detail }: CustomEvent) => {
-		const target = detail.name;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, (deleted) => {
-			console.log(deleted);
-			toastSuccessfullyDeleted(toastStore);
+	const handleDeleteProgram = ({ detail }: CustomEvent<IProgram>) => {
+		const target = detail.program_name;
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+			console.log(detail);
+			$loading = true;
+			try {
+				await programService.deleteProgram(detail.id_program);
+				getAll();
+				toastSuccessfullyDeleted(toastStore);
+			} catch (e) {}
+			$loading = false;
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handlePageChange = ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail);
+		getAll();
+	};
+	const handleAmountChange = ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		getAll();
+	};
 	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 

@@ -1,18 +1,18 @@
 <script lang="ts">
+	import type { DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
-	import type flashStore from '$lib/stores/flashes';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import type { DropdownOptions } from '$lib/components/Inputs/Dropdown.svelte';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let value: any; //TODO request id
 	const close = () => {
 		modalStore.close();
 	};
-	const requests: DropdownOptions[] = [];
+	const requests: DropdownOption[] = [];
 	const validate = () => {
 		flashes.reset();
 		return true;

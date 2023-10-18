@@ -1,27 +1,19 @@
-<script context="module" lang="ts">
-	export interface ISpecificProgramEdit {
-		id_program: string | number;
-		description: string;
-		start: Date | string;
-		duration: string; //interval
-		km: number;
-	}
-</script>
-
 <script lang="ts">
+	//FIXME
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import DurationInput, {
 		durationObjToStr,
-		type DurationInputValue,
-		durationStrToObj
+		durationStrToObj,
+		type DurationInputValue
 	} from '$lib/components/Inputs/DurationInput.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
-	import type flashStore from '$lib/stores/flashes';
+	import i18n from '$lib/i18n';
+	import type { ISpecificProgramEdit } from '$lib/services/ProgramService';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
-	import i18n from '$lib/i18n';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: ISpecificProgramEdit = $modalStore[0].meta.values;
 	let durationObj: DurationInputValue = durationStrToObj(values.duration);
 	const close = () => {
@@ -52,7 +44,7 @@
 				{i18n.t('label.program')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="specific-program-edit-description">
+				<label class="required" for="specific-program-edit-description">
 					{i18n.t('label.description')}
 				</label>
 				<input
@@ -64,13 +56,13 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-edit-start">
+				<label class="required" for="specific-program-edit-start">
 					{i18n.t('label.startsAt')}
 				</label>
 				<input required type="time" id="specific-program-edit-start" bind:value={values.start} />
 			</div>
 			<div>
-				<label data-required="true" for="specific-program-edit-distance">
+				<label class="required" for="specific-program-edit-distance">
 					{i18n.t('label.distanceKM')}
 				</label>
 				<div class="input-group flex items-center">
@@ -80,8 +72,8 @@
 						type="number"
 						id="specific-program-edit-distance"
 						bind:value={values.km}
-						min="0"
-						max="600"
+						min="1"
+						max="1000"
 					/>
 					<span class=" px-3">KM</span>
 				</div>

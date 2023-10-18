@@ -3,13 +3,19 @@ import { authService } from '$lib/services';
 import dayjs from 'dayjs';
 import { spring } from 'svelte/motion';
 import { writable } from 'svelte/store';
+import { loggedUser } from './stores';
 
 export const handleLogout = () => {
 	authService.logout();
+	loggedUser.delete();
 	goto('/auth/login');
 };
 
 export interface HeightSpringOptions {
+	stiffness: number;
+	damping: number;
+}
+export interface DimensionSpringOptions {
 	stiffness: number;
 	damping: number;
 }
@@ -31,6 +37,32 @@ export function springHeight(
 		value !== null && springStore.set(value);
 	});
 	return springStore;
+}
+
+export function springDimensions(
+	element: HTMLElement,
+	options: DimensionSpringOptions = { stiffness: 0.1, damping: 0.4 }
+) {
+	if (!element) return [spring(0, options), spring(0, options)];
+	const internalHeightStore = writable<number | null>(null, (set) => {
+		const observer = new ResizeObserver(() => element && set(element.offsetHeight));
+		observer.observe(element);
+		return () => observer.disconnect();
+	});
+	const internalWidthStore = writable<number | null>(null, (set) => {
+		const observer = new ResizeObserver(() => element && set(element.offsetWidth));
+		observer.observe(element);
+		return () => observer.disconnect();
+	});
+	const springHeightStore = spring(0, options);
+	const springWidthStore = spring(0, options);
+	internalHeightStore.subscribe((value) => {
+		value !== null && springHeightStore.set(value);
+	});
+	internalWidthStore.subscribe((value) => {
+		value !== null && springWidthStore.set(value);
+	});
+	return [springHeightStore, springWidthStore];
 }
 
 export const validateID = (id: string, onInvalid: () => void) => {

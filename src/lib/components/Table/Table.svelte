@@ -1,12 +1,17 @@
+<script context="module" lang="ts">
+	export type ColumnOrientation = 'asc' | 'desc';
+</script>
+
 <script lang="ts">
 	import NoData from './NoData.svelte';
 	import TableActions from './TableActions.svelte';
 	import TableData from './TableData.svelte';
-	export let headers: string[] = [];
+	export let headers: any[] = [];
 	export let data: any[] = [];
 </script>
 
-<TableActions disableSearch={data.length === 0} on:insert>
+<!-- disableSearch={data.length === 0} -->
+<TableActions on:insert>
 	<slot name="table-name" />
 	<svelte:fragment slot="insert">
 		<slot name="insert" />

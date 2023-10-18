@@ -1,26 +1,23 @@
-<script context="module" lang="ts">
-	export interface IUserCreate {
-		username: string;
-		password: string;
-		id_role: number;
-	}
-</script>
-
 <script lang="ts">
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
-	import type flashStore from '$lib/stores/flashes';
+	import { userService } from '$lib/services';
+	import type { IUserCreate } from '$lib/services/UserService';
+	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let passwordConf = '';
 	let values: IUserCreate = {
 		username: '',
-		password: '',
-		id_role: 1
+		password: ''
+		// id_role: 1
 	};
+	flashes.trigger({
+		message: 'work in progress',
+		type: 'warning'
+	});
 	const close = () => {
 		modalStore.close();
 	};
@@ -35,12 +32,16 @@
 		}
 		return true;
 	};
-	const create = () => {
-		validate() && console.log(values);
+	const create = async () => {
+		if (validate()) {
+			const user = await userService.createUser(values);
+			$modalStore[0].response?.(user);
+			close();
+		}
 	};
 
 	function onRoleSelection({ detail }: CustomEvent): void {
-		values.id_role = detail;
+		// values.id_role = detail;
 	}
 </script>
 
@@ -49,7 +50,7 @@
 		<BaseForm footerCols={2} {flashes} on:submit={create} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.createUser')}</svelte:fragment>
 			<div>
-				<label data-required="true" for="user-create-username">{i18n.t('label.username')}</label>
+				<label class="required" for="user-create-username">{i18n.t('label.username')}</label>
 				<input
 					required
 					type="text"
@@ -58,14 +59,14 @@
 					bind:value={values.username}
 				/>
 			</div>
-			<Dropdown
+			<!-- <Dropdown
 				required
 				options={[]}
 				on:select={onRoleSelection}
 				placeholder={i18n.t('placeholder.role')}>{i18n.t('label.role')}</Dropdown
-			>
+			> -->
 			<div>
-				<label data-required="true" for="user-create-password">{i18n.t('label.password')}</label>
+				<label class="required" for="user-create-password">{i18n.t('label.password')}</label>
 				<input
 					required
 					type="password"
@@ -75,7 +76,7 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="user-create-password-conf"
+				<label class="required" for="user-create-password-conf"
 					>{i18n.t('label.passwordConfirmation')}</label
 				>
 				<input

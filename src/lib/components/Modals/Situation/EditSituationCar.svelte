@@ -1,23 +1,15 @@
-<script context="module" lang="ts">
-	export interface ICarSituationEdit {
-		car_id_car: number;
-		situation_id_situation: number;
-		date: Date | string;
-		return_date: Date | null;
-	}
-</script>
-
 <script lang="ts">
-	import type flashStore from '$lib/stores/flashes';
-	import { tomorrow } from '$lib/utils';
-	import { getModalStore } from '@skeletonlabs/skeleton';
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
-	import BaseForm from '../BaseForm.svelte';
 	import i18n from '$lib/i18n';
+	import type { ICarSituation } from '$lib/services/SituationService';
+	import type { FlashStore } from '$lib/stores/flashes';
+	import { tomorrow } from '$lib/utils';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
-	const flashes: typeof flashStore = $modalStore[0].meta.flashes;
-	let values: ICarSituationEdit = $modalStore[0].meta.values;
+	const flashes: FlashStore = $modalStore[0].meta.flashes;
+	let values: ICarSituation = $modalStore[0].meta.values;
 
 	const close = () => {
 		modalStore.close();
@@ -27,14 +19,8 @@
 		return true;
 	};
 	const edit = () => {
+		//TODO
 		validate() && console.log(values);
-	};
-
-	const onSituationSelection = ({ detail }: CustomEvent) => {
-		values.situation_id_situation = detail;
-	};
-	const onCarSelection = ({ detail }: CustomEvent) => {
-		values.car_id_car = detail;
 	};
 </script>
 
@@ -43,23 +29,23 @@
 		<BaseForm footerCols={2} {flashes} on:submit={edit} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.editCarSituation')}</svelte:fragment>
 			<Dropdown
+				bind:value={values.car.id_car}
 				placeholder={i18n.t('placeholder.car')}
 				required
 				options={[]}
-				on:select={onCarSelection}
 			>
 				{i18n.t('label.car')}
 			</Dropdown>
 			<Dropdown
+				bind:value={values.situation.id_situation}
 				placeholder={i18n.t('placeholder.situation')}
 				required
 				options={[]}
-				on:select={onSituationSelection}
 			>
 				{i18n.t('label.situation')}
 			</Dropdown>
 			<div>
-				<label data-required="true" for="car-situation-date">
+				<label class="required" for="car-situation-date">
 					{i18n.t('label.date')}
 				</label>
 				<input
@@ -72,7 +58,7 @@
 				/>
 			</div>
 			<div>
-				<label data-required="true" for="car-situation-date">
+				<label class="required" for="car-situation-date">
 					{i18n.t('label.returnDate')}
 				</label>
 				<input

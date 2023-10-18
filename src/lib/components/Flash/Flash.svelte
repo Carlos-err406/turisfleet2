@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import type { FlashType } from '$lib/stores/flashes';
-	import { fly, scale, slide } from 'svelte/transition';
+	import { createEventDispatcher } from 'svelte';
+	import { scale, slide } from 'svelte/transition';
 	export let flash: FlashType;
 	const dispatch = createEventDispatcher();
 	const handleClick = () => {
@@ -17,5 +17,5 @@
 	in:scale={{ duration: 200 }}
 	out:slide={{ duration: 200 }}
 >
-	<span>{flash.message}</span>
+	<span class="whitespace-break-spaces">{flash.message}</span>
 </button>

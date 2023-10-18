@@ -1,8 +1,6 @@
 import { PUBLIC_APP_NAME } from '$env/static/public';
 import i18n from '$lib/i18n';
-import { lang } from '$lib/stores';
 import dayjs, { Dayjs } from 'dayjs';
-import { get } from 'svelte/store';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 

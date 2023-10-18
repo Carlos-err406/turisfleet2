@@ -2,30 +2,42 @@
 	import i18n from '$lib/i18n';
 	import { downSimple, edit, trash } from '$lib/icons';
 	import { actionsHeight, navHeight } from '$lib/stores';
+	import type { PaginationStore } from '$lib/stores/pagination';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, getContext } from 'svelte';
+	import type { ColumnOrientation } from './Table.svelte';
 	export let headers: string[];
 	export let data: any[];
 	let tableElement: HTMLTableElement;
 	const dispatch = createEventDispatcher();
 
+	const pagination: PaginationStore = getContext('pagination');
+
 	const handleEdit = (item: (typeof data)[0]) => dispatch('edit', item);
 	const handleDelete = (item: (typeof data)[0]) => dispatch('delete', item);
 	const handleOrderByChange = (header: string) => {
-		const button = tableElement.querySelector(`#order-by-button-${header}`);
-		if (button)
-			button.classList.contains('rotate-180')
-				? button.classList.remove('rotate-180')
-				: button?.classList.add('rotate-180');
-		dispatch('change-order', header);
+		let orientation: ColumnOrientation = 'asc';
+		const allButtons = tableElement.querySelectorAll('.order-by-button');
+		const button = tableElement.querySelector(`#order-by-button-${header}`) as HTMLButtonElement;
+		allButtons.forEach((b) => !button.isSameNode(b) && b.classList.remove('rotate-180'));
+		orientation = button.classList.toggle('rotate-180') ? 'asc' : 'desc';
+		dispatch('change-order', { header, orientation });
 	};
 
-	let paginationSettings = {
-		page: 0,
-		limit: 20,
+	let paginationSettings: PaginationSettings = {
+		page: Math.ceil($pagination.skip / $pagination.limit),
+		limit: $pagination.limit,
 		size: data.length,
 		amounts: [10, 20, 50, 100, 200]
-	} satisfies PaginationSettings;
+	};
+
+	const footerFiller = () => {
+		let filler = [];
+		for (let i = 0; i < headers.length - 1; i++) {
+			filler.push('');
+		}
+		return filler;
+	};
 </script>
 
 <div
@@ -41,7 +53,7 @@
 						<span
 							id="order-by-button-{th}"
 							tabindex="-1"
-							class="py-0 px-2 flex items-center gap-2 transition-transform duration-200"
+							class="order-by-button py-0 px-2 flex items-center gap-2 transition-transform duration-200"
 						>
 							{@html downSimple}
 						</span>
@@ -55,9 +67,9 @@
 		<tbody>
 			{#each data as tr}
 				<tr class="bg-primary-hover-token">
-					{#each Object.entries(tr) as [key, value]}
-						{#if value}
-							<td>{value}</td>
+					{#each headers as key}
+						{#if tr[key]}
+							<td>{tr[key]}</td>
 						{:else}
 							<td>-</td>
 						{/if}
@@ -83,7 +95,7 @@
 						<span class="code">{data.length}</span>
 					</div>
 				</th>
-				{#each Object.keys(data[0]) as _}
+				{#each footerFiller() as _}
 					<td />
 				{/each}
 			</tr>

@@ -12,19 +12,19 @@
 	let password: string = '';
 
 	const handleSumbit = async () => {
+		$loading = true;
 		try {
-			$loading = true;
 			$loggedUser = await authService.login({ username, password });
-			$loading = false;
 			goto('/app/users');
 		} catch (e: any) {
 			const { exceptionID, message } = e;
 			toastStore.trigger({
-				timeout: 3000,
+				timeout: 2000,
 				message,
-				classes: 'variant-ghost-error'
+				classes: 'variant-filled-error'
 			});
 		}
+		$loading = false;
 	};
 </script>
 
@@ -39,7 +39,7 @@
 	</header>
 	<section class="p-4 flex flex-col gap-5">
 		<div class="flex flex-col items-start gap-1">
-			<label data-required="true" class="ml-3" for="username-input">
+			<label class="required ml-3" for="username-input">
 				{i18n.t('label.username')}
 			</label>
 			<div class="flex gap-0 items-center input w-full">
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div class="flex flex-col items-start gap-1">
-			<label data-required="true" class="ml-3" for="password-input">
+			<label class="required ml-3" for="password-input">
 				{i18n.t('label.password')}
 			</label>
 			<div class="flex gap-0 items-center input w-full">

@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { springHeight } from '$lib/utils';
+	import { springDimensions } from '$lib/utils';
 	let wrapper: HTMLDivElement;
-	$: heightSpring = springHeight(wrapper);
+	let heightSpring, widthSpring;
+
+	$: if (wrapper) {
+		[heightSpring, widthSpring] = springDimensions(wrapper);
+	}
 </script>
 
 <div
-	class="overflow-hidden bg-surface-50-900-token min-w-fit rounded-container-token shadow-xl"
-	style="height: {$heightSpring}px;"
+	class="overflow-hidden bg-surface-50-900-token w-modal rounded-container-token shadow-xl"
+	style="height: {$heightSpring}px; width: {$widthSpring}px;"
 >
-	<div bind:this={wrapper} class="overflow-auto h-auto max-h-[95vh] p-4">
+	<div bind:this={wrapper} class="overflow-auto min-w-max h-auto max-h-[95vh] p-4">
 		<slot />
 	</div>
 </div>
