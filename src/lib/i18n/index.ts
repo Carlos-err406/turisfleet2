@@ -48,7 +48,7 @@ const i18n = rosetta({
 		label: {
 			administrator: 'Administrator',
 			agent: 'Agent',
-			support: 'support',
+			support: 'Support',
 			createOne: 'Create one',
 			selectADate: 'Select a date',
 			language: 'Language',

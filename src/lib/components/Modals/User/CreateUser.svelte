@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { triggerErrorFlash } from '$lib/CustomError';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
 	import { userService } from '$lib/services';
 	import type { IUserCreate } from '$lib/services/UserService';
@@ -6,18 +8,15 @@
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import { roles } from './user';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let passwordConf = '';
 	let values: IUserCreate = {
 		username: '',
-		password: ''
-		// id_role: 1
+		password: '',
+		role: roles[0].value
 	};
-	flashes.trigger({
-		message: 'work in progress',
-		type: 'warning'
-	});
 	const close = () => {
 		modalStore.close();
 	};
@@ -34,15 +33,15 @@
 	};
 	const create = async () => {
 		if (validate()) {
-			const user = await userService.createUser(values);
-			$modalStore[0].response?.(user);
-			close();
+			try {
+				const user = await userService.createUser(values);
+				$modalStore[0].response?.(user);
+				close();
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 		}
 	};
-
-	function onRoleSelection({ detail }: CustomEvent): void {
-		// values.id_role = detail;
-	}
 </script>
 
 {#if $modalStore[0]}
@@ -59,12 +58,14 @@
 					bind:value={values.username}
 				/>
 			</div>
-			<!-- <Dropdown
+			<Dropdown
 				required
-				options={[]}
-				on:select={onRoleSelection}
-				placeholder={i18n.t('placeholder.role')}>{i18n.t('label.role')}</Dropdown
-			> -->
+				options={roles}
+				bind:value={values.role}
+				placeholder={i18n.t('placeholder.role')}
+			>
+				{i18n.t('label.role')}
+			</Dropdown>
 			<div>
 				<label class="required" for="user-create-password">{i18n.t('label.password')}</label>
 				<input

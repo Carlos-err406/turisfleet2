@@ -6,6 +6,7 @@ export type RoleType = 'administrator' | 'support' | 'agent' | 'driver';
 export interface IUserCreate {
 	username: string;
 	password: string;
+	role: RoleType;
 }
 export interface IUser {
 	id_user: number;
