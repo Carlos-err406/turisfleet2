@@ -14,6 +14,7 @@
 	import { onMount } from 'svelte';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
@@ -79,7 +80,9 @@
 				);
 				$modalStore[0].response?.(driver);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

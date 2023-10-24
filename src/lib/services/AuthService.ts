@@ -11,10 +11,12 @@ export const login = async (auth: ILogin): Promise<ILoggedUser> => {
 			[proxy.ENDPOINT_HEADER]: '/security/login',
 			'Content-Type': 'application/json'
 		}
+	}).then((response) => {
+		if (response.status === 401)
+			throw new CustomError(ErrorCode.INVALID_CREDENTIALS, 'invalid credentials');
+		else return response.json();
 	});
-	if (response.status === 401) {
-		throw new CustomError(ErrorCode.UNAUTHORIZED, 'unauthorized');
-	} else return response.json();
+	return response;
 };
 
 export const refresh = async () => {

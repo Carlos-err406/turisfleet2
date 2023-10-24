@@ -13,11 +13,12 @@
 	import { onMount } from 'svelte';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const onResolve: (r: any) => void = $modalStore[0].meta.onResolve;
-	console.log(onResolve)
+	console.log(onResolve);
 	let values: ICarSituationCreate = {
 		id_situation: 0,
 		date: tomorrow(),
@@ -44,7 +45,7 @@
 				toastMessage: i18n.t('flashes.noSituationTypesToCreateSituations'),
 				modalToReopen: Modals.CREATE_SITUATION_CAR,
 				creationModal: Modals.CREATE_SITUATION,
-				onResolve: onResolve
+				onResolve
 			});
 			close();
 		} else if (cars.length === 0) {
@@ -53,7 +54,7 @@
 				toastMessage: i18n.t('flashes.noCarsToCreateSituations'),
 				modalToReopen: Modals.CREATE_SITUATION_CAR,
 				creationModal: Modals.CREATE_CAR,
-				onResolve: onResolve
+				onResolve
 			});
 			close();
 		}
@@ -79,13 +80,12 @@
 		if (validate()) {
 			$loading = true;
 			try {
-				console.log('creating...');
 				const carSituation = await situationService.createCarSituation(selectedCar, values);
-				console.log('created...sending modal response');
 				$modalStore[0].response?.(carSituation);
-				console.log('closing...');
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

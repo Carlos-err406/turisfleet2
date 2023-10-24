@@ -4,6 +4,7 @@
 		toastSuccessfullyDeleted,
 		toastSuccessfullyEdited
 	} from '$lib';
+	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
@@ -31,7 +32,9 @@
 				...value,
 				situation_type_i18n: i18n.t(`label.${value.situation_type}`)
 			}));
-		} catch (e) {}
+		} catch (e) {
+			triggerErrorToast(toastStore, e);
+		}
 		$loading = false;
 	};
 
@@ -62,7 +65,9 @@
 				await situationService.deleteSituation(detail.id_situation);
 				getAll();
 				toastSuccessfullyDeleted(toastStore);
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorToast(toastStore, e);
+			}
 			$loading = false;
 		});
 	};

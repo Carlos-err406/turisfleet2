@@ -12,6 +12,7 @@
 	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IDriver = $modalStore[0].meta.values;
@@ -55,15 +56,17 @@
 	$: console.log(selectedCategories);
 	const edit = async () => {
 		if (validate()) {
-			values.license_categories = selectedCategories.map(({ value }) => {
-				return { license_category: value as LicenseCategory };
-			});
+			// values.license_categories = selectedCategories.map(({ value }) => {
+			// 	return { license_category: value as LicenseCategory };
+			// });
 			$loading = true;
 			try {
 				const driver = await driverService.editDriver(values.id_driver, values);
 				$modalStore[0].response?.(driver);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

@@ -13,6 +13,7 @@
 	import { Modals } from '..';
 	import ModalBase from '../ModalBase.svelte';
 	import { createOneFromToast } from '$lib';
+	import { triggerErrorFlash, triggerErrorToast } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
@@ -50,7 +51,7 @@
 		}));
 	});
 	const validate = () => {
-		const isValidPlateNumber = carService.isValidPlateNumber(values.plate_number);
+		const isValidPlateNumber = true; //carService.isValidPlateNumber(values.plate_number);
 		if (!isValidPlateNumber) {
 			flashes.trigger({
 				type: 'error',
@@ -67,7 +68,9 @@
 				const car = await carService.createCar(values);
 				$modalStore[0].response?.(car);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};
@@ -84,12 +87,12 @@
 					placeholder={i18n.t('placeholder.plateNumber')}
 					required
 					type="text"
-					minlength="7"
-					maxlength="7"
 					id="car-create-plate"
 					bind:value={values.plate_number}
 				/>
 			</div>
+			<!-- minlength="7"
+				maxlength="7" -->
 			<Dropdown
 				placeholder={i18n.t('placeholder.licenseCategory')}
 				bind:value={values.category}

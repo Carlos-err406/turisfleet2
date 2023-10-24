@@ -1,5 +1,7 @@
-import { error, type HttpError_1 } from '@sveltejs/kit';
+import type { ToastStore } from '@skeletonlabs/skeleton';
+import i18n from './i18n';
 import type { ErrorCode } from './types/ErrorCodes';
+import type { FlashStore } from './stores/flashes';
 
 export default class CustomError extends Error {
 	public body: { detail: { exception_id: ErrorCode; message: string } };
@@ -15,23 +17,25 @@ export default class CustomError extends Error {
 	}
 }
 
-export class CustomHttpError implements HttpError_1 {
-	public error: { exceptionId: ErrorCode; message: string };
-	public status: number;
-	public body: App.Error;
+export const getErrorMessage = (e: any) => {
+	let code = '';
+	if (e.body?.detail.exception_id) code = e.body.detail.exception_id;
+	const errorMessage = i18n.t(`error.${code}`) ?? e.message;
+	return errorMessage;
+};
 
-	public constructor(status: number, exceptionId: ErrorCode, message?: string) {
-		this.status = status;
-		this.body = { message: message ?? '' };
-		this.error = {
-			exceptionId,
-			message: message ?? ''
-		};
-	}
-	public build(): HttpError_1 {
-		return error(this.status, this.error);
-	}
-	public throw() {
-		throw this.build();
-	}
-}
+export const triggerErrorToast = (toastStore: ToastStore, e: any) => {
+	console.error(e);
+	toastStore.trigger({
+		timeout: 2000,
+		message: getErrorMessage(e),
+		classes: 'variant-filled-error'
+	});
+};
+
+export const triggerErrorFlash = (flashStore: FlashStore, e: any) => {
+	flashStore.trigger({
+		type: 'error',
+		message: getErrorMessage(e)
+	});
+};

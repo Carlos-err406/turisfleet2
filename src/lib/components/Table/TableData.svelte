@@ -1,5 +1,5 @@
 <script lang="ts">
-	import i18n from '$lib/i18n';
+	import i18n, { getTranslatedHeader } from '$lib/i18n';
 	import { downSimple, edit, trash } from '$lib/icons';
 	import { actionsHeight, navHeight } from '$lib/stores';
 	import type { PaginationStore } from '$lib/stores/pagination';
@@ -49,7 +49,7 @@
 			{#each headers as th}
 				<th class="cursor-pointer" on:click={() => handleOrderByChange(th)}>
 					<div class="flex items-center justify-start gap-0">
-						<span class="px-2">{i18n.t(`table.header.${th}`) || `i18n - ${th}`}</span>
+						<span class="px-2">{getTranslatedHeader(th)}</span>
 						<span
 							id="order-by-button-{th}"
 							tabindex="-1"

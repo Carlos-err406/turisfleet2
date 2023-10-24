@@ -4,6 +4,7 @@
 		toastSuccessfullyDeleted,
 		toastSuccessfullyEdited
 	} from '$lib';
+	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
@@ -31,7 +32,9 @@
 		$loading = true;
 		try {
 			data = await carService.getCars($paginationStore);
-		} catch (e) {}
+		} catch (e) {
+			triggerErrorToast(toastStore, e);
+		}
 		$loading = false;
 	};
 
@@ -62,7 +65,9 @@
 				await carService.deleteCar(detail.id_car);
 				getAll();
 				toastSuccessfullyDeleted(toastStore);
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorToast(toastStore, e);
+			}
 			$loading = false;
 		});
 	};

@@ -7,6 +7,7 @@
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IProgramCreate = {
@@ -26,7 +27,9 @@
 				const program = await programService.createProgram(values);
 				$modalStore[0].response?.(program);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

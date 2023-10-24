@@ -9,6 +9,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { loading } from '$lib/stores';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IGroup = $modalStore[0].meta.values;
@@ -26,7 +27,9 @@
 				const group = await groupService.editGroup(values.id_group, values);
 				$modalStore[0].response?.(group);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

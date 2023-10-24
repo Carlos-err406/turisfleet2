@@ -9,6 +9,7 @@
 	import ModalBase from '../ModalBase.svelte';
 	import { situations } from './situations';
 	import { loading } from '$lib/stores';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: ISituationCreate = {
@@ -29,7 +30,9 @@
 				const situation = await situationService.createSituation(values);
 				$modalStore[0].response?.(situation);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};

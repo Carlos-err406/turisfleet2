@@ -4,6 +4,7 @@
 		toastSuccessfullyDeleted,
 		toastSuccessfullyEdited
 	} from '$lib';
+	import { triggerErrorToast } from '$lib/CustomError';
 	import { durationObjToStr, durationStrToObj } from '$lib/components/Inputs/DurationInput.svelte';
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
@@ -18,7 +19,7 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
-	
+
 	setContext('pagination', paginationStore);
 	let data: ISpecificProgram[] = [];
 	type FlattenDataType = ISpecificProgram & { program_name: string; duration_flat: string };
@@ -40,7 +41,9 @@
 				program_name: value.program.program_name,
 				duration_flat: durationObjToStr(durationStrToObj(value.duration))
 			}));
-		} catch (e) {}
+		} catch (e) {
+			triggerErrorToast(toastStore, e);
+		}
 		$loading = false;
 	};
 
@@ -73,7 +76,9 @@
 				);
 				getAll();
 				toastSuccessfullyDeleted(toastStore);
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorToast(toastStore, e);
+			}
 			$loading = false;
 		});
 	};

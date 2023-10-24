@@ -12,6 +12,7 @@
 	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({
@@ -51,7 +52,7 @@
 
 		const date = dayjs(`${month}-${day}-${year}`);
 		let isValid = true;
-		if(month<1 || month>12) isValid = false;
+		if (month < 1 || month > 12) isValid = false;
 		else if (day > 31 || day < 1) isValid = false;
 		else if (month == 2 && day > 29) isValid = false;
 		else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
@@ -59,25 +60,27 @@
 		if (!isValid || !date.isValid()) {
 			triggerInvalidID();
 		}
-		console.log(isValid)
+		console.log(isValid);
 		return isValid;
 	};
 	const create = async () => {
 		if (validate()) {
-			values.license_categories = selectedCategories.map((c) => ({
-				license_category: c.value.license_category
-			}));
+			// values.license_categories = selectedCategories.map((c) => ({
+			// 	license_category: c.value.license_category
+			// }));
 			$loading = true;
 			try {
 				const driver = await driverService.createDriver(values);
 				$modalStore[0].response?.(driver);
 				close();
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 			$loading = false;
 		}
 	};
 	let selectedCategories: DropdownOption[] = [
-		{ label: LicenseCategory.B, value: { license_category: LicenseCategory.B } }
+		{ label: LicenseCategory.B, value: LicenseCategory.B }
 	];
 </script>
 

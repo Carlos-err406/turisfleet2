@@ -4,6 +4,7 @@
 		toastSuccessfullyDeleted,
 		toastSuccessfullyEdited
 	} from '$lib';
+	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
@@ -27,7 +28,9 @@
 		try {
 			data = await userService.getUsers($paginationStore);
 			flattenData = data.map((value) => ({ ...value, role_i18n: i18n.t(`label.${value.role}`) }));
-		} catch (e) {}
+		} catch (e) {
+			triggerErrorToast(toastStore, e);
+		}
 		$loading = false;
 	};
 
@@ -58,7 +61,9 @@
 				await userService.deleteUser(detail.id_user);
 				getAll();
 				toastSuccessfullyDeleted(toastStore);
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorToast(toastStore, e);
+			}
 			$loading = false;
 		});
 	};

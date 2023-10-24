@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
-	import { authService } from '$lib/services';
+	import { triggerErrorToast } from '$lib/CustomError';
+	import i18n from '$lib/i18n';
 	import { lock, user } from '$lib/icons';
+	import { authService } from '$lib/services';
 	import { loading, loggedUser } from '$lib/stores';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
-	import i18n from '$lib/i18n';
 	const toastStore = getToastStore();
 
 	let username: string = '';
@@ -15,14 +16,9 @@
 		$loading = true;
 		try {
 			$loggedUser = await authService.login({ username, password });
-			goto('/app/users');
+			await goto('/app/users');
 		} catch (e: any) {
-			const { exceptionID, message } = e;
-			toastStore.trigger({
-				timeout: 2000,
-				message,
-				classes: 'variant-filled-error'
-			});
+			triggerErrorToast(toastStore, e);
 		}
 		$loading = false;
 	};

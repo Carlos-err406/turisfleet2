@@ -7,7 +7,7 @@ export interface IDriverCreate {
 	id_number: string;
 	name: string;
 	address: string;
-	license_categories: { license_category: LicenseCategory }[];
+	license_categories: LicenseCategory[];
 }
 export interface IDriver extends IDriverCreate {
 	id_driver: number;

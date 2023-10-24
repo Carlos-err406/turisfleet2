@@ -4,6 +4,7 @@
 		toastSuccessfullyDeleted,
 		toastSuccessfullyEdited
 	} from '$lib';
+	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
@@ -33,11 +34,11 @@
 			data = await driverService.getDrivers($paginationStore);
 			flattenData = data.map((value) => ({
 				...value,
-				license_categories_flat: value.license_categories
-					.map((lc) => lc.license_category) //TODO remove this when api updates it
-					.join(', ')
+				license_categories_flat: value.license_categories.join(', ')
 			}));
-		} catch (e) {}
+		} catch (e) {
+			triggerErrorToast(toastStore, e);
+		}
 		$loading = false;
 	};
 
@@ -68,7 +69,9 @@
 				await driverService.deleteDriver(detail.id_driver);
 				getAll();
 				toastSuccessfullyDeleted(toastStore);
-			} catch (e) {}
+			} catch (e) {
+				triggerErrorToast(toastStore, e);
+			}
 			$loading = false;
 		});
 	};

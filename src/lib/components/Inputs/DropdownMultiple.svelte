@@ -33,7 +33,7 @@
 			}
 		}
 	};
-	$:console.log(selectedOptions)
+	$: console.log(selectedOptions);
 </script>
 
 <div class="">

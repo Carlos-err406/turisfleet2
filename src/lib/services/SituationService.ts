@@ -65,7 +65,7 @@ export const getDriverSituations = async (id: number): Promise<IDriverSituation[
 export const deleteDriverSituation = async (
 	driverID: number,
 	situationID: number,
-	date:string,
+	date: string
 ): Promise<void> => {
 	return PROXY_DELETE(`/drivers/${driverID}/situations/${situationID}`, makeParams({ date }));
 };

@@ -5,13 +5,14 @@
 	import PopupItem from './PopupItem.svelte';
 	import i18n from '$lib/i18n';
 	import { reportService } from '$lib/services';
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { Modals } from '../Modals';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import type { Dayjs } from 'dayjs';
 	import dayjs from 'dayjs';
 	export let placement: Placement = 'bottom';
 	const modalStore = getModalStore();
+	const toastStore = getToastStore();
 	const handleDriversList = () => {
 		reportService.driversListReport();
 	};

@@ -43,7 +43,7 @@ interface CreateOneFromToastConfig {
 	stores: { toast: ToastStore; modal: ModalStore };
 	toastMessage: string;
 	creationModal: Modals;
-	modalToReopen: Modals;
+	modalToReopen?: Modals;
 	onResolve: (r: any) => void;
 	meta?: any;
 }
@@ -72,21 +72,25 @@ export const createOneFromToast = (config: CreateOneFromToastConfig) => {
 						component: creationModal,
 						meta: { flashes: getFlashStore() },
 						response: (r1) => {
-							console.info('creation modal response received...');
-							if (r1) {
-								console.info('triggering modal to reopen...', modalToReopen);
-								modal.trigger({
-									type: 'component',
-									component: modalToReopen,
-									meta: { flashes: getFlashStore(), ...meta, onResolve },
-									response: (r2) => {
-										console.info('modal to reopen response received...');
-										if (r2) {
-											console.info('running resolve callback');
-											onResolve(r2);
+							if (modalToReopen) {
+								console.info('creation modal response received...');
+								if (r1) {
+									console.info('triggering modal to reopen...', modalToReopen);
+									modal.trigger({
+										type: 'component',
+										component: modalToReopen,
+										meta: { flashes: getFlashStore(), ...meta, onResolve },
+										response: (r2) => {
+											console.info('modal to reopen response received...');
+											if (r2) {
+												console.info('running resolve callback');
+												onResolve(r2);
+											}
 										}
-									}
-								});
+									});
+								}
+							} else {
+								onResolve(r1);
 							}
 						}
 					},
