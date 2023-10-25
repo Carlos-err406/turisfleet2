@@ -11,22 +11,38 @@
 	import { userService } from '$lib/services';
 	import type { IUser } from '$lib/services/UserService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
+
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
+
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
 	type FlattenDataType = IUser & { role_i18n: string };
-	let data: IUser[] = [];
 	let flattenData: FlattenDataType[] = [];
 	const headers: (keyof FlattenDataType)[] = ['username', 'role_i18n'];
 
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await userService.getUsers($paginationStore);
+			const { data, total, page, page_size } = await userService.getUsers(
+				$paginationStore,
+				$queryStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({ ...value, role_i18n: i18n.t(`label.${value.role}`) }));
 		} catch (e) {
 			triggerErrorToast(toastStore, e);
@@ -37,17 +53,15 @@
 	onMount(getAll);
 
 	const handleCreateUser = () => {
-		handleCreate(modalStore, Modals.CREATE_USER, (created) => {
-			console.log(created);
+		handleCreate(modalStore, Modals.CREATE_USER, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
-			getAll();
 		});
 	};
 
 	const handleEditUser = ({ detail }: CustomEvent<IUser>) => {
-		handleEdit(modalStore, Modals.EDIT_USER, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_USER, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -55,7 +69,6 @@
 	const handleDeleteUser = ({ detail }: CustomEvent<IUser>) => {
 		const target = detail.username;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(detail);
 			$loading = true;
 			try {
 				await userService.deleteUser(detail.id_user);
@@ -68,13 +81,17 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {
-		paginationStore.gotoPage(detail);
-		getAll();
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		$loading = true;
+		await getAll();
+		$loading = false;
 	};
-	const handleAmountChange = ({ detail }: CustomEvent) => {
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
-		getAll();
+		$loading = true;
+		await getAll();
+		$loading = false;
 	};
 	const handleOrderChange = ({
 		detail
@@ -100,6 +117,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.users')}

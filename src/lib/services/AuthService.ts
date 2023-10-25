@@ -1,5 +1,4 @@
 import CustomError from '$lib/CustomError';
-import { ErrorCode } from '$lib/types/ErrorCodes';
 import * as proxy from './Base/ProxyService';
 import type { RoleType } from './UserService';
 
@@ -12,8 +11,7 @@ export const login = async (auth: ILogin): Promise<ILoggedUser> => {
 			'Content-Type': 'application/json'
 		}
 	}).then((response) => {
-		if (response.status === 401)
-			throw new CustomError(ErrorCode.INVALID_CREDENTIALS, 'invalid credentials');
+		if (response.status === 401) throw new CustomError('00040', 'invalid credentials');
 		else return response.json();
 	});
 	return response;

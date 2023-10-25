@@ -1,6 +1,6 @@
 import type { IPagination } from '$lib/stores/pagination';
 import type { LicenseCategory } from '$lib/types/LicenseTypes';
-import { getAll, makeParams } from './Base/BaseService';
+import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
 
 export interface ICarCreate {
@@ -16,8 +16,13 @@ export interface ICar extends ICarCreate {
 }
 export interface ICarEdit extends ICarCreate {}
 
-export const getCars = async (pagination: IPagination): Promise<ICar[]> => {
-	return PROXY_GET('/cars', makeParams(pagination));
+export const getCars = async (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<ICar[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET('/cars', makeParams(params));
 };
 export const deleteCar = async (id: number): Promise<void> => {
 	return PROXY_DELETE('/cars/' + id);

@@ -18,7 +18,6 @@
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const onResolve: (r: any) => void = $modalStore[0].meta.onResolve;
-	console.log(onResolve);
 	let values: ICarSituationCreate = {
 		id_situation: 0,
 		date: tomorrow(),

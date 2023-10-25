@@ -25,3 +25,4 @@ export const settings = `<svg width="24" height="24" viewBox="0 0 24 24"><use hr
 export const alertTriangle = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/alert-triangle.svg#alertTriangle"></use></svg>`;
 export const trash = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/trash.svg#trash"></use></svg>`;
 export const edit = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/edit.svg#edit"></use></svg>`;
+export const xCircle = `<svg width="24" height="24" viewBox="0 0 24 24"><use href="/img/x-circle.svg#x-circle"></use></svg>`;

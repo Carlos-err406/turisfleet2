@@ -12,15 +12,24 @@
 	import { programService } from '$lib/services';
 	import type { ISpecificProgram } from '$lib/services/ProgramService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
 
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+//TODO test
 	let data: ISpecificProgram[] = [];
 	type FlattenDataType = ISpecificProgram & { program_name: string; duration_flat: string };
 	let flattenForTable: FlattenDataType[] = [];
@@ -35,7 +44,13 @@
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await programService.getSpecificPrograms($paginationStore);
+			const { data, total, page, page_size } = await programService.getSpecificPrograms(
+				$paginationStore,
+				$queryStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenForTable = data.map((value) => ({
 				...value,
 				program_name: value.program.program_name,
@@ -49,17 +64,15 @@
 
 	onMount(getAll);
 	const handleCreateSpecificProgram = () => {
-		handleCreate(modalStore, Modals.CREATE_PROGRAM_SPECIFIC, (created) => {
-			console.log(created);
-			getAll();
+		handleCreate(modalStore, Modals.CREATE_PROGRAM_SPECIFIC, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditSpecificProgram = ({ detail }: CustomEvent<ISpecificProgram>) => {
-		handleEdit(modalStore, Modals.EDIT_PROGRAM_SPECIFIC, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_PROGRAM_SPECIFIC, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -67,7 +80,6 @@
 	const handleDeleteSpecificProgram = ({ detail }: CustomEvent<ISpecificProgram>) => {
 		const target = detail.description;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(detail);
 			$loading = true;
 			try {
 				await programService.deleteSpecificProgram(
@@ -112,6 +124,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.specificPrograms')}

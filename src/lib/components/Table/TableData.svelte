@@ -6,12 +6,14 @@
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher, getContext } from 'svelte';
 	import type { ColumnOrientation } from './Table.svelte';
+	import type { Writable } from 'svelte/store';
 	export let headers: string[];
 	export let data: any[];
 	let tableElement: HTMLTableElement;
 	const dispatch = createEventDispatcher();
 
 	const pagination: PaginationStore = getContext('pagination');
+	const size: Writable<number> = getContext('totalElements');
 
 	const handleEdit = (item: (typeof data)[0]) => dispatch('edit', item);
 	const handleDelete = (item: (typeof data)[0]) => dispatch('delete', item);
@@ -25,12 +27,11 @@
 	};
 
 	let paginationSettings: PaginationSettings = {
-		page: Math.ceil($pagination.skip / $pagination.limit),
-		limit: $pagination.limit,
-		size: data.length,
+		page: $pagination.page - 1,
+		limit: $pagination.page_size,
+		size: $size,
 		amounts: [10, 20, 50, 100, 200]
 	};
-
 	const footerFiller = () => {
 		let filler = [];
 		for (let i = 0; i < headers.length - 1; i++) {
@@ -41,7 +42,7 @@
 </script>
 
 <div
-	class="table-wrapper border-surface-50 dark:!border-0"
+	class="table-wrapper !z-0 border-surface-50 dark:!border-0"
 	style="--nav-height: {$navHeight}px; --actions-height: {$actionsHeight}px"
 >
 	<table class="relative" bind:this={tableElement}>

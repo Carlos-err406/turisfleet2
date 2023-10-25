@@ -1,6 +1,6 @@
 import type { IPagination } from '$lib/stores/pagination';
 import type { LicenseCategory } from '$lib/types/LicenseTypes';
-import { getAll, makeParams } from './Base/BaseService';
+import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
 
 export interface IDriverCreate {
@@ -15,8 +15,13 @@ export interface IDriver extends IDriverCreate {
 
 export interface IDriverEdit extends IDriverCreate {}
 
-export const getDrivers = (pagination: IPagination): Promise<IDriver[]> => {
-	return PROXY_GET('/drivers', makeParams(pagination));
+export const getDrivers = (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<IDriver[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET('/drivers', makeParams(params));
 };
 
 export const getDriver = (id: number): Promise<IDriver> => {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import i18n from '$lib/i18n';
-	import type { IUser } from '$lib/services/UserService';
+	import type { IUser, IUserEdit } from '$lib/services/UserService';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { Modals } from '..';
@@ -8,9 +8,15 @@
 	import FormFooter from '../FormFooter.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { userService } from '$lib/services';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import { roles } from './user';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
-	const values: IUser = $modalStore[0].meta.values;
+	const user: IUser = $modalStore[0].meta.values;
+	const editedUser: IUserEdit = {
+		username: user.username,
+		role: user.role
+	};
 	const close = () => {
 		modalStore.close();
 	};
@@ -20,8 +26,8 @@
 	};
 	const edit = async () => {
 		if (validate()) {
-			const user = await userService.editUser(values.id_user, values);
-			$modalStore[0].response?.(user);
+			const updatedUser = await userService.editUser(user.id_user, editedUser);
+			$modalStore[0].response?.(updatedUser);
 			close();
 		}
 	};
@@ -29,7 +35,7 @@
 		const changePasswordSettings: ModalSettings = {
 			type: 'component',
 			component: Modals.CHANGE_PASSWORD,
-			meta: { flashes, values }
+			meta: { flashes, values: user }
 		};
 		$modalStore = [changePasswordSettings, ...$modalStore];
 	};
@@ -46,9 +52,17 @@
 					type="text"
 					id="user-edit-username"
 					placeholder={i18n.t('placeholder.username')}
-					bind:value={values.username}
+					bind:value={editedUser.username}
 				/>
 			</div>
+			<Dropdown
+				required
+				options={roles}
+				bind:value={editedUser.role}
+				placeholder={i18n.t('placeholder.role')}
+			>
+				{i18n.t('label.role')}
+			</Dropdown>
 			<svelte:fragment slot="footer">
 				<FormFooter>
 					<button

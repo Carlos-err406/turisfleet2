@@ -1,6 +1,6 @@
 import type { IPagination } from '$lib/stores/pagination';
 import type { CollectLineNumbers } from 'vitest';
-import { getAll, makeParams } from './Base/BaseService';
+import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
 
 //------------------
@@ -13,8 +13,13 @@ export interface IProgram extends IProgramCreate {
 }
 export interface IProgramEdit extends IProgramCreate {}
 
-export const getPrograms = async (pagination: IPagination): Promise<IProgram[]> => {
-	return PROXY_GET('/programs', makeParams(pagination));
+export const getPrograms = async (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<IProgram[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET('/programs', makeParams(params));
 };
 export const deleteProgram = async (id: number): Promise<void> => {
 	return PROXY_DELETE('/programs/' + id);
@@ -47,8 +52,13 @@ export interface ISpecificProgram extends ISpecificProgramBase {
 }
 export interface ISpecificProgramEdit extends ISpecificProgramCreate {}
 
-export const getSpecificPrograms = async (pagination: IPagination): Promise<ISpecificProgram[]> => {
-	return PROXY_GET('/programs/specific-programs', makeParams(pagination));
+export const getSpecificPrograms = async (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<ISpecificProgram[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET('/programs/specific-programs', makeParams(params));
 };
 export const deleteSpecificProgram = async (
 	idProgram: number,
@@ -71,6 +81,10 @@ export const editSpecificProgram = async (
 		`/programs/${idProgram}/specific-programs/${idSpecificProgram}`,
 		JSON.stringify(specificProgram)
 	);
+};
+
+export const getAllSpecificPrograms = async (): Promise<ISpecificProgram[]> => {
+	return getAll(getSpecificPrograms);
 };
 
 //END SPECIFIC PROGRAMS

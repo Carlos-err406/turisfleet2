@@ -5,6 +5,7 @@
 </script>
 
 <button
+	type="button"
 	{id}
 	class="font-semibold btn variant-outline-surface"
 	class:bg-primary-active-token={active}

@@ -8,32 +8,24 @@
 <script lang="ts">
 	import { v4 } from 'uuid';
 	export let options: DropdownOption[];
-	export let placeholder = '';
 	export let id = v4();
 	export let required = false;
-	export let selectedOptions: DropdownOption[] = [];
+	export let values: any[];
 	const handleOptionClick = (e: MouseEvent, option: DropdownOption) => {
 		const { ctrlKey, button } = e;
 		if (button === 0) {
 			e.preventDefault();
 			if (ctrlKey) {
-				if (
-					selectedOptions.some(
-						({ value }) => JSON.stringify(value) === JSON.stringify(option.value)
-					)
-				) {
-					selectedOptions = selectedOptions.filter(
-						({ value }) => JSON.stringify(value) !== JSON.stringify(option.value)
-					);
+				if (values.includes(option.value)) {
+					values = values.filter((value) => value != option.value);
 				} else {
-					selectedOptions = [...selectedOptions, option];
+					values = [...values, option.value];
 				}
 			} else {
-				selectedOptions = [option];
+				values = [option.value];
 			}
 		}
 	};
-	$: console.log(selectedOptions);
 </script>
 
 <div class="">
@@ -41,14 +33,9 @@
 		<slot />
 	</label>
 	<select name="" multiple {id} {required} class="!pr-2">
-		{#if placeholder}
-			<option value="" disabled selected hidden>{placeholder}</option>
-		{/if}
 		{#each options as option}
 			<option
-				selected={selectedOptions.some(
-					({ value }) => JSON.stringify(value) === JSON.stringify(option.value)
-				)}
+				selected={values.includes(option.value)}
 				value={option.value}
 				on:click={(e) => handleOptionClick(e, option)}
 			>

@@ -10,14 +10,19 @@
 	import { getFlashStore } from '$lib/stores/flashes';
 	import type { Dayjs } from 'dayjs';
 	import dayjs from 'dayjs';
+	import { loading } from '$lib/stores';
 	export let placement: Placement = 'bottom';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
-	const handleDriversList = () => {
-		reportService.driversListReport();
+	const handleDriversList = async () => {
+		$loading = true;
+		await reportService.driversListReport(toastStore);
+		$loading = false;
 	};
-	const handleCarsList = () => {
-		reportService.carsListReport();
+	const handleCarsList = async () => {
+		$loading = true;
+		await reportService.carsListReport(toastStore);
+		$loading = false;
 	};
 	const handleRequestOn = () => {
 		new Promise<Dayjs>((resolve) => {
@@ -27,24 +32,36 @@
 				meta: { flashes: getFlashStore() },
 				response: (r) => r && resolve(dayjs(r))
 			});
-		}).then((date) => {
-			reportService.requestsOnDateReport(date);
+		}).then(async (date) => {
+			$loading = true;
+			await reportService.requestsOnDateReport(toastStore, date);
+			$loading = false;
 		});
 	};
-	const handleCarSituations = () => {
-		reportService.carSituationsReport();
+	const handleCarSituations = async () => {
+		$loading = true;
+		await reportService.carSituationsReport(toastStore);
+		$loading = false;
 	};
-	const handleDriverSituations = () => {
-		reportService.driverSituationsReport();
+	const handleDriverSituations = async () => {
+		$loading = true;
+		await reportService.driverSituationsReport(toastStore);
+		$loading = false;
 	};
-	const handleCarDriver = () => {
-		reportService.carDriverRelationReport();
+	const handleCarDriver = async () => {
+		$loading = true;
+		await reportService.carDriverRelationReport(toastStore);
+		$loading = false;
 	};
-	const handleDragsList = () => {
-		reportService.dragsListReport();
+	const handleDragsList = async () => {
+		$loading = true;
+		await reportService.dragsListReport(toastStore);
+		$loading = false;
 	};
-	const handleRoutingSheets = () => {
-		reportService.routingSheetsReport();
+	const handleRoutingSheets = async () => {
+		$loading = true;
+		await reportService.routingSheetsReport(toastStore);
+		$loading = false;
 	};
 	const handleRequestModifications = () => {
 		new Promise<any>((resolve) => {
@@ -54,8 +71,10 @@
 				response: (r) => r && resolve(r),
 				meta: { flashes: getFlashStore() }
 			});
-		}).then((request) => {
-			reportService.requestModificationsReport(request);
+		}).then(async (request) => {
+			$loading = true;
+			await reportService.requestModificationsReport(toastStore, request);
+			$loading = false;
 		});
 	};
 </script>

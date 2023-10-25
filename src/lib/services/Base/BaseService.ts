@@ -18,7 +18,6 @@ export const fetchWrapper = async (input: RequestInfo, init?: RequestInit): Prom
 		const ref = await authService.refresh();
 		if ([400, 401].includes(ref.status)) {
 			window.location.replace('/auth/login');
-			// alert("SESSION EXPIRED!!")
 			throw Error('UNAUTHORIZED');
 		} else {
 			return await fetch(input, init);
@@ -43,17 +42,18 @@ export const handleResponse = async <T>(response: Response): Promise<T> => {
  * @returns all entries of type T
  */
 export const getAll = async <T>(
-	getter: (pagination: IPagination) => Promise<T[]>,
+	getter: (pagination: IPagination) => Promise<PaginatedResponse<T[]>>,
 	chunkSize = 200
 ) => {
 	let entries: T[] = [];
-	let entriesSkip = 0;
+	let requestPage = 1;
+	let page_size = chunkSize;
 	while (true) {
 		try {
-			const newEntries = await getter({ limit: chunkSize, skip: entriesSkip });
-			entries = [...entries, ...newEntries];
-			if (newEntries.length < chunkSize) break;
-			entriesSkip += chunkSize;
+			const { data, total_pages, page } = await getter({ page_size, page: requestPage });
+			entries = [...entries, ...data];
+			if (page == total_pages || data.length === 0) break;
+			requestPage++;
 		} catch (error) {
 			console.error(`Failed to get entries: ${error}`);
 			break;
@@ -61,3 +61,15 @@ export const getAll = async <T>(
 	}
 	return entries;
 };
+
+export interface PaginatedResponse<T> {
+	page: number;
+	page_size: number;
+	pagination: {
+		next: string;
+		previous: string;
+	};
+	total: number;
+	total_pages: number;
+	data: T;
+}

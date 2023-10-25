@@ -53,12 +53,8 @@
 		}
 		return isValid;
 	};
-	$: console.log(selectedCategories);
 	const edit = async () => {
 		if (validate()) {
-			// values.license_categories = selectedCategories.map(({ value }) => {
-			// 	return { license_category: value as LicenseCategory };
-			// });
 			$loading = true;
 			try {
 				const driver = await driverService.editDriver(values.id_driver, values);
@@ -70,9 +66,10 @@
 			$loading = false;
 		}
 	};
-	let selectedCategories: DropdownOption[] = values.license_categories.map(
-		({ license_category }) => ({ label: license_category, value: license_category })
-	);
+	let selectedCategories: DropdownOption[] = values.license_categories.map((category) => ({
+		label: category,
+		value: category
+	}));
 </script>
 
 {#if $modalStore[0]}
@@ -99,7 +96,7 @@
 					bind:value={values.address}
 				/>
 			</div>
-			<DropdownMultiple options={categories} bind:selectedOptions={selectedCategories} required>
+			<DropdownMultiple options={categories} bind:values={selectedCategories} required>
 				{i18n.t('label.licenseCategory')}
 			</DropdownMultiple>
 		</BaseForm>

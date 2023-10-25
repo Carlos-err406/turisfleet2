@@ -8,17 +8,27 @@
 	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
-	import { driverService, situationService } from '$lib/services';
-	import type { IDriver } from '$lib/services/DriverService';
+	import { situationService } from '$lib/services';
 	import type { IDriverSituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
+
 	const toastStore = getToastStore();
-	const paginationStore = getPaginationStore();
 	const modalStore = getModalStore();
+	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
+
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
 	type FlattenDataType = IDriverSituation & {
 		name: string;
 		id_number: string;
@@ -36,7 +46,13 @@
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await situationService.getDriversSituations($paginationStore);
+			const { data, total, page, page_size } = await situationService.getDriversSituations(
+				$paginationStore,
+				$queryStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({
 				...value,
 				name: value.driver.name,
@@ -52,26 +68,22 @@
 	onMount(getAll);
 
 	const handleCreateDriverSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, (created) => {
-			console.log(created);
-			getAll();
+		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditDriverSituation = ({ detail }: CustomEvent<IDriverSituation>) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION_DRIVER, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_SITUATION_DRIVER, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
 	const handleDeleteDriverSituation = ({ detail }: CustomEvent<IDriverSituation>) => {
 		const target = detail.driver.name;
-		console.log(detail);
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(deleted);
 			$loading = true;
 			try {
 				await situationService.deleteDriverSituation(
@@ -88,8 +100,14 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
+	};
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		await getAll();
+	};
 	const handleOrderChange = ({
 		detail
 	}: CustomEvent<{ header: keyof FlattenDataType; orientation: ColumnOrientation }>) => {
@@ -120,6 +138,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.driverSituations')}

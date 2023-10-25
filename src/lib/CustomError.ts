@@ -1,12 +1,11 @@
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import i18n from './i18n';
-import type { ErrorCode } from './types/ErrorCodes';
 import type { FlashStore } from './stores/flashes';
 
 export default class CustomError extends Error {
-	public body: { detail: { exception_id: ErrorCode; message: string } };
+	public body: { detail: { exception_id: string; message: string } };
 
-	public constructor(exception_id: ErrorCode, message: string) {
+	public constructor(exception_id: string, message: string) {
 		super(message);
 		this.body = {
 			detail: {
@@ -20,14 +19,14 @@ export default class CustomError extends Error {
 export const getErrorMessage = (e: any) => {
 	let code = '';
 	if (e.body?.detail.exception_id) code = e.body.detail.exception_id;
-	const errorMessage = i18n.t(`error.${code}`) ?? e.message;
+	const errorMessage = i18n.t(`error.${code}`) || i18n.t('error.00060');
 	return errorMessage;
 };
 
 export const triggerErrorToast = (toastStore: ToastStore, e: any) => {
 	console.error(e);
 	toastStore.trigger({
-		timeout: 2000,
+		timeout: 5000,
 		message: getErrorMessage(e),
 		classes: 'variant-filled-error'
 	});

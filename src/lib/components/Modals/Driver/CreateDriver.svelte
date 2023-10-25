@@ -17,14 +17,14 @@
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({
 		label: key,
-		value: { license_category: value } //TODO remove this when api updates it
+		value
 	}));
 
 	let values: IDriverCreate = {
 		id_number: '',
 		name: '',
 		address: '',
-		license_categories: []
+		license_categories: [LicenseCategory.B]
 	};
 	const close = () => {
 		modalStore.close();
@@ -60,7 +60,6 @@
 		if (!isValid || !date.isValid()) {
 			triggerInvalidID();
 		}
-		console.log(isValid);
 		return isValid;
 	};
 	const create = async () => {
@@ -79,9 +78,6 @@
 			$loading = false;
 		}
 	};
-	let selectedCategories: DropdownOption[] = [
-		{ label: LicenseCategory.B, value: LicenseCategory.B }
-	];
 </script>
 
 {#if $modalStore[0]}
@@ -108,7 +104,7 @@
 					bind:value={values.address}
 				/>
 			</div>
-			<DropdownMultiple options={categories} bind:selectedOptions={selectedCategories} required>
+			<DropdownMultiple options={categories} bind:values={values.license_categories} required>
 				{i18n.t('label.licenseCategory')}
 			</DropdownMultiple>
 		</BaseForm>

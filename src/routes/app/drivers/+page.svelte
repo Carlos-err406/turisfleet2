@@ -11,15 +11,25 @@
 	import { driverService } from '$lib/services';
 	import type { IDriver } from '$lib/services/DriverService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
+
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
+
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
 	type FlattenDataType = IDriver & { license_categories_flat: string };
-	let data: IDriver[] = [];
 	let flattenData: FlattenDataType[] = [];
 	const headers: (keyof FlattenDataType)[] = [
 		'name',
@@ -31,7 +41,13 @@
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await driverService.getDrivers($paginationStore);
+			const { data, total, page, page_size } = await driverService.getDrivers(
+				$paginationStore,
+				$queryStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({
 				...value,
 				license_categories_flat: value.license_categories.join(', ')
@@ -45,17 +61,15 @@
 	onMount(getAll);
 
 	const handleCreateDriver = () => {
-		handleCreate(modalStore, Modals.CREATE_DRIVER, (created) => {
-			console.log(created);
+		handleCreate(modalStore, Modals.CREATE_DRIVER, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
-			getAll();
 		});
 	};
 
 	const handleEditDriver = ({ detail }: CustomEvent<IDriver>) => {
-		handleEdit(modalStore, Modals.EDIT_DRIVER, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_DRIVER, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -63,11 +77,10 @@
 	const handleDeleteDriver = ({ detail }: CustomEvent<IDriver>) => {
 		const target = detail.name;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(detail);
 			$loading = true;
 			try {
 				await driverService.deleteDriver(detail.id_driver);
-				getAll();
+				await getAll();
 				toastSuccessfullyDeleted(toastStore);
 			} catch (e) {
 				triggerErrorToast(toastStore, e);
@@ -76,13 +89,13 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {
-		paginationStore.gotoPage(detail);
-		getAll();
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
 	};
-	const handleAmountChange = ({ detail }: CustomEvent) => {
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
-		getAll();
+		await getAll();
 	};
 	const handleOrderChange = ({
 		detail
@@ -96,6 +109,7 @@
 				header = detail.header;
 		}
 	};
+	
 </script>
 
 <div class="overflow-hidden">
@@ -108,6 +122,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.drivers')}

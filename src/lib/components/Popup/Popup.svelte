@@ -27,7 +27,7 @@
 			<span class="text-xs font-bold">
 				<slot name="title" />
 			</span>
-			<div class="card p-4 max-w-sm shadow-lg" data-popup={target}>
+			<div class="card p-4 max-w-sm shadow-lg z-40" data-popup={target}>
 				<div class="grid grid-cols-1 gap-2 max-h-[70vh] overflow-auto text-primary-100">
 					<slot />
 				</div>

@@ -11,21 +11,37 @@
 	import { groupService } from '$lib/services';
 	import type { IGroup } from '$lib/services/GroupService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
-	setContext('pagination', paginationStore);
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
 
-	let data: IGroup[] = [];
+	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
+	let groups: IGroup[] = [];
 	const headers: (keyof IGroup)[] = ['country', 'tourist_amount'];
 
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await groupService.getGroups($paginationStore);
+			const { data, total, page, page_size } = await groupService.getGroups(
+				$paginationStore,
+				$queryStore
+			);
+			groups = data;
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 		} catch (e) {
 			triggerErrorToast(toastStore, e);
 		}
@@ -35,17 +51,15 @@
 	onMount(getAll);
 
 	const handleCreateGroup = () => {
-		handleCreate(modalStore, Modals.CREATE_GROUP, (created) => {
-			console.log(created);
+		handleCreate(modalStore, Modals.CREATE_GROUP, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
-			getAll();
 		});
 	};
 
 	const handleEditGroup = ({ detail }: CustomEvent<IGroup>) => {
-		handleEdit(modalStore, Modals.EDIT_GROUP, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_GROUP, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -53,11 +67,10 @@
 	const handleDeleteGroup = ({ detail }: CustomEvent<IGroup>) => {
 		const target = detail.country;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(detail);
 			$loading = true;
 			try {
 				await groupService.deleteGroup(detail.id_group);
-				getAll();
+				await getAll();
 				toastSuccessfullyDeleted(toastStore);
 			} catch (e) {
 				triggerErrorToast(toastStore, e);
@@ -66,20 +79,21 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {
-		paginationStore.gotoPage(detail);
-		getAll();
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
 	};
-	const handleAmountChange = ({ detail }: CustomEvent) => {
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
-		getAll();
+		await getAll();
 	};
-	const handleOrderChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = async ({ detail }: CustomEvent) => {};
+
 </script>
 
 <div class="overflow-hidden">
 	<Table
-		{data}
+		data={groups}
 		{headers}
 		on:insert={handleCreateGroup}
 		on:edit={handleEditGroup}
@@ -87,6 +101,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.groups')}

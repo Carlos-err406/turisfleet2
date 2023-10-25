@@ -7,8 +7,8 @@ import {
 } from 'svelte/store';
 
 export interface IPagination {
-	limit: number;
-	skip: number;
+	page: number;
+	page_size: number;
 }
 export interface PaginationStore {
 	gotoPage: (page: number) => void;
@@ -23,13 +23,13 @@ export interface PaginationStore {
 	update: (this: void, updater: Updater<IPagination>) => void;
 }
 export const getPaginationStore = (): PaginationStore => {
-	const { set, subscribe, update } = writable<IPagination>({ limit: 10, skip: 0 });
+	const { set, subscribe, update } = writable<IPagination>({ page: 1, page_size: 10 });
 
 	const gotoPage = (page: number) => {
 		update((updater) => {
 			return {
 				...updater,
-				skip: updater.limit * page
+				page
 			};
 		});
 	};
@@ -38,12 +38,12 @@ export const getPaginationStore = (): PaginationStore => {
 		update((updater) => {
 			return {
 				...updater,
-				limit
+				page_size: limit
 			};
 		});
 	};
 	const reset = () => {
-		set({ limit: 100, skip: 0 });
+		set({ page: 1, page_size: 10 });
 	};
 	return {
 		gotoPage,
@@ -57,3 +57,6 @@ export const getPaginationStore = (): PaginationStore => {
 
 const paginationStore = getPaginationStore();
 export default paginationStore;
+
+export const getTotalElementsStore = () => writable<number>(0);
+export const getQueryStringStore = () => writable<string | undefined>(undefined);

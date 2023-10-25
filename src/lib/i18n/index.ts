@@ -9,6 +9,8 @@ loading.set(true);
 const i18n = rosetta({
 	en: {
 		title: {
+			profile: 'Profile',
+
 			createCar: 'Create Car',
 			createUser: 'Create User',
 			createDriver: 'Create Driver',
@@ -54,7 +56,8 @@ const i18n = rosetta({
 			language: 'Language',
 			copilot: 'Copilot',
 			newPassword: 'New password',
-			currentPassword: 'Current Password',
+			currentPassword: 'Current password',
+			confirmPassword: 'Confirm password',
 			date: 'Date',
 			returnDate: 'Return date',
 			situation: 'Situation',
@@ -115,6 +118,7 @@ const i18n = rosetta({
 			copilot: 'copilot',
 			newPassword: 'new password',
 			currentPassword: 'current password',
+			confirmPassword: 'confirm password',
 			car: 'car',
 			situation: 'situation',
 			situationType: 'situation type',
@@ -158,17 +162,23 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
-			noDriversForReport: 'There are no drivers for the report',
-			noProgramsToCreateSpecificProgramFrom: 'No programs to create specific program from',
+			noSpecificProgramsToCreateRequest: 'There are no Specific Programs to create a request',
+			noGroupsToCreateRequest: 'There are no Groups to create a request',
+			noDataForThisReport: 'No data for this report',
+			noDriverSituationsForReport: 'There are no Driver Situations for the report',
+			noCarSituationsForReport: 'There are no Car Situations for the report',
+			noCarsForReport: 'There are no Cars for the report',
+			noDriversForReport: 'There are no Drivers for the report',
+			noProgramsToCreateSpecificProgramFrom: 'No Programs to create pecific program from',
 			noProgramsToEditSpecificProgramFrom: 'No programs to create specific program from',
-			noDriverToAssignToCar: 'No driver to assign to car',
+			noDriverToAssignToCar: 'No Driver to assign to Car',
 			invalidPlateNumber: 'Invalid plate number, should start with a letter followed by 6 digits',
-			noCarsToCreateSituations: 'No cars to create situations from',
-			noCarsToEditSituations: 'No cars to create situations from',
-			noDriversToCreateSituations: 'No drivers to create situations from',
-			noDriversToEditSituations: 'No drivers to create situations from',
-			noSituationTypesToCreateSituations: 'No situation types to create situations from',
-			noSituationTypesToEditSituations: 'No situation types to create situations from',
+			noCarsToCreateSituations: 'There are no Cars to create situations from',
+			noCarsToEditSituations: 'There are no Cars to edit situations from',
+			noDriversToCreateSituations: 'There are no Drivers to create situations from',
+			noDriversToEditSituations: 'There are no drivers to edit situations from',
+			noSituationTypesToCreateSituations: 'There are no situation types to create situations from',
+			noSituationTypesToEditSituations: 'There are no situation types to edit situations from',
 			created: 'Successfully created',
 			deleted: 'Successfully deleted',
 			updated: 'Successfully updated',
@@ -179,6 +189,7 @@ const i18n = rosetta({
 
 		table: {
 			header: {
+				driver_name: 'Driver name',
 				duration_flat: 'Duration',
 				role_i18n: 'Role',
 				role: 'Role',
@@ -258,7 +269,11 @@ const i18n = rosetta({
 			'00056': 'No car available for this request',
 			'00057': 'No copilot available for this request',
 			'00058': 'Request not found',
-			'00059': 'The driver is the current driver of a car'
+			'00059': 'The driver is the current driver of a car',
+			'00060': 'Something went wrong',
+			'00061': 'Wrong password',
+			'00062': 'This situation is being used',
+			'99999': 'Can not delete yourself'
 		},
 		misc: {
 			noData: 'No Data to display',
@@ -272,6 +287,8 @@ const i18n = rosetta({
 
 i18n.set('es', {
 	title: {
+		profile: 'Perfil',
+
 		createCar: 'Crear Carro',
 		createUser: 'Crear Usuario',
 		createDriver: 'Crear Conductor',
@@ -319,6 +336,7 @@ i18n.set('es', {
 		copilot: 'Copiloto',
 		newPassword: 'Nueva contraseña',
 		currentPassword: 'Contraseña actual',
+		confirmPassword: 'Confirmar contraseña',
 		date: 'Fecha',
 		returnDate: 'Fecha de retorno',
 		situation: 'Situación',
@@ -379,6 +397,7 @@ i18n.set('es', {
 		copilot: 'copiloto',
 		newPassword: 'nueva contraseña',
 		currentPassword: 'contraseña actual',
+		confirmPassword: 'confirmar contraseña',
 		car: 'carro',
 		situation: 'situación',
 		situationType: 'tipo de situación',
@@ -422,6 +441,12 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		noSpecificProgramsToCreateRequest: 'No hay programas específicos para crear una solicitud',
+		noGroupsToCreateRequest: 'No hay grupos para crear una solicitud',
+		noDataForThisReport: 'No hay datos para este reporte',
+		noDriverSituationsForReport: 'No existen situaciones de conductores para este reporte',
+		noCarSituationsForReport: 'No existen situaciones de coches para este reporte',
+		noCarsForReport: 'No existen coches para este reporte',
 		noDriversForReport: 'No existen conductores para este reporte',
 		noProgramsToCreateSpecificProgramFrom:
 			'No hay programas con los que crear programas específicos',
@@ -445,6 +470,7 @@ i18n.set('es', {
 	},
 	table: {
 		header: {
+			driver_name: 'Nombre del conductor',
 			duration_flat: 'Duración',
 			role_i18n: 'Rol',
 			role: 'Rol',
@@ -524,7 +550,11 @@ i18n.set('es', {
 		'00056': 'No hay coche disponible para esta solicitud',
 		'00057': 'No hay copiloto disponible para esta solicitud',
 		'00058': 'Solicitud no encontrada',
-		'00059': 'El conductor es el conductor actual de un coche'
+		'00059': 'El conductor es el conductor actual de un coche',
+		'00060': 'Algo salió mal',
+		'00061': 'Contraseña incorrecta',
+		'00062': 'Esta situación está en uso',
+		'99999': 'No se puede eliminar usted mismo'
 	},
 	misc: {
 		noData: 'Sin datos para mostrar',

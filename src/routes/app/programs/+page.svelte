@@ -11,21 +11,37 @@
 	import { programService } from '$lib/services';
 	import type { IProgram } from '$lib/services/ProgramService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 	const paginationStore = getPaginationStore();
-	setContext('pagination', paginationStore);
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
 
-	let data: IProgram[] = [];
+	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
+	let programs: IProgram[] = [];
 	const headers: (keyof IProgram)[] = ['program_name'];
 
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await programService.getPrograms($paginationStore);
+			const { data, total, page, page_size } = await programService.getPrograms(
+				$paginationStore,
+				$queryStore
+			);
+			programs = data;
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 		} catch (e) {
 			triggerErrorToast(toastStore, e);
 		}
@@ -35,17 +51,15 @@
 	onMount(getAll);
 
 	const handleCreateProgram = () => {
-		handleCreate(modalStore, Modals.CREATE_PROGRAM, (created) => {
-			console.log(created);
-			getAll();
+		handleCreate(modalStore, Modals.CREATE_PROGRAM, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditProgram = ({ detail }: CustomEvent<IProgram>) => {
-		handleEdit(modalStore, Modals.EDIT_PROGRAM, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_PROGRAM, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -53,7 +67,6 @@
 	const handleDeleteProgram = ({ detail }: CustomEvent<IProgram>) => {
 		const target = detail.program_name;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(detail);
 			$loading = true;
 			try {
 				await programService.deleteProgram(detail.id_program);
@@ -66,20 +79,20 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {
-		paginationStore.gotoPage(detail);
-		getAll();
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
 	};
-	const handleAmountChange = ({ detail }: CustomEvent) => {
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
-		getAll();
+		await getAll();
 	};
 	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 
 <div class="overflow-hidden">
 	<Table
-		{data}
+		data={programs}
 		{headers}
 		on:insert={handleCreateProgram}
 		on:edit={handleEditProgram}
@@ -87,6 +100,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.programs')}

@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+	
 	import NoData from './NoData.svelte';
 	import TableActions from './TableActions.svelte';
 	import TableData from './TableData.svelte';
@@ -10,8 +11,7 @@
 	export let data: any[] = [];
 </script>
 
-<!-- disableSearch={data.length === 0} -->
-<TableActions on:insert>
+<TableActions on:insert on:search>
 	<slot name="table-name" />
 	<svelte:fragment slot="insert">
 		<slot name="insert" />

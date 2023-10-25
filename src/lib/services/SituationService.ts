@@ -1,5 +1,5 @@
 import type { IPagination } from '$lib/stores/pagination';
-import { getAll, makeParams } from './Base/BaseService';
+import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
 import type { ICar } from './CarService';
 import type { IDriver } from './DriverService';
@@ -17,8 +17,13 @@ export interface ISituation extends ISituationCreate {
 }
 export interface ISituationEdit extends ISituationCreate {}
 
-export const getSituations = async (pagination: IPagination): Promise<ISituation[]> => {
-	return PROXY_GET('/situations', makeParams(pagination));
+export const getSituations = async (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<ISituation[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET('/situations', makeParams(params));
 };
 export const deleteSituation = async (id: number): Promise<void> => {
 	return PROXY_DELETE(`/situations/${id}`);
@@ -54,14 +59,18 @@ export interface IDriverSituation extends IDriverSituationBase {
 export interface IDriverSituationEdit extends IDriverSituationCreate {}
 
 export const getDriversSituations = async (
-	pagination: IPagination
-): Promise<IDriverSituation[]> => {
-	return PROXY_GET(`/drivers/situations`, makeParams(pagination));
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<IDriverSituation[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET(`/drivers/situations`, makeParams(params));
 };
 
 export const getDriverSituations = async (id: number): Promise<IDriverSituation[]> => {
 	return PROXY_GET(`/drivers/${id}/situations`);
 };
+
 export const deleteDriverSituation = async (
 	driverID: number,
 	situationID: number,
@@ -84,6 +93,10 @@ export const editDriverSituation = async (
 	return PROXY_PUT(`/drivers/${driverID}/situations/${situationID}`, JSON.stringify(situation));
 };
 
+export const getAllDriverSituations = async () => {
+	return getAll(getDriversSituations);
+};
+
 //END DRIVER SITUATIONS
 //-------------------------
 
@@ -103,11 +116,17 @@ export interface ICarSituation extends ICarSituationBase {
 
 export interface ICarSituationEdit extends ICarSituationCreate {}
 
+export const getCarsSituations = async (
+	pagination: IPagination,
+	query?: string
+): Promise<PaginatedResponse<ICarSituation[]>> => {
+	const params = { ...pagination };
+	query && Object.assign(params, { query });
+	return PROXY_GET(`/cars/situations`, makeParams(params));
+};
+
 export const getCarSituations = async (id: number): Promise<ICarSituation[]> => {
 	return PROXY_GET(`/cars/${id}/situations`);
-};
-export const getCarsSituations = async (pagination: IPagination): Promise<ICarSituation[]> => {
-	return PROXY_GET(`/cars/situations`, makeParams(pagination));
 };
 export const deleteCarSituation = async (
 	carID: number,
@@ -130,5 +149,7 @@ export const editCarSituation = async (
 ): Promise<ICarSituation> => {
 	return PROXY_PUT(`/cars/${carID}/situations/${situationID}`, JSON.stringify(situation));
 };
+
+export const getAllCarSituations = async () => getAll(getCarsSituations);
 //END CAR SITUATIONS
 //-------------------------

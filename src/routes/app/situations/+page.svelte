@@ -11,13 +11,24 @@
 	import { situationService } from '$lib/services';
 	import type { ISituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
+
 	const toastStore = getToastStore();
-	const paginationStore = getPaginationStore();
 	const modalStore = getModalStore();
+	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
+
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
 	type FlattenDataType = ISituation & { situation_type_i18n: string };
 	let data: ISituation[] = [];
 	let flattenData: FlattenDataType[] = [];
@@ -27,7 +38,13 @@
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await situationService.getSituations($paginationStore);
+			const { data, total, page, page_size } = await situationService.getSituations(
+				$paginationStore,
+				$queryStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({
 				...value,
 				situation_type_i18n: i18n.t(`label.${value.situation_type}`)
@@ -41,25 +58,21 @@
 	onMount(getAll);
 
 	const handleCreateSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION, (created) => {
-			console.log(created);
-			getAll();
+		handleCreate(modalStore, Modals.CREATE_SITUATION, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditSituation = ({ detail }: CustomEvent<ISituation>) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_SITUATION, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
 	const handleDeleteSituation = ({ detail }: CustomEvent<ISituation>) => {
-		console.log(detail.situation_name);
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, detail.situation_name, async (deleted) => {
-			console.log(deleted);
 			$loading = true;
 			try {
 				await situationService.deleteSituation(detail.id_situation);
@@ -97,6 +110,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.situations')}

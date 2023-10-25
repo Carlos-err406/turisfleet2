@@ -11,13 +11,24 @@
 	import { situationService } from '$lib/services';
 	import type { ICarSituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
-	import { getPaginationStore } from '$lib/stores/pagination';
+	import {
+		getPaginationStore,
+		getQueryStringStore,
+		getTotalElementsStore
+	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
+
 	const toastStore = getToastStore();
-	const paginationStore = getPaginationStore();
 	const modalStore = getModalStore();
+	const paginationStore = getPaginationStore();
+	const queryStore = getQueryStringStore();
+	const totalElementsStore = getTotalElementsStore();
+
 	setContext('pagination', paginationStore);
+	setContext('totalElements', totalElementsStore);
+	setContext('query', queryStore);
+
 	type FlattenDataType = ICarSituation & {
 		brand: string;
 		plate_number: string;
@@ -36,7 +47,12 @@
 	const getAll = async () => {
 		$loading = true;
 		try {
-			data = await situationService.getCarsSituations($paginationStore);
+			const { data, total, page, page_size } = await situationService.getCarsSituations(
+				$paginationStore
+			);
+			$totalElementsStore = total;
+			$paginationStore.page = page;
+			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({
 				...value,
 				plate_number: value.car.plate_number,
@@ -52,17 +68,15 @@
 	onMount(getAll);
 
 	const handleCreateCarSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION_CAR, (created) => {
-			console.log(created);
-			getAll();
+		handleCreate(modalStore, Modals.CREATE_SITUATION_CAR, async (created) => {
+			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditCarSituation = ({ detail }: CustomEvent) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION_CAR, detail, (edited) => {
-			console.log(edited);
-			getAll();
+		handleEdit(modalStore, Modals.EDIT_SITUATION_CAR, detail, async (edited) => {
+			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
@@ -70,7 +84,6 @@
 	const handleDeleteCarSituation = ({ detail }: CustomEvent<ICarSituation>) => {
 		const target = `([${detail.car.plate_number}] ${detail.car.brand}) -> ${detail.situation.situation_name}`;
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
-			console.log(deleted);
 			$loading = true;
 			try {
 				await situationService.deleteCarSituation(
@@ -78,7 +91,7 @@
 					detail.situation.id_situation,
 					detail.date as string
 				);
-				getAll();
+				await getAll();
 				toastSuccessfullyDeleted(toastStore);
 			} catch (e) {
 				triggerErrorToast(toastStore, e);
@@ -87,8 +100,14 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
+	};
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		await getAll();
+	};
 	const handleOrderChange = ({
 		detail
 	}: CustomEvent<{ header: keyof FlattenDataType; orientation: ColumnOrientation }>) => {
@@ -118,6 +137,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.carSituations')}
