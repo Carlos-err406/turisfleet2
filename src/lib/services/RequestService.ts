@@ -21,6 +21,7 @@ export interface IRequest extends IRequestBase {
 	group: IGroup;
 	car: ICar;
 	copilot?: IDriver;
+	driver: IDriver;
 	return_date: string | Date;
 }
 export interface IRequestEdit extends IRequestBase {}

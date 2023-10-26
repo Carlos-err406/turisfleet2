@@ -67,10 +67,8 @@
 				country: value.group.country,
 				description: value.specific_program.description,
 				program_name: value.specific_program.program.program_name,
-				driver_flat: `${value}`,
-				copilot_flat: value.copilot?.name,
-
-				
+				driver_flat: `${value.driver.name}`,
+				copilot_flat: value.copilot?.name
 			}));
 		} catch (e) {
 			triggerErrorToast(toastStore, e);
@@ -96,7 +94,7 @@
 
 	const handleDeleteRequest = ({ detail }: CustomEvent<IRequest>) => {
 		const target = detail.date as string; //FIXME
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async(deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
 			$loading = true;
 			try {
 				await requestService.deleteRequest(detail.id_request);
@@ -109,7 +107,6 @@
 		});
 	};
 
-	
 	const handlePageChange = async ({ detail }: CustomEvent) => {
 		paginationStore.gotoPage(detail + 1);
 		await getAll();

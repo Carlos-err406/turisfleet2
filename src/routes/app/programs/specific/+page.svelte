@@ -54,7 +54,6 @@
 			$paginationStore.page_size = page_size;
 			flattenForTable = data.map((value) => ({
 				...value,
-				start: value.start,
 				program_name: value.program.program_name,
 				duration_flat: durationObjToStr(durationStrToObj(value.duration))
 			}));
@@ -97,8 +96,14 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
+	};
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		await getAll();
+	};
 	const handleOrderChange = ({
 		detail
 	}: CustomEvent<{ header: keyof FlattenDataType; orientation: ColumnOrientation }>) => {
