@@ -15,7 +15,8 @@
 	let values: IUserCreate = {
 		username: '',
 		password: '',
-		role: roles[0].value
+		role: roles[0].value,
+		email: ''
 	};
 	const close = () => {
 		modalStore.close();
@@ -25,6 +26,13 @@
 		if (passwordConf !== values.password) {
 			flashes.trigger({
 				message: i18n.t('flashes.passwordsMustMatch'),
+				type: 'error'
+			});
+			return false;
+		}
+		if (userService.validateEmail(values.email)) {
+			flashes.trigger({
+				message: i18n.t('flashes.invalidEmail'),
 				type: 'error'
 			});
 			return false;
@@ -56,6 +64,16 @@
 					id="user-create-username"
 					placeholder={i18n.t('placeholder.username')}
 					bind:value={values.username}
+				/>
+			</div>
+			<div>
+				<label class="required" for="user-create-email">{i18n.t('label.email')}</label>
+				<input
+					required
+					type="email"
+					id="user-create-email"
+					placeholder={i18n.t('placeholder.email')}
+					bind:value={values.email}
 				/>
 			</div>
 			<Dropdown

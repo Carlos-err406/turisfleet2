@@ -10,6 +10,7 @@ export type RoleType = 'administrator' | 'support' | 'agent' | 'driver';
 interface IUserBase {
 	username: string;
 	role: RoleType;
+	email: string;
 }
 export interface IUserCreate extends IUserBase {
 	password: string;
@@ -55,3 +56,9 @@ export const editUser = (id: number, user: IUserEdit): Promise<IUser> => {
 export const changePassword = (id: number, passwordInput: IUserChangePassword): Promise<void> => {
 	return PROXY_PUT(`/users/${id}/password`, JSON.stringify(passwordInput));
 };
+
+const emailRegex = new RegExp(
+	/^[a-z0-9]+([._+-][a-z0-9]+)*@[a-z0-9-_]+(\.[a-z0-9-_]+)*\.[a-z0-9]{2,}$/
+);
+
+export const validateEmail = (email: string) => emailRegex.test(email);

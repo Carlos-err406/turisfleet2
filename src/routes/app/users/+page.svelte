@@ -31,7 +31,7 @@
 
 	type FlattenDataType = IUser & { role_i18n: string };
 	let flattenData: FlattenDataType[] = [];
-	const headers: (keyof FlattenDataType)[] = ['username', 'role_i18n'];
+	const headers: (keyof FlattenDataType)[] = ['username', 'role_i18n', 'email'];
 
 	const getAll = async () => {
 		$loading = true;

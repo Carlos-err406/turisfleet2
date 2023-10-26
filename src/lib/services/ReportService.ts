@@ -73,7 +73,6 @@ export const carsListReport = async (toastStore: ToastStore) => {
 	generatePDF(data, headers, title);
 };
 
-//TODO
 export const requestsOnDateReport = async (toastStore: ToastStore, date: Dayjs) => {
 	const formattedDate = date.format('DD-MM-YYYY');
 	const title = i18n.t('label.reports.requestOnDate') + ` (${formattedDate})`;
@@ -107,7 +106,7 @@ export const requestsOnDateReport = async (toastStore: ToastStore, date: Dayjs) 
 		country: value.group.country,
 		description: value.specific_program.description,
 		program_name: value.specific_program.program.program_name,
-		driver_flat: `${value}`,
+		driver_flat: `${value.driver.name}`,
 		copilot_flat: value.copilot?.name
 	}));
 	generatePDF(flattenData, headers, title, undefined, { orientation: 'landscape' });
@@ -197,14 +196,15 @@ export const dragsListReport = async (toastStore: ToastStore, request: IRequest)
 	generatePDF(data, headers, title);
 };
 
-//TODO
 export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: CarAndDate) => {
 	const roadmap: IRoadmap = await PROXY_GET(
 		`/cars/${carAndDate.car.id_car}/roadmap`,
 		makeParams({ date: dayjs(carAndDate.date).format('YYYY-MM-DD') })
 	);
+	console.log(roadmap?.programs?.length === 0)
 	if (roadmap?.programs?.length === 0) {
 		triggerNoDataForReport(toastStore, i18n.t('flashes.noDataForThisReport'));
+		return
 	}
 	const title = i18n.t('label.reports.routingSheets');
 	const extraData: { label: string; value: string }[] = [
@@ -246,11 +246,11 @@ export const generatePDF = (
 	doc.addImage(img, 'png', 75, 5, 25, 25);
 	doc.text(PUBLIC_APP_NAME, 105, 20);
 	doc.text(title, 10, 50);
-	let initialPosition = { x: 10, y: 60 };
+	let initialPosition = { x: 10, y: 70 };
 	if (extraData) {
 		extraData.forEach((value) => {
 			doc.text(`${value.label}: ${value.value}`, initialPosition.x, initialPosition.y);
-			initialPosition.y += 15;
+			initialPosition.y += 10;
 		});
 	}
 	if (data && data.length > 0) {
