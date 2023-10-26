@@ -84,8 +84,15 @@
 			$loading = false;
 		});
 	};
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
+	};
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		paginationStore.gotoPage(1);
+		await getAll();
+	};
 	const handleOrderChange = ({
 		detail
 	}: CustomEvent<{ header: keyof FlattenDataType; orientation: ColumnOrientation }>) => {

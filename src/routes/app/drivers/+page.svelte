@@ -95,6 +95,7 @@
 	};
 	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
+		paginationStore.gotoPage(1);
 		await getAll();
 	};
 	const handleOrderChange = ({
@@ -109,7 +110,6 @@
 				header = detail.header;
 		}
 	};
-	
 </script>
 
 <div class="overflow-hidden">

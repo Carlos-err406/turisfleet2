@@ -83,15 +83,12 @@
 
 	const handlePageChange = async ({ detail }: CustomEvent) => {
 		paginationStore.gotoPage(detail + 1);
-		$loading = true;
 		await getAll();
-		$loading = false;
 	};
 	const handleAmountChange = async ({ detail }: CustomEvent) => {
 		paginationStore.setLimit(detail);
-		$loading = true;
+		paginationStore.gotoPage(1);
 		await getAll();
-		$loading = false;
 	};
 	const handleOrderChange = ({
 		detail

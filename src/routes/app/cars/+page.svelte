@@ -88,18 +88,14 @@
 
 	const handlePageChange = async ({ detail }: CustomEvent) => {
 		paginationStore.gotoPage(detail + 1);
-		$loading = true;
 		await getAll();
-		$loading = false;
 	};
 	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(1);
 		paginationStore.setLimit(detail);
-		$loading = true;
 		await getAll();
-		$loading = false;
 	};
 	const handleOrderChange = ({ detail }: CustomEvent) => {};
-
 </script>
 
 <div class="overflow-hidden">

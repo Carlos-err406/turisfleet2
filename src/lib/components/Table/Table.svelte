@@ -3,7 +3,6 @@
 </script>
 
 <script lang="ts">
-	
 	import NoData from './NoData.svelte';
 	import TableActions from './TableActions.svelte';
 	import TableData from './TableData.svelte';

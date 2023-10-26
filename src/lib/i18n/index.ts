@@ -285,7 +285,7 @@ const i18n = rosetta({
 			'99999': 'Can not delete yourself'
 		},
 		misc: {
-			days:"Days",
+			days: 'Days',
 			noData: 'No Data to display',
 			noEntriesFound: 'No entries found',
 			delete: 'delete',
@@ -576,7 +576,7 @@ i18n.set('es', {
 		'99999': 'No se puede eliminar usted mismo'
 	},
 	misc: {
-		days:"Días",
+		days: 'Días',
 		noData: 'Sin datos para mostrar',
 		noEntriesFound: 'No se encontraron entradas',
 		delete: 'eliminar',
