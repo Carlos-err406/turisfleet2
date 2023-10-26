@@ -104,7 +104,7 @@ const i18n = rosetta({
 				item: 'Reports',
 				driversList: 'Drivers List',
 				carsList: 'Cars List',
-				requestOnDate: 'Request on date',
+				requestOnDate: 'Requests on date',
 				carSituations: 'Car Situations',
 				driverSituations: 'Driver Situations',
 				carDriverRelation: 'Car-Driver relation list',
@@ -162,6 +162,10 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
+			noRequestsForReport: 'There are no requests for the report',
+			noDriversToCreateRequest: 'There are no drivers to create a request',
+			noProgramsToCreateRequest: 'There are no programs to create a request',
+			noCarsToCreateRequest: 'There are no Cars to create a request',
 			noSpecificProgramsToCreateRequest: 'There are no Specific Programs to create a request',
 			noGroupsToCreateRequest: 'There are no Groups to create a request',
 			noDataForThisReport: 'No data for this report',
@@ -189,8 +193,11 @@ const i18n = rosetta({
 
 		table: {
 			header: {
+				driver_flat: 'Driver',
+				copilot_flat: 'Copilot',
 				driver_name: 'Driver name',
 				duration_flat: 'Duration',
+				car_flat: 'Car',
 				role_i18n: 'Role',
 				role: 'Role',
 				username: 'Username',
@@ -273,9 +280,12 @@ const i18n = rosetta({
 			'00060': 'Something went wrong',
 			'00061': 'Wrong password',
 			'00062': 'This situation is being used',
+			'00063': 'Program can not be deleted because it has a specific program on use',
+			'00064': "Tourist amount is greater than the group's tourist amount",
 			'99999': 'Can not delete yourself'
 		},
 		misc: {
+			days:"Days",
 			noData: 'No Data to display',
 			noEntriesFound: 'No entries found',
 			delete: 'delete',
@@ -293,7 +303,7 @@ i18n.set('es', {
 		createUser: 'Crear Usuario',
 		createDriver: 'Crear Conductor',
 		createGroup: 'Crear Grupo',
-		createRequest: 'Crear Petición',
+		createRequest: 'Crear Solicitud',
 		createSituation: 'Crear Situación',
 		createCarSituation: 'Crear Situación de Carro',
 		createDriverSituation: 'Crear Situación de Conductor',
@@ -304,7 +314,7 @@ i18n.set('es', {
 		editUser: 'Editar Usuario',
 		editDriver: 'Editar Conductor',
 		editGroup: 'Editar Grupo',
-		editRequest: 'Editar Petición',
+		editRequest: 'Editar Solicitud',
 		editSituation: 'Editar Situación',
 		editCarSituation: 'Editar Situación de Carro',
 		editDriverSituation: 'Editar Situación de Conductor',
@@ -318,7 +328,7 @@ i18n.set('es', {
 		users: 'Usuarios',
 		drivers: 'Conductores',
 		cars: 'Carros',
-		requests: 'Peticiones',
+		requests: 'Solicitudes',
 		groups: 'Grupos',
 		programs: 'Programas',
 		specificPrograms: 'Programas específicos',
@@ -373,7 +383,7 @@ i18n.set('es', {
 		drivers: 'Conductores',
 		cars: 'Carros',
 		groups: 'Grupos',
-		requests: 'Peticiones',
+		requests: 'Solicitudes',
 		programs: 'Programas',
 		specificPrograms: 'Programas específicos',
 		situations: 'Situaciones',
@@ -383,13 +393,13 @@ i18n.set('es', {
 			item: 'Reportes',
 			driversList: 'Listado de conductores',
 			carsList: 'Listado de carros',
-			requestOnDate: 'Peticiones de una fecha',
+			requestOnDate: 'Solicitudes de una fecha',
 			carSituations: 'Situaciones de los carros',
 			driverSituations: 'Situaciones de los conductores',
 			carDriverRelation: 'Relación carro-conductor',
 			dragsList: 'Listado de arrastres',
 			routingSheets: 'Hojas de ruta',
-			requestModifications: 'Modificaciones de petición'
+			requestModifications: 'Modificaciones de solicitud'
 		}
 	},
 	placeholder: {
@@ -441,6 +451,10 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		noRequestsForReport: 'No hay solicitudes para el reporte',
+		noDriversToCreateRequest: 'No hay conductores para crear una solicitud',
+		noProgramsToCreateRequest: 'No hay programas para crear una solicitud',
+		noCarsToCreateRequest: 'No hay Coches para crear una solicitud',
 		noSpecificProgramsToCreateRequest: 'No hay programas específicos para crear una solicitud',
 		noGroupsToCreateRequest: 'No hay grupos para crear una solicitud',
 		noDataForThisReport: 'No hay datos para este reporte',
@@ -470,6 +484,9 @@ i18n.set('es', {
 	},
 	table: {
 		header: {
+			driver_flat: 'Conductor',
+			copilot_flat: 'Copiloto',
+			car_flat: 'Coche',
 			driver_name: 'Nombre del conductor',
 			duration_flat: 'Duración',
 			role_i18n: 'Rol',
@@ -545,7 +562,7 @@ i18n.set('es', {
 		'00052':
 			'El conductor no puede ser borrado porque tiene una solicitud futura que no puede ser asignada a otro conductor',
 		'00053': 'Programa específico no encontrado',
-		'00054': 'Este programa específico se utiliza en peticiones entrantes. Por favor, cancélelas',
+		'00054': 'Este programa específico se utiliza en solicitudes entrantes. Por favor, cancélelas',
 		'00055': 'El grupo ya tiene una solicitud en esta fecha',
 		'00056': 'No hay coche disponible para esta solicitud',
 		'00057': 'No hay copiloto disponible para esta solicitud',
@@ -554,9 +571,12 @@ i18n.set('es', {
 		'00060': 'Algo salió mal',
 		'00061': 'Contraseña incorrecta',
 		'00062': 'Esta situación está en uso',
+		'00063': 'No se puede eliminar el programa porque tiene un programa específico en uso',
+		'00064': 'La cantidad de turistas el mayor que el tamaño del grupo',
 		'99999': 'No se puede eliminar usted mismo'
 	},
 	misc: {
+		days:"Días",
 		noData: 'Sin datos para mostrar',
 		noEntriesFound: 'No se encontraron entradas',
 		delete: 'eliminar',

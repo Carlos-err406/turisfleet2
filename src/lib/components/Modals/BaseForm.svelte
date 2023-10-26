@@ -7,10 +7,10 @@
 	export let footerCols = 1;
 </script>
 
-<div class="grid grid-cols gap-y-3">
+<div class="grid gap-y-3">
 	<h3 class="text-3xl"><slot name="title" /></h3>
 	<Flashes {flashes} />
-	<form action="" autocomplete="off" class="grid gap-y-4 gap-x-3" on:submit|preventDefault>
+	<form action="" autocomplete="off" class="grid gap-y-4 grid-cols-{footerCols} gap-x-3" on:submit|preventDefault>
 		<slot />
 		<div
 			class="flex items-center justify-end w-full mt-2 gap-3 font-semibold col-span-{footerCols} "

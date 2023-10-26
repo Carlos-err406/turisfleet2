@@ -16,7 +16,6 @@
 	if (!$lang) $lang = 'en';
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-
 	initializeStores();
 	getDrawerStore().close();
 </script>

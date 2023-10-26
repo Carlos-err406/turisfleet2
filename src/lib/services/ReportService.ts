@@ -2,13 +2,14 @@ import { PUBLIC_APP_NAME } from '$env/static/public';
 import i18n, { getTranslatedHeader } from '$lib/i18n';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import dayjs, { Dayjs } from 'dayjs';
-import jsPDF from 'jspdf';
+import jsPDF, { type jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { carService, driverService, situationService } from '.';
+import { carService, driverService, requestService, situationService } from '.';
 import type { ICar } from './CarService';
 import type { IDriver } from './DriverService';
 import type { ICarSituation, IDriverSituation } from './SituationService';
 import { PROXY_GET } from '$lib/services/Base/ProxyService';
+import type { IRequest } from './RequestService';
 const DOWNLOAD_PDFS = true;
 const OPEN_PDFS = true;
 
@@ -58,8 +59,40 @@ export const carsListReport = async (toastStore: ToastStore) => {
 export const requestsOnDateReport = async (toastStore: ToastStore, date: Dayjs) => {
 	const formattedDate = date.format('DD-MM-YYYY');
 	const title = i18n.t('label.reports.requestOnDate') + ` (${formattedDate})`;
-	const data: any[] = [];
-	// generatePDF(data, title);
+	const requests: IRequest[] = await requestService.getAllRequestsOnDate(date);
+	if (requests.length === 0) {
+		triggerNoDataForReport(toastStore, i18n.t('flashes.noRequestsForReport'));
+		return;
+	}
+	type FlattenDataType = IRequest & {
+		car_flat: string;
+		country: string;
+		description: string;
+		program_name: string;
+		driver_flat: string;
+		copilot_flat?: string;
+	};
+	const headers: (keyof FlattenDataType)[] = [
+		'return_date',
+		'country',
+		'description',
+		'program_name',
+		'tourist_amount',
+		'car_flat',
+		'driver_flat',
+		'copilot_flat'
+	];
+	const flattenData: FlattenDataType[] = requests.map((value) => ({
+		...value,
+		return_date: dayjs(value.return_date).format('YYYY-MM-DD'),
+		car_flat: `[${value.car.plate_number}] ${value.car.brand}`,
+		country: value.group.country,
+		description: value.specific_program.description,
+		program_name: value.specific_program.program.program_name,
+		driver_flat: `${value}`,
+		copilot_flat: value.copilot?.name
+	}));
+	generatePDF(flattenData, headers, title, { orientation: 'landscape' });
 };
 
 export const carSituationsReport = async (toastStore: ToastStore) => {
@@ -156,8 +189,13 @@ export const requestModificationsReport = async (toastStore: ToastStore, request
 	// generatePDF(data, title);
 };
 
-export const generatePDF = (data: any[], headers: string[], title: string) => {
-	const doc = new jsPDF();
+export const generatePDF = (
+	data: any[],
+	headers: string[],
+	title: string,
+	options?: jsPDFOptions
+) => {
+	const doc = new jsPDF(options);
 	doc.setFont('Helvetica', 'normal');
 	doc.setTextColor(0, 0, 0);
 	const img = document.createElement('img');

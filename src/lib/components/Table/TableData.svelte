@@ -34,7 +34,7 @@
 	};
 	const footerFiller = () => {
 		let filler = [];
-		for (let i = 0; i < headers.length - 1; i++) {
+		for (let i = 0; i < headers.length; i++) {
 			filler.push('');
 		}
 		return filler;
@@ -48,16 +48,17 @@
 	<table class="relative" bind:this={tableElement}>
 		<thead class="sticky top-0">
 			{#each headers as th}
-				<th class="cursor-pointer" on:click={() => handleOrderByChange(th)}>
+				<!-- <th class="cursor-pointer" on:click={() => handleOrderByChange(th)}> -->
+				<th>
 					<div class="flex items-center justify-start gap-0">
 						<span class="px-2">{getTranslatedHeader(th)}</span>
-						<span
+						<!-- <span
 							id="order-by-button-{th}"
 							tabindex="-1"
 							class="order-by-button py-0 px-2 flex items-center gap-2 transition-transform duration-200"
 						>
 							{@html downSimple}
-						</span>
+						</span> -->
 					</div>
 				</th>
 			{/each}
@@ -93,7 +94,7 @@
 				<th>
 					<div class="flex items-center gap-5">
 						<span>Total</span>
-						<span class="code">{data.length}</span>
+						<span class="code">{$size}</span>
 					</div>
 				</th>
 				{#each footerFiller() as _}

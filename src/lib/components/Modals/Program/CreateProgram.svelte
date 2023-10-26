@@ -9,6 +9,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
+
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let values: IProgramCreate = {
 		program_name: ''

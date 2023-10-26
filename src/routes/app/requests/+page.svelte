@@ -29,7 +29,26 @@
 	setContext('totalElements', totalElementsStore);
 	setContext('query', queryStore);
 	let requests: IRequest[] = [];
-	const headers: (keyof IRequest)[] = [];
+	type FlattenDataType = IRequest & {
+		car_flat: string;
+		country: string;
+		description: string;
+		program_name: string;
+		driver_flat: string;
+		copilot_flat?: string;
+	};
+	let flattenData: FlattenDataType[] = [];
+	const headers: (keyof FlattenDataType)[] = [
+		'date',
+		'return_date',
+		'country',
+		'description',
+		'program_name',
+		'tourist_amount',
+		'car_flat',
+		'driver_flat',
+		'copilot_flat'
+	];
 
 	const getAll = async () => {
 		$loading = true;
@@ -42,10 +61,17 @@
 			$totalElementsStore = total;
 			$paginationStore.page = page;
 			$paginationStore.page_size = page_size;
-			// flattenData = data.map((value) => ({
-			// 	...value,
-			// 	license_categories_flat: value.license_categories.join(', ')
-			// }));
+			flattenData = data.map((value) => ({
+				...value,
+				car_flat: `[${value.car.plate_number}] ${value.car.brand}`,
+				country: value.group.country,
+				description: value.specific_program.description,
+				program_name: value.specific_program.program.program_name,
+				driver_flat: `${value}`,
+				copilot_flat: value.copilot?.name,
+
+				
+			}));
 		} catch (e) {
 			triggerErrorToast(toastStore, e);
 		}
@@ -53,6 +79,7 @@
 	};
 
 	onMount(getAll);
+
 	const handleCreateRequest = () => {
 		handleCreate(modalStore, Modals.CREATE_REQUEST, async (created) => {
 			await getAll();
@@ -67,11 +94,13 @@
 		});
 	};
 
-	const handleDeleteRequest = ({ detail }: CustomEvent) => {
-		const target = detail.name;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, (deleted) => {
+	const handleDeleteRequest = ({ detail }: CustomEvent<IRequest>) => {
+		const target = detail.date as string; //FIXME
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async(deleted) => {
 			$loading = true;
 			try {
+				await requestService.deleteRequest(detail.id_request);
+				await getAll();
 				toastSuccessfullyDeleted(toastStore);
 			} catch (e) {
 				triggerErrorToast(toastStore, e);
@@ -80,14 +109,21 @@
 		});
 	};
 
-	const handlePageChange = ({ detail }: CustomEvent) => {};
-	const handleAmountChange = ({ detail }: CustomEvent) => {};
+	
+	const handlePageChange = async ({ detail }: CustomEvent) => {
+		paginationStore.gotoPage(detail + 1);
+		await getAll();
+	};
+	const handleAmountChange = async ({ detail }: CustomEvent) => {
+		paginationStore.setLimit(detail);
+		await getAll();
+	};
 	const handleOrderChange = ({ detail }: CustomEvent) => {};
 </script>
 
 <div class="overflow-hidden">
 	<Table
-		data={requests}
+		data={flattenData}
 		{headers}
 		on:insert={handleCreateRequest}
 		on:edit={handleEditRequest}
@@ -95,6 +131,7 @@
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}
 		on:change-order={handleOrderChange}
+		on:search={getAll}
 	>
 		<svelte:fragment slot="table-name">
 			{i18n.t('title.requests')}

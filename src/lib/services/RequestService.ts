@@ -1,30 +1,38 @@
 import type { IPagination } from '$lib/stores/pagination';
+import type { Dayjs } from 'dayjs';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
+import type { ICar } from './CarService';
+import type { IDriver } from './DriverService';
 import type { IGroup } from './GroupService';
 import type { ISpecificProgram } from './ProgramService';
 
-export interface IRequestCreate {
+interface IRequestBase {
+	date: string | Date;
+	tourist_amount: number;
+}
+export interface IRequestCreate extends IRequestBase {
 	id_group: number;
 	id_specific_program: number;
-	start_date: string | Date;
-	tourist_amount: number;
 }
-export interface IRequest {
-	group: IGroup;
-	specific_program: ISpecificProgram;
-	tourist_amount: number;
-	start_date: Date | string;
+export interface IRequest extends IRequestBase {
 	id_request: number;
+	specific_program: ISpecificProgram;
+	group: IGroup;
+	car: ICar;
+	copilot?: IDriver;
+	return_date: string | Date;
 }
-export interface IRequestEdit extends IRequestCreate {}
+export interface IRequestEdit extends IRequestBase {}
 
 export const getRequests = async (
 	pagination: IPagination,
-	query?: string
+	query?: string,
+	date?: string | Date
 ): Promise<PaginatedResponse<IRequest[]>> => {
 	const params = { ...pagination };
 	query && Object.assign(params, { query });
+	date && Object.assign(params, { date: date.toString() });
 	return PROXY_GET('/requests', makeParams(params));
 };
 export const deleteRequest = async (id: number): Promise<void> => {
@@ -39,4 +47,21 @@ export const editRequest = async (id: number, request: IRequestEdit): Promise<IR
 
 export const getAllRequests = async (chunkSize = 200): Promise<IRequest[]> => {
 	return getAll<IRequest>(getRequests, chunkSize);
+};
+
+export const getAllRequestsOnDate = async (date: Dayjs): Promise<IRequest[]> => {
+	let requests: IRequest[] = [];
+	let requestPage = 1;
+	let page_size = 200;
+	while (true) {
+		const { data, total_pages, page } = await getRequests(
+			{ page_size, page: requestPage },
+			undefined,
+			date.format('YYYY-MM-DD')
+		);
+		requests = [...requests, ...data];
+		if (page == total_pages || data.length === 0) break;
+		requestPage++;
+	}
+	return requests;
 };

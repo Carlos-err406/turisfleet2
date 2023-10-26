@@ -8,13 +8,22 @@
 	import ModalBase from '../ModalBase.svelte';
 	import type { IRequestCreate } from '$lib/services/RequestService';
 	import type { IGroup } from '$lib/services/GroupService';
-	import type { ISpecificProgram } from '$lib/services/ProgramService';
+	import type { IProgram, ISpecificProgram } from '$lib/services/ProgramService';
 	import { onMount } from 'svelte';
 	import { loading } from '$lib/stores';
-	import { groupService, programService, requestService, situationService } from '$lib/services';
+	import {
+		carService,
+		driverService,
+		groupService,
+		programService,
+		requestService,
+		situationService
+	} from '$lib/services';
 	import { createOneFromToast } from '$lib';
 	import { Modals } from '..';
 	import { triggerErrorFlash } from '$lib/CustomError';
+	import type { ICar } from '$lib/services/CarService';
+	import type { IDriver } from '$lib/services/DriverService';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
@@ -23,11 +32,15 @@
 	let values: IRequestCreate = {
 		id_group: 0,
 		id_specific_program: 0,
-		start_date: tomorrow(),
+		date: tomorrow(),
 		tourist_amount: 0
 	};
+	let mounted = false;
 	let groups: IGroup[] = [];
+	let drivers: IDriver[] = [];
+	let programs: IProgram[] = [];
 	let specificPrograms: ISpecificProgram[] = [];
+	let cars: ICar[] = [];
 	let groupOptions: DropdownOption[] = [];
 	let specificProgramOptions: DropdownOption[] = [];
 	const close = () => {
@@ -35,17 +48,20 @@
 	};
 	onMount(async () => {
 		$loading = true;
-		[groups, specificPrograms] = await Promise.all([
-			await groupService.getAllGroups(),
-			await programService.getAllSpecificPrograms()
+		[groups, specificPrograms, cars, programs, drivers] = await Promise.all([
+			groupService.getAllGroups(),
+			programService.getAllSpecificPrograms(),
+			carService.getAllCars(),
+			programService.getAllPrograms(),
+			driverService.getAllDrivers()
 		]);
 		$loading = false;
-		if (groups.length === 0) {
+		if (specificPrograms.length === 0 && programs.length === 0) {
 			createOneFromToast({
 				stores: { toast: toastStore, modal: modalStore },
-				toastMessage: i18n.t('flashes.noGroupsToCreateRequest'),
+				toastMessage: i18n.t('flashes.noProgramsToCreateRequest'),
 				modalToReopen: Modals.CREATE_REQUEST,
-				creationModal: Modals.CREATE_GROUP,
+				creationModal: Modals.CREATE_PROGRAM,
 				onResolve
 			});
 			close();
@@ -58,7 +74,35 @@
 				onResolve
 			});
 			close();
+		} else if (cars.length === 0 && drivers.length === 0) {
+			createOneFromToast({
+				stores: { toast: toastStore, modal: modalStore },
+				toastMessage: i18n.t('flashes.noDriversToCreateRequest'),
+				modalToReopen: Modals.CREATE_REQUEST,
+				creationModal: Modals.CREATE_DRIVER,
+				onResolve
+			});
+			close();
+		} else if (cars.length === 0) {
+			createOneFromToast({
+				stores: { toast: toastStore, modal: modalStore },
+				toastMessage: i18n.t('flashes.noCarsToCreateRequest'),
+				modalToReopen: Modals.CREATE_REQUEST,
+				creationModal: Modals.CREATE_CAR,
+				onResolve
+			});
+			close();
+		} else if (groups.length === 0) {
+			createOneFromToast({
+				stores: { toast: toastStore, modal: modalStore },
+				toastMessage: i18n.t('flashes.noGroupsToCreateRequest'),
+				modalToReopen: Modals.CREATE_REQUEST,
+				creationModal: Modals.CREATE_GROUP,
+				onResolve
+			});
+			close();
 		}
+		mounted = true;
 		values.id_group = groups[0].id_group;
 		values.id_specific_program = specificPrograms[0]?.id_specific_program;
 		groupOptions = groups.map(({ id_group, country, tourist_amount }) => ({
@@ -67,7 +111,7 @@
 		}));
 		specificProgramOptions = specificPrograms.map(
 			({ id_specific_program, description, program }) => ({
-				label: `${program.program_name} ${description}`,
+				label: `(${program.program_name}) ${description}`,
 				value: id_specific_program
 			})
 		);
@@ -90,19 +134,21 @@
 	};
 </script>
 
-{#if $modalStore[0]}
+{#if $modalStore[0] && mounted}
 	<ModalBase>
 		<BaseForm footerCols={3} {flashes} on:submit={create} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.createRequest')}</svelte:fragment>
-			<Dropdown
-				bind:value={values.id_group}
-				placeholder={i18n.t('placeholder.group')}
-				required
-				options={groupOptions}
-				on:select
-			>
-				{i18n.t('label.group')}
-			</Dropdown>
+			<div class="col-span-2">
+				<Dropdown
+					bind:value={values.id_group}
+					placeholder={i18n.t('placeholder.group')}
+					required
+					options={groupOptions}
+					on:select
+				>
+					{i18n.t('label.group')}
+				</Dropdown>
+			</div>
 			<div>
 				<label class="required" for="request-create-tourist-amount">
 					{i18n.t('label.touristAmount')}
@@ -112,19 +158,21 @@
 					required
 					type="number"
 					min="1"
-					max="300"
+					max={groups.find((g) => g.id_group === values.id_group)?.tourist_amount || 0}
 					id="request-create-tourist-amount"
 					bind:value={values.tourist_amount}
 				/>
 			</div>
-			<Dropdown
-				bind:value={values.id_specific_program}
-				placeholder={i18n.t('placeholder.specificProgram')}
-				options={specificProgramOptions}
-				on:select
-			>
-				{i18n.t('label.specificProgram')}
-			</Dropdown>
+			<div class="col-span-3">
+				<Dropdown
+					bind:value={values.id_specific_program}
+					placeholder={i18n.t('placeholder.specificProgram')}
+					options={specificProgramOptions}
+					on:select
+				>
+					{i18n.t('label.specificProgram')}
+				</Dropdown>
+			</div>
 			<div>
 				<label class="required" for="request-create-start-date">{i18n.t('label.startDate')}</label>
 				<input
@@ -132,11 +180,10 @@
 					required
 					type="date"
 					id="request-create-start-date"
-					bind:value={values.start_date}
+					bind:value={values.date}
 					min={tomorrow()}
 				/>
 			</div>
-			
 		</BaseForm>
 	</ModalBase>
 {/if}

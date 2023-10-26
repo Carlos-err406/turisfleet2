@@ -1,5 +1,5 @@
 import { getFlashStore } from '$lib/stores/flashes';
-import type { ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
+import type { ModalComponent, ModalStore, ToastStore } from '@skeletonlabs/skeleton';
 import CreateCar from './Car/CreateCar.svelte';
 import EditCar from './Car/EditCar.svelte';
 import DeleteConfirmation from './DeleteConfirmation.svelte';

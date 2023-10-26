@@ -57,15 +57,14 @@ export const createOneFromToast = (config: CreateOneFromToastConfig) => {
 		onResolve,
 		meta
 	} = config;
-	console.info("triggering 'create one' toast...");
 	toast.trigger({
 		message: toastMessage,
 		background: 'variant-filled-surface',
 		hideDismiss: true,
+		hoverable: true,
 		action: {
 			label: i18n.t('label.createOne'),
 			response: () => {
-				console.info('triggering creation modal...', creationModal);
 				modal.update((updater) => [
 					{
 						type: 'component',
@@ -73,17 +72,13 @@ export const createOneFromToast = (config: CreateOneFromToastConfig) => {
 						meta: { flashes: getFlashStore() },
 						response: (r1) => {
 							if (modalToReopen) {
-								console.info('creation modal response received...');
 								if (r1) {
-									console.info('triggering modal to reopen...', modalToReopen);
 									modal.trigger({
 										type: 'component',
 										component: modalToReopen,
 										meta: { flashes: getFlashStore(), ...meta, onResolve },
 										response: (r2) => {
-											console.info('modal to reopen response received...');
 											if (r2) {
-												console.info('running resolve callback');
 												onResolve(r2);
 											}
 										}

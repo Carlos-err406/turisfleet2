@@ -7,7 +7,7 @@
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import i18n from '$lib/i18n';
 	import type { FlashStore } from '$lib/stores/flashes';
-	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, type ToastStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import type { IProgram, ISpecificProgramCreate } from '$lib/services/ProgramService';
 	import { createOneFromToast } from '$lib';
@@ -43,7 +43,9 @@
 				creationModal: Modals.CREATE_PROGRAM,
 				onResolve
 			});
+			$modalStore[0].response?.(false);
 			close();
+			// return;
 		}
 		selectedProgram = programs[0]?.id_program;
 
