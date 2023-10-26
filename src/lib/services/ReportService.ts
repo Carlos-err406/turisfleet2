@@ -230,7 +230,6 @@ export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: Ca
 	generatePDF(roadmap.programs, headers, title, extraData);
 };
 
-//TODO request interface tho it should be the id
 export const requestModificationsReport = async (toastStore: ToastStore, request: IRequest) => {
 	const title = i18n.t('label.reports.requestModifications');
 	let data: IRequestModification[] = await PROXY_GET(
@@ -248,9 +247,9 @@ export const requestModificationsReport = async (toastStore: ToastStore, request
 	];
 	data = data.map((value) => ({
 		...value,
+		// modified_key: i18n.t(`label.${value.modified_key}`),
 		modification_datetime: dayjs(value.modification_datetime).format('YYYY-MM-DD HH:mm:ss')
 	}));
-	//TODO
 	generatePDF(data, headers, title);
 };
 

@@ -1,19 +1,22 @@
 <script lang="ts">
+	import { triggerErrorFlash } from '$lib/CustomError';
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
 	import type { ISituation, ISituationEdit } from '$lib/services/SituationService';
+	import { loading } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { situations } from './situations';
-	import { loading } from '$lib/stores';
-	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
-	let values: ISituation = $modalStore[0].meta.values;
-
+	const situation: ISituation = $modalStore[0].meta.values;
+	let values: ISituationEdit = {
+		situation_name: situation.situation_name,
+		situation_type: situation.situation_type
+	};
 	const close = () => {
 		modalStore.close();
 	};
@@ -25,8 +28,8 @@
 		if (validate()) {
 			$loading = true;
 			try {
-				const situation = await situationService.editSituation(values.id_situation, values);
-				$modalStore[0].response?.(situation);
+				const updated = await situationService.editSituation(situation.id_situation, values);
+				$modalStore[0].response?.(updated);
 				close();
 			} catch (e) {
 				triggerErrorFlash(flashes, e);

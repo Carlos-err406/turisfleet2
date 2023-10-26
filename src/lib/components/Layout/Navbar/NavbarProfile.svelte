@@ -18,35 +18,29 @@
 	<AppBar slotDefault="place-self-center" slotTrail="place-content-end" shadow="shadow-sm">
 		<svelte:fragment slot="lead">
 			<div class="flex gap-2 sm:gap-5 2xl items-center">
-				<button type="button" class="flex md:hidden btn btn-icon" on:click={handleShowMenuClick}>
-					{@html menu}
-				</button>
 				<div class="flex-none">
 					<img src="/logo.png" alt="logo" width="40" />
 				</div>
 				<h3 class="h3">{PUBLIC_APP_NAME}</h3>
 			</div>
 		</svelte:fragment>
-		{#if $loggedUser?.role !== 'driver' && $page.url.pathname === '/profile'}
-			<a href="/app/users" class="btn"> Go to main view</a>
+		{#if $loggedUser?.role !== 'driver'}
+			<a href="/app/users" class="btn font-semibold"> Go to main view</a>
 		{/if}
 		<svelte:fragment slot="trail">
-			<div class="block md:hidden">
-				<LangButton />
-			</div>
-			<a href="/profile">
-				<div class="flex flex-col gap-0.5 items-start justify-center w-fit">
-					{#if $loggedUser}
+			{#if $loggedUser}
+				<a href="/profile">
+					<div class="flex flex-col gap-0.5 items-start justify-center w-fit text-primary-500-400-token">
 						<span class="text-lg font-semibold">{$loggedUser.username}</span>
-						<span class="text-sm text-surface-500-400-token"
+						<span class="text-sm text-primary-500-400-token opacity-70"
 							>{i18n.t(`label.${$loggedUser.role}`)}</span
 						>
-					{/if}
-				</div>
-			</a>
-			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>
+					</div>
+				</a>
+			{/if}
+			<button type="button" class="btn gap-2 items-center" on:click={handleLogout}>
 				{@html logout}
-				<span>{i18n.t('button.logout')} </span>
+				<span class="hidden md:block">{i18n.t('button.logout')} </span>
 			</button>
 		</svelte:fragment>
 	</AppBar>

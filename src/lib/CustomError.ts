@@ -16,9 +16,13 @@ export default class CustomError extends Error {
 	}
 }
 
-export const getErrorMessage = (e: any) => {
+export const getErrorCode = (e: any) => {
 	let code = '';
 	if (e.body?.detail.exception_id) code = e.body.detail.exception_id;
+	return code;
+};
+export const getErrorMessage = (e: any) => {
+	const code = getErrorCode(e);
 	const errorMessage = i18n.t(`error.${code}`) || i18n.t('error.00060');
 	return errorMessage;
 };

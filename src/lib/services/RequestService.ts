@@ -24,7 +24,11 @@ export interface IRequest extends IRequestBase {
 	driver: IDriver;
 	return_date: string | Date;
 }
-export interface IRequestEdit extends IRequestBase {}
+export interface IRequestEdit {
+	date: string | Date;
+	tourist_amount: number;
+	id_specific_program: number;
+}
 
 export const getRequests = async (
 	pagination: IPagination,
@@ -42,7 +46,10 @@ export const deleteRequest = async (id: number): Promise<void> => {
 export const createRequest = async (request: IRequestCreate): Promise<IRequest> => {
 	return PROXY_POST('/requests', JSON.stringify(request));
 };
-export const editRequest = async (id: number, request: IRequestEdit): Promise<IRequest> => {
+export const editRequest = async (
+	id: number,
+	request: Partial<IRequestEdit>
+): Promise<IRequest> => {
 	return PROXY_PUT('/requests/' + id, JSON.stringify(request));
 };
 

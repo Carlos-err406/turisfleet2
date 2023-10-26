@@ -16,7 +16,9 @@
 		$loading = true;
 		try {
 			$loggedUser = await authService.login({ username, password });
-			await goto('/app/users');
+			if ($loggedUser.role === 'driver') {
+				await goto('/profile');
+			} else await goto('/app/users');
 		} catch (e: any) {
 			triggerErrorToast(toastStore, e);
 		}

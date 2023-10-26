@@ -10,6 +10,8 @@
 	import { userService } from '$lib/services';
 	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import { roles } from './user';
+	import { loggedUser } from '$lib/stores';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const user: IUser = $modalStore[0].meta.values;
@@ -27,9 +29,13 @@
 	};
 	const edit = async () => {
 		if (validate()) {
-			const updatedUser = await userService.editUser(user.id_user, editedUser);
-			$modalStore[0].response?.(updatedUser);
-			close();
+			try {
+				const updatedUser = await userService.editUser(user.id_user, editedUser);
+				$modalStore[0].response?.(updatedUser);
+				close();
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
 		}
 	};
 	const triggerChangePassword = () => {
@@ -66,14 +72,16 @@
 					bind:value={editedUser.email}
 				/>
 			</div>
-			<Dropdown
-				required
-				options={roles}
-				bind:value={editedUser.role}
-				placeholder={i18n.t('placeholder.role')}
-			>
-				{i18n.t('label.role')}
-			</Dropdown>
+			{#if $loggedUser?.role === 'administrator'}
+				<Dropdown
+					required
+					options={roles}
+					bind:value={editedUser.role}
+					placeholder={i18n.t('placeholder.role')}
+				>
+					{i18n.t('label.role')}
+				</Dropdown>
+			{/if}
 			<svelte:fragment slot="footer">
 				<FormFooter>
 					<button

@@ -18,6 +18,7 @@
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 	initializeStores();
 	getDrawerStore().close();
+
 </script>
 
 <svelte:window bind:innerWidth={$clientWidth} />

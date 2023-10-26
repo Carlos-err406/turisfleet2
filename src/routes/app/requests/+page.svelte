@@ -17,6 +17,7 @@
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import dayjs from 'dayjs';
 	import { onMount, setContext } from 'svelte';
 
 	const toastStore = getToastStore();
@@ -63,6 +64,7 @@
 			$paginationStore.page_size = page_size;
 			flattenData = data.map((value) => ({
 				...value,
+				return_date: dayjs(value.return_date).format('YYYY-MM-DD'),
 				car_flat: `[${value.car.plate_number}] ${value.car.brand}`,
 				country: value.group.country,
 				description: value.specific_program.description,

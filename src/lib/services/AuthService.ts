@@ -12,7 +12,7 @@ export const login = async (auth: ILogin): Promise<ILoggedUser> => {
 		}
 	}).then((response) => {
 		if (response.status === 401) throw new CustomError('00040', 'invalid credentials');
-		else return response.json();
+		return response.json();
 	});
 	return response;
 };
@@ -38,4 +38,5 @@ export interface ILoggedUser {
 	id_user: number;
 	role: RoleType;
 	username: string;
+	email: string;
 }

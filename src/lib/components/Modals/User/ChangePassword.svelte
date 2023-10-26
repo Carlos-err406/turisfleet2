@@ -56,11 +56,14 @@
 		<BaseForm footerCols={1} {flashes} on:submit={change} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.changePassword')}</svelte:fragment>
 			<div class:hidden={$loggedUser?.role === 'administrator'}>
-				<label class="required" for="user-edit-current-password">
+				<label
+					class:required={$loggedUser?.role !== 'administrator'}
+					for="user-edit-current-password"
+				>
 					{i18n.t('label.currentPassword')}
 				</label>
 				<input
-					required
+					required={$loggedUser?.role !== 'administrator'}
 					type="password"
 					id="user-edit-current-password"
 					placeholder={i18n.t('placeholder.currentPassword')}
