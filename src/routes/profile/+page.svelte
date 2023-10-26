@@ -3,9 +3,16 @@
 	import { toastSuccessfullyEdited } from '$lib';
 	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleEdit } from '$lib/components/Modals';
+	import type { CarAndDate } from '$lib/components/Modals/Reports/types';
+	import PopupItem from '$lib/components/Popup/PopupItem.svelte';
+	import Reports from '$lib/components/Popup/Reports.svelte';
+	import { handleRoutingSheets } from '$lib/components/Popup/reports';
 	import i18n from '$lib/i18n';
 	import { avatar, edit } from '$lib/icons';
-	import { loggedUser } from '$lib/stores';
+	import { carService, reportService } from '$lib/services';
+	import type { ICar } from '$lib/services/CarService';
+	import { isDriver, loading, loggedUser } from '$lib/stores';
+	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	let modalStore = getModalStore();
@@ -37,7 +44,14 @@
 	};
 </script>
 
-<section class="h-full">
+<section class="relative h-full">
+	<div class="m-3 absolute">
+		{#if $isDriver}
+			<PopupItem on:click={() => handleRoutingSheets(toastStore, modalStore)}
+				>{i18n.t('label.reports.routingSheets')}</PopupItem
+			>
+		{/if}
+	</div>
 	<div class="flex items-center justify-center w-full h-full flex-col">
 		{@html avatar}
 		<span class="text-5xl pb-2 flex items-center gap-2">

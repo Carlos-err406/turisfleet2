@@ -95,7 +95,7 @@
 	};
 
 	const handleDeleteRequest = ({ detail }: CustomEvent<IRequest>) => {
-		const target = detail.date as string; //FIXME
+		const target = detail.date as string; 
 		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
 			$loading = true;
 			try {

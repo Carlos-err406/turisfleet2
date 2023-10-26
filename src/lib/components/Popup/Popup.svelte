@@ -10,16 +10,18 @@
 	let settings: PopupSettings = { event, target, placement };
 </script>
 
-<div
+<!-- svelte-ignore a11y-no-noninteractive-tabindex -->
+<button
+	type="button"
 	use:popup={settings}
-	class="py-1 md:my-1 md:py-3 cursor-pointer app-rail-wrapper w-full flex flex-col justify-center items-stretch text-center aspect-auto bg-primary-hover-token"
+	class="py-1 md:my-1 md:py-3 cursor-pointer rounded-token app-rail-wrapper w-full flex flex-col justify-center items-stretch text-center aspect-auto bg-primary-hover-token"
 	class:bg-primary-active-token={active}
 >
 	<div class="app-rail-label font-bold text-xs">
 		<div
 			class="flex {$md
 				? 'flex-row md:flex-col'
-				: 'flex-col py-1.5'}  items-center justify-center gap-2"
+				: 'flex-col py-1.5'} items-center justify-center gap-2"
 		>
 			<span>
 				<slot name="icon" />
@@ -35,4 +37,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</button>

@@ -1,15 +1,20 @@
 <script lang="ts">
-	//FIXME
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import i18n from '$lib/i18n';
-	import type { ISpecificProgram, IProgramEdit } from '$lib/services/ProgramService';
+	import { programService } from '$lib/services';
+	import type { IProgram, IProgramEdit } from '$lib/services/ProgramService';
+	import { loading } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
-	import { programService } from '$lib/services';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
-	let values: ISpecificProgram = $modalStore[0].meta.values;
+	const program: IProgram = $modalStore[0].meta.values;
+
+	let values: IProgramEdit = {
+		program_name: program.program_name
+	};
 	const close = () => {
 		modalStore.close();
 	};
@@ -19,9 +24,15 @@
 	};
 	const edit = async () => {
 		if (validate()) {
-			const program = await programService.editProgram(values.id_program, values);
-			$modalStore[0].response?.(program);
-			close();
+			$loading = true;
+			try {
+				const updated = await programService.editProgram(program.id_program, values);
+				$modalStore[0].response?.(updated);
+				close();
+			} catch (e) {
+				triggerErrorFlash(flashes, e);
+			}
+			$loading = false;
 		}
 	};
 </script>
@@ -36,6 +47,7 @@
 					placeholder={i18n.t('placeholder.programName')}
 					required
 					type="text"
+					minlength="3"
 					id="program-edit-name"
 					bind:value={values.program_name}
 				/>

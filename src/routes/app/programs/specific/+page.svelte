@@ -18,7 +18,6 @@
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
-	import dayjs from 'dayjs';
 	import { onMount, setContext } from 'svelte';
 
 	const toastStore = getToastStore();
@@ -30,8 +29,6 @@
 	setContext('pagination', paginationStore);
 	setContext('totalElements', totalElementsStore);
 	setContext('query', queryStore);
-	//TODO test
-	let data: ISpecificProgram[] = [];
 	type FlattenDataType = ISpecificProgram & { program_name: string; duration_flat: string };
 	let flattenForTable: FlattenDataType[] = [];
 	const headers: (keyof FlattenDataType)[] = [

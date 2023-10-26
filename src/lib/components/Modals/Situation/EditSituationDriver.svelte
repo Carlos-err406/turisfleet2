@@ -1,5 +1,5 @@
 <script lang="ts">
-	//FIXME
+	//TODO
 	import { createOneFromToast } from '$lib';
 	import Dropdown, { type DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
