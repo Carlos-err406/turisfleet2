@@ -113,7 +113,7 @@ const i18n = rosetta({
 				driverSituations: 'Driver Situations',
 				carDriverRelation: 'Car-Driver relation list',
 				dragsList: 'Drags List',
-				routingSheets: 'Routing Sheets',
+				routingSheets: 'Routing Sheet',
 				requestModifications: 'Request Modifications'
 			}
 		},
@@ -168,7 +168,7 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
-			invalidEmail:"Invalid email",
+			invalidEmail: 'Invalid email',
 			noRequestsForReport: 'There are no requests for the report',
 			noDriversToCreateRequest: 'There are no drivers to create a request',
 			noProgramsToCreateRequest: 'There are no programs to create a request',
@@ -200,7 +200,8 @@ const i18n = rosetta({
 
 		table: {
 			header: {
-				email:"Email",
+				end_time: 'Termina a la(s)',
+				email: 'Email',
 				driver_flat: 'Driver',
 				copilot_flat: 'Copilot',
 				driver_name: 'Driver name',
@@ -412,7 +413,7 @@ i18n.set('es', {
 			driverSituations: 'Situaciones de los conductores',
 			carDriverRelation: 'Relación carro-conductor',
 			dragsList: 'Listado de arrastres',
-			routingSheets: 'Hojas de ruta',
+			routingSheets: 'Hoja de ruta',
 			requestModifications: 'Modificaciones de solicitud'
 		}
 	},
@@ -467,7 +468,7 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
-		invalidEmail:"Correo inválido",
+		invalidEmail: 'Correo inválido',
 		noRequestsForReport: 'No hay solicitudes para el reporte',
 		noDriversToCreateRequest: 'No hay conductores para crear una solicitud',
 		noProgramsToCreateRequest: 'No hay programas para crear una solicitud',
@@ -501,7 +502,8 @@ i18n.set('es', {
 	},
 	table: {
 		header: {
-			email:"Correo",
+			end_time: 'Ends at',
+			email: 'Correo',
 			driver_flat: 'Conductor',
 			copilot_flat: 'Copiloto',
 			car_flat: 'Coche',

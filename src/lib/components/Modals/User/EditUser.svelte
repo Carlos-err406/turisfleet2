@@ -15,7 +15,8 @@
 	const user: IUser = $modalStore[0].meta.values;
 	const editedUser: IUserEdit = {
 		username: user.username,
-		role: user.role
+		role: user.role,
+		email: user.email
 	};
 	const close = () => {
 		modalStore.close();
@@ -53,6 +54,16 @@
 					id="user-edit-username"
 					placeholder={i18n.t('placeholder.username')}
 					bind:value={editedUser.username}
+				/>
+			</div>
+			<div>
+				<label class="required" for="user-edit-email">{i18n.t('label.email')}</label>
+				<input
+					required
+					type="text"
+					id="user-edit-email"
+					placeholder={i18n.t('placeholder.email')}
+					bind:value={editedUser.email}
 				/>
 			</div>
 			<Dropdown

@@ -163,7 +163,7 @@
 					bind:value={values.tourist_amount}
 				/>
 			</div>
-			<div class="col-span-3">
+			<div class="col-span-3 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ">
 				<Dropdown
 					bind:value={values.id_specific_program}
 					placeholder={i18n.t('placeholder.specificProgram')}

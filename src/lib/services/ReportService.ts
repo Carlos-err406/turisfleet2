@@ -215,10 +215,10 @@ export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: Ca
 	];
 	const headers: (keyof IRoadmapProgram)[] = [
 		'start',
+		'end_time',
 		'country',
 		'tourist_amount',
 		'program_name',
-		'end_time'
 	];
 	generatePDF(roadmap.programs, headers, title, extraData);
 };
