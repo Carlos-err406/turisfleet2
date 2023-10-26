@@ -14,7 +14,7 @@
 
 	const pagination: PaginationStore = getContext('pagination');
 	const size: Writable<number> = getContext('totalElements');
-
+	const canEdit: boolean = getContext('canEdit');
 	const handleEdit = (item: (typeof data)[0]) => dispatch('edit', item);
 	const handleDelete = (item: (typeof data)[0]) => dispatch('delete', item);
 	const handleOrderByChange = (header: string) => {
@@ -78,9 +78,11 @@
 					{/each}
 					<td class="">
 						<div class="flex items-center justify-end gap-3">
-							<button type="button" tabindex="-1" class="btn p-0" on:click={() => handleEdit(tr)}>
-								{@html edit}
-							</button>
+							{#if canEdit}
+								<button type="button" tabindex="-1" class="btn p-0" on:click={() => handleEdit(tr)}>
+									{@html edit}
+								</button>
+							{/if}
 							<button type="button" tabindex="-1" class="btn p-0" on:click={() => handleDelete(tr)}>
 								{@html trash}
 							</button>

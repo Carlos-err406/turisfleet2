@@ -61,4 +61,4 @@ const emailRegex = new RegExp(
 	/^[a-z0-9]+([._+-][a-z0-9]+)*@[a-z0-9-_]+(\.[a-z0-9-_]+)*\.[a-z0-9]{2,}$/
 );
 
-export const validateEmail = (email: string) => emailRegex.test(email);
+export const validateEmail = (email: string) => !emailRegex.test(email);

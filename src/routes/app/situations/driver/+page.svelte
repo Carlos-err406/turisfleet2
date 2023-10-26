@@ -1,11 +1,10 @@
 <script lang="ts">
 	import {
 		toastSuccessfullyCreated,
-		toastSuccessfullyDeleted,
-		toastSuccessfullyEdited
+		toastSuccessfullyDeleted
 	} from '$lib';
 	import { triggerErrorToast } from '$lib/CustomError';
-	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
+	import { Modals, handleCreate, handleDelete } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
@@ -28,6 +27,7 @@
 	setContext('pagination', paginationStore);
 	setContext('totalElements', totalElementsStore);
 	setContext('query', queryStore);
+	setContext('canEdit', false);
 
 	type FlattenDataType = IDriverSituation & {
 		name: string;
@@ -71,13 +71,6 @@
 		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, async (created) => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
-		});
-	};
-
-	const handleEditDriverSituation = ({ detail }: CustomEvent<IDriverSituation>) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION_DRIVER, detail, async (edited) => {
-			await getAll();
-			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
@@ -134,7 +127,6 @@
 		data={flattenData}
 		{headers}
 		on:insert={handleCreateDriverSituation}
-		on:edit={handleEditDriverSituation}
 		on:delete={handleDeleteDriverSituation}
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}

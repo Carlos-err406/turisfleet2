@@ -12,13 +12,14 @@
 	} from '@skeletonlabs/skeleton';
 	import { scale } from 'svelte/transition';
 	import '../app.postcss';
+	import { setContext } from 'svelte';
 
 	if (!$lang) $lang = 'en';
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 	initializeStores();
 	getDrawerStore().close();
-
+	setContext('canEdit', true);
 </script>
 
 <svelte:window bind:innerWidth={$clientWidth} />

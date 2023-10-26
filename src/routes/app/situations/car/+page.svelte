@@ -1,11 +1,10 @@
 <script lang="ts">
 	import {
 		toastSuccessfullyCreated,
-		toastSuccessfullyDeleted,
-		toastSuccessfullyEdited
+		toastSuccessfullyDeleted
 	} from '$lib';
 	import { triggerErrorToast } from '$lib/CustomError';
-	import { Modals, handleCreate, handleDelete, handleEdit } from '$lib/components/Modals';
+	import { Modals, handleCreate, handleDelete } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
@@ -28,6 +27,7 @@
 	setContext('pagination', paginationStore);
 	setContext('totalElements', totalElementsStore);
 	setContext('query', queryStore);
+	setContext('canEdit', false);
 
 	type FlattenDataType = ICarSituation & {
 		brand: string;
@@ -74,12 +74,7 @@
 		});
 	};
 
-	const handleEditCarSituation = ({ detail }: CustomEvent) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION_CAR, detail, async (edited) => {
-			await getAll();
-			toastSuccessfullyEdited(toastStore);
-		});
-	};
+	
 
 	const handleDeleteCarSituation = ({ detail }: CustomEvent<ICarSituation>) => {
 		const target = `([${detail.car.plate_number}] ${detail.car.brand}) -> ${detail.situation.situation_name}`;
@@ -133,7 +128,6 @@
 		data={flattenData}
 		{headers}
 		on:insert={handleCreateCarSituation}
-		on:edit={handleEditCarSituation}
 		on:delete={handleDeleteCarSituation}
 		on:page={handlePageChange}
 		on:amount={handleAmountChange}

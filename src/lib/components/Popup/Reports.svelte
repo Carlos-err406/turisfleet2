@@ -53,7 +53,7 @@
 			<PopupItem on:click={() => handleRequestModifications(toastStore, modalStore)}
 				>{i18n.t('label.reports.requestModifications')}</PopupItem
 			>
-		{:else if $isDriver}
+			<!-- {:else if $isDriver || $isAdmin} -->
 			<PopupItem on:click={() => handleRoutingSheets(toastStore, modalStore)}
 				>{i18n.t('label.reports.routingSheets')}</PopupItem
 			>

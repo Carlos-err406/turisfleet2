@@ -1,5 +1,5 @@
 import { getFlashStore } from '$lib/stores/flashes';
-import type { ModalComponent, ModalStore, ToastStore } from '@skeletonlabs/skeleton';
+import type { ModalComponent, ModalStore } from '@skeletonlabs/skeleton';
 import CreateCar from './Car/CreateCar.svelte';
 import EditCar from './Car/EditCar.svelte';
 import DeleteConfirmation from './DeleteConfirmation.svelte';
@@ -12,6 +12,7 @@ import CreateProgram from './Program/CreateProgram.svelte';
 import CreateSpecificProgram from './Program/CreateProgramSpecific.svelte';
 import EditProgram from './Program/EditProgram.svelte';
 import EditProgramSpecific from './Program/EditProgramSpecific.svelte';
+import CarAndDateSelect from './Reports/CarAndDateSelect.svelte';
 import DateSelect from './Reports/DateSelect.svelte';
 import RequestSelect from './Reports/RequestSelect.svelte';
 import CreateRequest from './Request/CreateRequest.svelte';
@@ -20,12 +21,9 @@ import CreateSituation from './Situation/CreateSituation.svelte';
 import CreateSituationCar from './Situation/CreateSituationCar.svelte';
 import CreateSituationDriver from './Situation/CreateSituationDriver.svelte';
 import EditSituation from './Situation/EditSituation.svelte';
-import EditSituationCar from './Situation/EditSituationCar.svelte';
-import EditSituationDriver from './Situation/EditSituationDriver.svelte';
 import ChangePassword from './User/ChangePassword.svelte';
 import CreateUser from './User/CreateUser.svelte';
 import EditUser from './User/EditUser.svelte';
-import CarAndDateSelect from './Reports/CarAndDateSelect.svelte';
 
 export enum Modals {
 	CREATE_USER = 'createUser',
@@ -46,8 +44,6 @@ export enum Modals {
 	EDIT_PROGRAM = 'editProgram',
 	EDIT_PROGRAM_SPECIFIC = 'editProgramSpecific',
 	EDIT_SITUATION = 'editSituation',
-	EDIT_SITUATION_CAR = 'editSituationCar',
-	EDIT_SITUATION_DRIVER = 'editSituationDriver',
 	CHANGE_PASSWORD = 'changePassword',
 	LANGUAGE_SELECTION = 'languageSelection',
 	DELETE_CONFIRMATION = 'deleteConfirmation',
@@ -76,8 +72,8 @@ const modalRegistry: Record<Modals, ModalComponent> = {
 	[Modals.EDIT_PROGRAM]: { ref: EditProgram },
 	[Modals.EDIT_PROGRAM_SPECIFIC]: { ref: EditProgramSpecific },
 	[Modals.EDIT_SITUATION]: { ref: EditSituation },
-	[Modals.EDIT_SITUATION_CAR]: { ref: EditSituationCar },
-	[Modals.EDIT_SITUATION_DRIVER]: { ref: EditSituationDriver },
+	// [Modals.EDIT_SITUATION_CAR]: { ref: EditSituationCar },
+	// [Modals.EDIT_SITUATION_DRIVER]: { ref: EditSituationDriver },
 	[Modals.LANGUAGE_SELECTION]: { ref: LanguageSelection },
 	[Modals.DELETE_CONFIRMATION]: { ref: DeleteConfirmation },
 	[Modals.DATE_SELECTION]: { ref: DateSelect },
