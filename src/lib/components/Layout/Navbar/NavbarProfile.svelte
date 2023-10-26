@@ -25,7 +25,7 @@
 			</div>
 		</svelte:fragment>
 		{#if !$isDriver}
-			<a href="/app/users" class="btn font-semibold"> Go to main view</a>
+			<a href="/app/users" class="btn font-semibold"> {i18n.t('label.goToMainView')}</a>
 		{/if}
 		<svelte:fragment slot="trail">
 			{#if $loggedUser}

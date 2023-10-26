@@ -49,6 +49,7 @@ const i18n = rosetta({
 			driverSituations: 'Driver Situations'
 		},
 		label: {
+			goToMainView: 'Go to main view',
 			email: 'Email',
 			remainingKM: 'Remaining kilometers',
 			selectARequest: 'Select a request',
@@ -168,6 +169,7 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
+			youNeedToLoginAgain: 'You need to login again',
 			noModificationsForRequest: 'There are no modifications of this request',
 			invalidEmail: 'Invalid email',
 			noRequestsForReport: 'There are no requests for the report',
@@ -354,6 +356,7 @@ i18n.set('es', {
 		driverSituations: 'Situaciones del conductor'
 	},
 	label: {
+		goToMainView: 'Ir a la vista principal',
 		email: 'Correo',
 		remainingKM: 'Kilómetros restantes',
 		selectARequest: 'Seleccione una solicitud',
@@ -473,6 +476,7 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		youNeedToLoginAgain: 'Necesita autenticarse nuevamente',
 		noModificationsForRequest: 'Esta solicitud no ha sido modificada',
 		invalidEmail: 'Correo inválido',
 		noRequestsForReport: 'No hay solicitudes para el reporte',

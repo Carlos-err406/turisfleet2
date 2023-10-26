@@ -4,15 +4,17 @@
 	import i18n from '$lib/i18n';
 	import { userService } from '$lib/services';
 	import type { IUser, IUserEdit } from '$lib/services/UserService';
-	import { isAdmin } from '$lib/stores';
+	import { isAdmin, loggedUser } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, getToastStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
 	import FormFooter from '../FormFooter.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { roles } from './user';
+	import { handleLogout } from '$lib/utils';
 	const modalStore = getModalStore();
+	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const user: IUser = $modalStore[0].meta.values;
 	const editedUser: IUserEdit = {
@@ -32,6 +34,14 @@
 			try {
 				const updatedUser = await userService.editUser(user.id_user, editedUser);
 				$modalStore[0].response?.(updatedUser);
+				if ($loggedUser?.id_user === user.id_user) {
+					toastStore.trigger({
+						hideDismiss: true,
+						message: i18n.t("flashes.youNeedToLoginAgain"),
+						background: 'variant-filled-primary'
+					});
+					handleLogout();
+				}
 				close();
 			} catch (e) {
 				triggerErrorFlash(flashes, e);

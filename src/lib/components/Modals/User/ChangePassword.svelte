@@ -6,7 +6,7 @@
 	import ModalBase from '../ModalBase.svelte';
 	import type { IUser, IUserChangePassword } from '$lib/services/UserService';
 	import { triggerErrorFlash } from '$lib/CustomError';
-	import { isAdmin, loading, loggedUser } from '$lib/stores';
+	import { isAdmin, isSupport, loading, loggedUser } from '$lib/stores';
 	import { userService } from '$lib/services';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
@@ -55,15 +55,12 @@
 	<ModalBase>
 		<BaseForm footerCols={1} {flashes} on:submit={change} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.changePassword')}</svelte:fragment>
-			<div class:hidden={$isAdmin}>
-				<label
-					class:required={!$isAdmin}
-					for="user-edit-current-password"
-				>
+			<div class:hidden={$isAdmin || $isSupport}>
+				<label class:required={!$isAdmin} for="user-edit-current-password">
 					{i18n.t('label.currentPassword')}
 				</label>
 				<input
-					required={!$isAdmin}
+					required={!$isAdmin && !$isSupport}
 					type="password"
 					id="user-edit-current-password"
 					placeholder={i18n.t('placeholder.currentPassword')}

@@ -46,11 +46,11 @@
 
 <section class="relative h-full">
 	<div class="m-3 absolute">
-		{#if $isDriver}
+		<!-- {#if $isDriver}
 			<PopupItem on:click={() => handleRoutingSheets(toastStore, modalStore)}
 				>{i18n.t('label.reports.routingSheets')}</PopupItem
 			>
-		{/if}
+		{/if} -->
 	</div>
 	<div class="flex items-center justify-center w-full h-full flex-col">
 		{@html avatar}

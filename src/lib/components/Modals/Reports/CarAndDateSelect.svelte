@@ -48,7 +48,7 @@
 
 {#if $modalStore[0]}
 	<ModalBase>
-		<BaseForm footerCols={1} {flashes} on:submit={select} on:secondary={close}>
+		<BaseForm footerCols={2} {flashes} on:submit={select} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('title.fillDataForReport')}</svelte:fragment>
 			<Dropdown
 				bind:value={selectedCar}
