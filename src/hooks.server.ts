@@ -14,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await resolve(event);
 
 	if (LOGGING === '1' && (pathname.includes('/proxy') || pathname.includes('/api'))) {
-		log(event.request, response.status, pathname);
+		log(event, response.status);
 	}
 
 	return response;
