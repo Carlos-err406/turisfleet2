@@ -14,6 +14,7 @@ interface IUserBase {
 }
 export interface IUserCreate extends IUserBase {
 	password: string;
+	id_driver?:number
 }
 export interface IUser extends IUserBase {
 	id_user: number;

@@ -1,23 +1,37 @@
 <script lang="ts">
 	import { triggerErrorFlash } from '$lib/CustomError';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
+	import Dropdown, { type DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
-	import { userService } from '$lib/services';
+	import { driverService, userService } from '$lib/services';
 	import type { IUserCreate } from '$lib/services/UserService';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { roles } from './user';
+	import type { IDriver } from '$lib/services/DriverService';
+	import { onMount } from 'svelte';
+	import { scale } from 'svelte/transition';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	let passwordConf = '';
+
 	let values: IUserCreate = {
 		username: '',
 		password: '',
 		role: roles[0].value,
 		email: ''
 	};
+	let selectedDriver: number;
+	let drivers: IDriver[] = [];
+	let driverOptions: DropdownOption[] = [];
+	onMount(async () => {
+		drivers = await driverService.getAllDrivers();
+		driverOptions = drivers.map(({ id_driver, name }) => ({
+			label: name,
+			value: id_driver
+		}));
+	});
 	const close = () => {
 		modalStore.close();
 	};
@@ -42,6 +56,7 @@
 	const create = async () => {
 		if (validate()) {
 			try {
+				if (values.role === 'driver') Object.assign(values, { id_driver: selectedDriver });
 				const user = await userService.createUser(values);
 				$modalStore[0].response?.(user);
 				close();
@@ -84,6 +99,20 @@
 			>
 				{i18n.t('label.role')}
 			</Dropdown>
+			<div>
+				{#if values.role === 'driver'}
+					<div transition:scale>
+						<Dropdown
+							required
+							options={driverOptions}
+							bind:value={selectedDriver}
+							placeholder={i18n.t('placeholder.driver')}
+						>
+							{i18n.t('label.driver')}
+						</Dropdown>
+					</div>
+				{/if}
+			</div>
 			<div>
 				<label class="required" for="user-create-password">{i18n.t('label.password')}</label>
 				<input

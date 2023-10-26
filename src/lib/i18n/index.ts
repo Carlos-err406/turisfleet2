@@ -300,6 +300,8 @@ const i18n = rosetta({
 			'00064': "Tourist amount is greater than the group's tourist amount",
 			'00065': 'Can not create a request in the past',
 			'00066': 'Driver does not have the required category',
+			'00067': 'The selected driver is already assigned to a user',
+			'00068': 'The driver is required to create a user with that role',
 			'99999': 'Can not delete yourself'
 		},
 		misc: {
@@ -609,6 +611,8 @@ i18n.set('es', {
 		'00064': 'La cantidad de turistas el mayor que el tamaño del grupo',
 		'00065': 'No puede crear una solicitud en el pasado',
 		'00066': 'El conductor no tiene la categoría necesaria',
+		'00067': 'El conductor seleccionado ya está asignado a un usuario',
+		'00068': 'El conductor es requerido',
 		'99999': 'No se puede eliminar usted mismo'
 	},
 	misc: {
