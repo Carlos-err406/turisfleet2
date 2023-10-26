@@ -10,10 +10,28 @@ import type { IDriver } from './DriverService';
 import type { ICarSituation, IDriverSituation } from './SituationService';
 import { PROXY_GET } from '$lib/services/Base/ProxyService';
 import type { IRequest } from './RequestService';
+import type { CarAndDate } from '$lib/components/Modals/Reports/types';
+import { makeParams } from './Base/BaseService';
 const DOWNLOAD_PDFS = true;
 const OPEN_PDFS = true;
 
-const triggerNoDataForReport = (toastStore: ToastStore, message: string) => {
+export interface IRoadmapProgram {
+	start: string | Date;
+	id_group: number;
+	country: string;
+	tourist_amount: number;
+	program_name: string;
+	end_time: string | Date;
+}
+export interface IRoadmap {
+	programs: IRoadmapProgram[];
+	plate_number: string;
+	brand: string;
+	available_km: number;
+	km_remaining: number;
+	driver_name: string;
+}
+export const triggerNoDataForReport = (toastStore: ToastStore, message: string) => {
 	toastStore.trigger({
 		message: message,
 		background: 'variant-filled-surface',
@@ -92,7 +110,7 @@ export const requestsOnDateReport = async (toastStore: ToastStore, date: Dayjs) 
 		driver_flat: `${value}`,
 		copilot_flat: value.copilot?.name
 	}));
-	generatePDF(flattenData, headers, title, { orientation: 'landscape' });
+	generatePDF(flattenData, headers, title, undefined, { orientation: 'landscape' });
 };
 
 export const carSituationsReport = async (toastStore: ToastStore) => {
@@ -167,25 +185,49 @@ export const carDriverRelationReport = async (toastStore: ToastStore) => {
 	generatePDF(data, headers, title);
 };
 
-//TODO
-export const dragsListReport = async (toastStore: ToastStore) => {
+export const dragsListReport = async (toastStore: ToastStore, request: IRequest) => {
 	const title = i18n.t('label.reports.dragsList');
-	const data: any[] = [];
-	// generatePDF(data, title);
+	const data: ICar[] = await PROXY_GET(`/requests/${request.id_request}/drag-list`);
+	if (data.length === 0) {
+		triggerNoDataForReport(toastStore, i18n.t('flashes.noDataForThisReport'));
+		return;
+	}
+	const headers: (keyof ICar)[] = ['plate_number', 'brand', 'category', 'seat_amount'];
+
+	generatePDF(data, headers, title);
 };
 
 //TODO
-export const routingSheetsReport = async (toastStore: ToastStore) => {
+export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: CarAndDate) => {
+	const roadmap: IRoadmap = await PROXY_GET(
+		`/cars/${carAndDate.car.id_car}/roadmap`,
+		makeParams({ date: dayjs(carAndDate.date).format('YYYY-MM-DD') })
+	);
+	if (roadmap?.programs?.length === 0) {
+		triggerNoDataForReport(toastStore, i18n.t('flashes.noDataForThisReport'));
+	}
 	const title = i18n.t('label.reports.routingSheets');
-	const data: any[] = [];
-	// generatePDF(data, title);
+	const extraData: { label: string; value: string }[] = [
+		{ label: i18n.t('label.car'), value: `[${roadmap.plate_number}] ${roadmap.brand}` },
+		{ label: i18n.t('label.driver'), value: roadmap.driver_name },
+		{ label: i18n.t('label.remainingKM'), value: String(roadmap.km_remaining) },
+		{ label: i18n.t('label.availableKM'), value: String(roadmap.available_km) }
+	];
+	const headers: (keyof IRoadmapProgram)[] = [
+		'start',
+		'country',
+		'tourist_amount',
+		'program_name',
+		'end_time'
+	];
+	generatePDF(roadmap.programs, headers, title, extraData);
 };
 
 //TODO request interface tho it should be the id
-export const requestModificationsReport = async (toastStore: ToastStore, request: any) => {
-	console.log(request);
+export const requestModificationsReport = async (toastStore: ToastStore, request: IRequest) => {
 	const title = i18n.t('label.reports.requestModifications');
 	const data: any[] = [];
+	//TODO
 	// generatePDF(data, title);
 };
 
@@ -193,6 +235,7 @@ export const generatePDF = (
 	data: any[],
 	headers: string[],
 	title: string,
+	extraData?: { label: string; value: string }[],
 	options?: jsPDFOptions
 ) => {
 	const doc = new jsPDF(options);
@@ -203,12 +246,19 @@ export const generatePDF = (
 	doc.addImage(img, 'png', 75, 5, 25, 25);
 	doc.text(PUBLIC_APP_NAME, 105, 20);
 	doc.text(title, 10, 50);
+	let initialPosition = { x: 10, y: 60 };
+	if (extraData) {
+		extraData.forEach((value) => {
+			doc.text(`${value.label}: ${value.value}`, initialPosition.x, initialPosition.y);
+			initialPosition.y += 15;
+		});
+	}
 	if (data && data.length > 0) {
 		const body = data.map((row) => headers.map((header) => row[header]));
 		autoTable(doc, {
 			head: [headers.map((header) => getTranslatedHeader(header))],
 			body,
-			startY: 60,
+			startY: initialPosition.y,
 			theme: 'striped'
 		});
 	}

@@ -9,6 +9,7 @@ loading.set(true);
 const i18n = rosetta({
 	en: {
 		title: {
+			fillDataForReport: 'Fill the data for the report',
 			profile: 'Profile',
 
 			createCar: 'Create Car',
@@ -48,6 +49,8 @@ const i18n = rosetta({
 			driverSituations: 'Driver Situations'
 		},
 		label: {
+			remainingKM: 'Kilómetros restantes',
+			selectARequest: 'Select a request',
 			administrator: 'Administrator',
 			agent: 'Agent',
 			support: 'Support',
@@ -114,6 +117,7 @@ const i18n = rosetta({
 			}
 		},
 		placeholder: {
+			request: 'request',
 			language: 'language',
 			copilot: 'copilot',
 			newPassword: 'new password',
@@ -282,6 +286,8 @@ const i18n = rosetta({
 			'00062': 'This situation is being used',
 			'00063': 'Program can not be deleted because it has a specific program on use',
 			'00064': "Tourist amount is greater than the group's tourist amount",
+			'00065': 'Can not create a request in the past',
+			'00066': 'Driver does not have the required category',
 			'99999': 'Can not delete yourself'
 		},
 		misc: {
@@ -297,6 +303,7 @@ const i18n = rosetta({
 
 i18n.set('es', {
 	title: {
+		fillDataForReport: 'Rellene los datos necesarios para el reporte',
 		profile: 'Perfil',
 
 		createCar: 'Crear Carro',
@@ -337,6 +344,8 @@ i18n.set('es', {
 		driverSituations: 'Situaciones del conductor'
 	},
 	label: {
+		remainingKM: 'Kilómetros restantes',
+		selectARequest: 'Seleccione una solicitud',
 		administrator: 'Administrador',
 		agent: 'Agente',
 		support: 'Soporte',
@@ -403,6 +412,7 @@ i18n.set('es', {
 		}
 	},
 	placeholder: {
+		request: 'solicitud',
 		language: 'idioma',
 		copilot: 'copiloto',
 		newPassword: 'nueva contraseña',
@@ -573,6 +583,8 @@ i18n.set('es', {
 		'00062': 'Esta situación está en uso',
 		'00063': 'No se puede eliminar el programa porque tiene un programa específico en uso',
 		'00064': 'La cantidad de turistas el mayor que el tamaño del grupo',
+		'00065': 'No puede crear una solicitud en el pasado',
+		'00066': 'El conductor no tiene la categoría necesaria',
 		'99999': 'No se puede eliminar usted mismo'
 	},
 	misc: {

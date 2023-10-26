@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { createOneFromToast } from '$lib';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	import Dropdown, { type DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
 	import DurationInput, {
 		durationObjToStr,
@@ -6,16 +8,14 @@
 	} from '$lib/components/Inputs/DurationInput.svelte';
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import i18n from '$lib/i18n';
-	import type { FlashStore } from '$lib/stores/flashes';
-	import { getModalStore, getToastStore, type ToastStore } from '@skeletonlabs/skeleton';
-	import BaseForm from '../BaseForm.svelte';
+	import { programService } from '$lib/services';
 	import type { IProgram, ISpecificProgramCreate } from '$lib/services/ProgramService';
-	import { createOneFromToast } from '$lib';
-	import { driverService, programService } from '$lib/services';
+	import { loading } from '$lib/stores';
+	import type { FlashStore } from '$lib/stores/flashes';
+	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { Modals } from '..';
-	import { loading } from '$lib/stores';
-	import { triggerErrorFlash } from '$lib/CustomError';
+	import BaseForm from '../BaseForm.svelte';
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;

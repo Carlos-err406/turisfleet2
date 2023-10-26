@@ -29,7 +29,7 @@
 		<BaseForm footerCols={1} {flashes} on:submit={select} on:secondary={close}>
 			<svelte:fragment slot="title">{i18n.t('label.reports.requestOnDate')}</svelte:fragment>
 			<div>
-				<label class="required" for="user-edit-password">{i18n.t('label.selectADate')}</label>
+				<label class="required" for="report-select-date-input">{i18n.t('label.selectADate')}</label>
 				<input required type="date" id="report-select-date-input" bind:value />
 			</div>
 		</BaseForm>

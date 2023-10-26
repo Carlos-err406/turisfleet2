@@ -25,6 +25,7 @@ import EditSituationDriver from './Situation/EditSituationDriver.svelte';
 import ChangePassword from './User/ChangePassword.svelte';
 import CreateUser from './User/CreateUser.svelte';
 import EditUser from './User/EditUser.svelte';
+import CarAndDateSelect from './Reports/CarAndDateSelect.svelte';
 
 export enum Modals {
 	CREATE_USER = 'createUser',
@@ -51,7 +52,8 @@ export enum Modals {
 	LANGUAGE_SELECTION = 'languageSelection',
 	DELETE_CONFIRMATION = 'deleteConfirmation',
 	DATE_SELECTION = 'dateSelection',
-	REQUEST_SELECTION = 'requestSelection'
+	REQUEST_SELECTION = 'requestSelection',
+	CAR_AND_DATE_SELECT = 'carAndDateSelect'
 }
 
 const modalRegistry: Record<Modals, ModalComponent> = {
@@ -79,7 +81,8 @@ const modalRegistry: Record<Modals, ModalComponent> = {
 	[Modals.LANGUAGE_SELECTION]: { ref: LanguageSelection },
 	[Modals.DELETE_CONFIRMATION]: { ref: DeleteConfirmation },
 	[Modals.DATE_SELECTION]: { ref: DateSelect },
-	[Modals.REQUEST_SELECTION]: { ref: RequestSelect }
+	[Modals.REQUEST_SELECTION]: { ref: RequestSelect },
+	[Modals.CAR_AND_DATE_SELECT]: { ref: CarAndDateSelect }
 };
 
 export default modalRegistry;
