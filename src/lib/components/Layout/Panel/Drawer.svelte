@@ -7,6 +7,7 @@
 	import DrawerItem from './DrawerItem.svelte';
 	import ProgramsPopup from './ProgramsPopup.svelte';
 	import SituationsPopup from './SituationsPopup.svelte';
+	import { isAdmin, isAgent, isSupport, loggedUser } from '$lib/stores';
 </script>
 
 <Drawer class="block md:hidden overflow-x-hidden">
@@ -15,14 +16,18 @@
 			<div class="flex w-full justify-center my-2">
 				<img src="/logo.png" width="40" alt="" />
 			</div>
-			<DrawerItem href="/app/users" icon={users}>{i18n.t('label.users')}</DrawerItem>
-			<DrawerItem href="/app/drivers" icon={driver}>{i18n.t('label.drivers')}</DrawerItem>
-			<DrawerItem href="/app/cars" icon={truck}>{i18n.t('label.cars')}</DrawerItem>
-			<DrawerItem href="/app/groups" icon={group}>{i18n.t('label.groups')}</DrawerItem>
-			<DrawerItem href="/app/requests" icon={inbox}>{i18n.t('label.requests')}</DrawerItem>
-			<ProgramsPopup />
-			<SituationsPopup />
-			<Reports placement="right" />
+			{#if $isAdmin || $isSupport}
+				<DrawerItem href="/app/users" icon={users}>{i18n.t('label.users')}</DrawerItem>
+			{/if}
+			{#if $isAdmin || $isAgent}
+				<DrawerItem href="/app/drivers" icon={driver}>{i18n.t('label.drivers')}</DrawerItem>
+				<DrawerItem href="/app/cars" icon={truck}>{i18n.t('label.cars')}</DrawerItem>
+				<DrawerItem href="/app/groups" icon={group}>{i18n.t('label.groups')}</DrawerItem>
+				<DrawerItem href="/app/requests" icon={inbox}>{i18n.t('label.requests')}</DrawerItem>
+				<ProgramsPopup />
+				<SituationsPopup />
+				<Reports placement="right" />
+			{/if}
 		</div>
 		<div class="mt-8 flex flex-col w-full items-start gap-2 pb-2">
 			<div class="w-full flex justify-center mb-1">

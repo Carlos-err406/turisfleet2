@@ -1,17 +1,17 @@
 <script lang="ts">
+	import { triggerErrorFlash } from '$lib/CustomError';
+	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import i18n from '$lib/i18n';
+	import { userService } from '$lib/services';
 	import type { IUser, IUserEdit } from '$lib/services/UserService';
+	import { isAdmin } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { Modals } from '..';
 	import BaseForm from '../BaseForm.svelte';
 	import FormFooter from '../FormFooter.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import { userService } from '$lib/services';
-	import Dropdown from '$lib/components/Inputs/Dropdown.svelte';
 	import { roles } from './user';
-	import { loggedUser } from '$lib/stores';
-	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const user: IUser = $modalStore[0].meta.values;
@@ -72,7 +72,7 @@
 					bind:value={editedUser.email}
 				/>
 			</div>
-			{#if $loggedUser?.role === 'administrator'}
+			{#if $isAdmin}
 				<Dropdown
 					required
 					options={roles}

@@ -5,7 +5,7 @@
 	import i18n from '$lib/i18n';
 	import { lock, user } from '$lib/icons';
 	import { authService } from '$lib/services';
-	import { loading, loggedUser } from '$lib/stores';
+	import { isAgent, isDriver, loading, loggedUser } from '$lib/stores';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
 	const toastStore = getToastStore();
 
@@ -16,9 +16,13 @@
 		$loading = true;
 		try {
 			$loggedUser = await authService.login({ username, password });
-			if ($loggedUser.role === 'driver') {
+			if ($isDriver) {
 				await goto('/profile');
-			} else await goto('/app/users');
+			} else if ($isAgent) {
+				await goto('/app/drivers');
+			} else {
+				await goto('/app/users');
+			}
 		} catch (e: any) {
 			triggerErrorToast(toastStore, e);
 		}

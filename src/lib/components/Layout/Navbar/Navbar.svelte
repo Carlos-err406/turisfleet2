@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { getDrawerSettings } from '$lib';
 	import i18n from '$lib/i18n';
 	import { logout, menu } from '$lib/icons';
-	import { loggedUser, navHeight } from '$lib/stores';
+	import { isDriver, loggedUser, navHeight } from '$lib/stores';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
 	import LangButton from '../Panel/LangButton.svelte';
-	import { page } from '$app/stores';
 	const drawer = getDrawerStore();
 	const handleShowMenuClick = () => {
 		!$drawer.open && drawer.open(getDrawerSettings());
@@ -27,7 +27,7 @@
 				<h3 class="h3">{PUBLIC_APP_NAME}</h3>
 			</div>
 		</svelte:fragment>
-		{#if $loggedUser?.role !== 'driver' && $page.url.pathname === '/profile'}
+		{#if !$isDriver && $page.url.pathname === '/profile'}
 			<a href="/app/users" class="btn"> Go to main view</a>
 		{/if}
 		<svelte:fragment slot="trail">

@@ -28,3 +28,9 @@ export const loggedUser = persist(
 	createSessionStorage(false),
 	'tf-user'
 );
+
+
+export const isAdmin = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'administrator');
+export const isSupport = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'support');
+export const isAgent = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'agent');
+export const isDriver = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'driver');

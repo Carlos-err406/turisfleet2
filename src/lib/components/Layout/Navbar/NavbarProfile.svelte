@@ -3,7 +3,7 @@
 	import { getDrawerSettings } from '$lib';
 	import i18n from '$lib/i18n';
 	import { logout, menu } from '$lib/icons';
-	import { loggedUser, navHeight } from '$lib/stores';
+	import { isDriver, loggedUser, navHeight } from '$lib/stores';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
 	import LangButton from '../Panel/LangButton.svelte';
@@ -24,13 +24,15 @@
 				<h3 class="h3">{PUBLIC_APP_NAME}</h3>
 			</div>
 		</svelte:fragment>
-		{#if $loggedUser?.role !== 'driver'}
+		{#if !$isDriver}
 			<a href="/app/users" class="btn font-semibold"> Go to main view</a>
 		{/if}
 		<svelte:fragment slot="trail">
 			{#if $loggedUser}
 				<a href="/profile">
-					<div class="flex flex-col gap-0.5 items-start justify-center w-fit text-primary-500-400-token">
+					<div
+						class="flex flex-col gap-0.5 items-start justify-center w-fit text-primary-500-400-token"
+					>
 						<span class="text-lg font-semibold">{$loggedUser.username}</span>
 						<span class="text-sm text-primary-500-400-token opacity-70"
 							>{i18n.t(`label.${$loggedUser.role}`)}</span
