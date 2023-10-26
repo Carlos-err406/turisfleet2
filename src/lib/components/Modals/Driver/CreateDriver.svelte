@@ -13,6 +13,7 @@
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
 	import { triggerErrorFlash } from '$lib/CustomError';
+	import flashStore from '$lib/stores/flashes';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({
@@ -30,8 +31,8 @@
 		modalStore.close();
 	};
 
-	const triggerInvalidID = () => {
-		flashes.trigger({
+	const triggerInvalidID = (flashStore: FlashStore) => {
+		flashStore.trigger({
 			message: i18n.t('flashes.invalidID'),
 			type: 'error'
 		});
@@ -39,28 +40,11 @@
 
 	const validate = () => {
 		const { id_number } = values;
-		if (id_number.length !== 11) {
-			triggerInvalidID();
+		if (!driverService.validateIDNumber(id_number)) {
+			triggerInvalidID(flashes);
 			return false;
 		}
-
-		const [year, month, day] = [
-			parseInt(id_number.slice(0, 2)),
-			parseInt(id_number.slice(2, 4)),
-			parseInt(id_number.slice(4, 6))
-		];
-
-		const date = dayjs(`${month}-${day}-${year}`);
-		let isValid = true;
-		if (month < 1 || month > 12) isValid = false;
-		else if (day > 31 || day < 1) isValid = false;
-		else if (month == 2 && day > 29) isValid = false;
-		else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
-		else if ([4, 6, 8, 11].includes(month) && day > 30) isValid = false;
-		if (!isValid || !date.isValid()) {
-			triggerInvalidID();
-		}
-		return isValid;
+		return true;
 	};
 	const create = async () => {
 		if (validate()) {

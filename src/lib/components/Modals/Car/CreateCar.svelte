@@ -51,7 +51,7 @@
 		}));
 	});
 	const validate = () => {
-		const isValidPlateNumber = true; //carService.isValidPlateNumber(values.plate_number);
+		const isValidPlateNumber = carService.isValidPlateNumber(values.plate_number);
 		if (!isValidPlateNumber) {
 			flashes.trigger({
 				type: 'error',
@@ -89,10 +89,10 @@
 					type="text"
 					id="car-create-plate"
 					bind:value={values.plate_number}
+					minlength="7"
+					maxlength="7"
 				/>
 			</div>
-			<!-- minlength="7"
-				maxlength="7" -->
 			<Dropdown
 				placeholder={i18n.t('placeholder.licenseCategory')}
 				bind:value={values.category}
@@ -118,7 +118,7 @@
 					required
 					type="number"
 					min="0"
-					max="60"
+					max="200"
 					id="car-create-seat-amount"
 					bind:value={values.seat_amount}
 				/>
@@ -133,7 +133,7 @@
 						id="car-create-available-km"
 						bind:value={values.available_km}
 						min="0"
-						max="600"
+						max="3000"
 					/>
 					<span class=" px-3">KM</span>
 				</div>

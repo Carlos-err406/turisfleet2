@@ -68,6 +68,7 @@
 	};
 
 	const handleEditDriver = ({ detail }: CustomEvent<IDriver>) => {
+		console.log(detail)
 		handleEdit(modalStore, Modals.EDIT_DRIVER, detail, async (edited) => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);

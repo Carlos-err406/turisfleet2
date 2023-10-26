@@ -1,12 +1,6 @@
-<script context="module" lang="ts">
-	export interface DropdownOption {
-		label: string;
-		value: any;
-	}
-</script>
-
 <script lang="ts">
 	import { v4 } from 'uuid';
+	import type { DropdownOption } from './Dropdown.svelte';
 	export let options: DropdownOption[];
 	export let id = v4();
 	export let required = false;

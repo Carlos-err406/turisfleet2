@@ -168,6 +168,7 @@ const i18n = rosetta({
 			cancel: 'Cancel'
 		},
 		flashes: {
+			noModificationsForRequest: 'There are no modifications of this request',
 			invalidEmail: 'Invalid email',
 			noRequestsForReport: 'There are no requests for the report',
 			noDriversToCreateRequest: 'There are no drivers to create a request',
@@ -200,6 +201,10 @@ const i18n = rosetta({
 
 		table: {
 			header: {
+				modification_datetime: 'Fecha de modificación',
+				modified_key: 'Atributo modificado',
+				old_value: 'Valor anterior',
+				new_value: 'Nuevo valor',
 				end_time: 'Termina a la(s)',
 				email: 'Email',
 				driver_flat: 'Driver',
@@ -468,6 +473,7 @@ i18n.set('es', {
 		cancel: 'Cancelar'
 	},
 	flashes: {
+		noModificationsForRequest: 'Esta solicitud no ha sido modificada',
 		invalidEmail: 'Correo inválido',
 		noRequestsForReport: 'No hay solicitudes para el reporte',
 		noDriversToCreateRequest: 'No hay conductores para crear una solicitud',
@@ -502,6 +508,10 @@ i18n.set('es', {
 	},
 	table: {
 		header: {
+			modification_datetime: 'Modification date',
+			modified_key: 'Modified Attribute',
+			old_value: 'Old value',
+			new_value: 'New value',
 			end_time: 'Ends at',
 			email: 'Correo',
 			driver_flat: 'Conductor',

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	import DropdownMultiple from '$lib/components/Inputs/DropdownMultiple.svelte';
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
 	import i18n from '$lib/i18n';
@@ -9,56 +9,44 @@
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import { triggerErrorFlash } from '$lib/CustomError';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
-	let values: IDriver = $modalStore[0].meta.values;
-	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({ label: key, value }));
+	const driver: IDriver = $modalStore[0].meta.values;
+	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({
+		label: key,
+		value
+	}));
 
+	let driverEdit: IDriverEdit = {
+		...driver
+	};
+	console.log(driverEdit);
 	const close = () => {
 		modalStore.close();
 	};
 
-	const triggerInvalidID = () => {
-		flashes.trigger({
+	const triggerInvalidID = (flashStore: FlashStore) => {
+		flashStore.trigger({
 			message: i18n.t('flashes.invalidID'),
 			type: 'error'
 		});
 	};
 
 	const validate = () => {
-		const { id_number } = values;
-		if (id_number.length !== 11) {
-			triggerInvalidID();
+		const { id_number } = driverEdit;
+		if (!driverService.validateIDNumber(id_number)) {
+			triggerInvalidID(flashes);
 			return false;
-		}
-
-		const [year, month, day] = [
-			parseInt(id_number.slice(0, 2)),
-			parseInt(id_number.slice(2, 4)),
-			parseInt(id_number.slice(4, 6))
-		];
-
-		const date = dayjs(`${month}-${day}-${year}`);
-		let isValid = true;
-		if (day > 31) isValid = false;
-		else if (month == 2 && day > 29) isValid = false;
-		else if ([1, 3, 5, 7, 9, 10, 12].includes(month) && day > 31) isValid = false;
-		else if ([4, 6, 8, 11].includes(month) && day > 30) isValid = false;
-		if (!isValid || !date.isValid()) {
-			triggerInvalidID();
-		}
-		return isValid;
+		} else return true;
 	};
 	const edit = async () => {
 		if (validate()) {
 			$loading = true;
 			try {
-				const driver = await driverService.editDriver(values.id_driver, values);
-				$modalStore[0].response?.(driver);
+				const updated = await driverService.editDriver(driver.id_driver, driverEdit);
+				$modalStore[0].response?.(updated);
 				close();
 			} catch (e) {
 				triggerErrorFlash(flashes, e);
@@ -66,10 +54,6 @@
 			$loading = false;
 		}
 	};
-	let selectedCategories: DropdownOption[] = values.license_categories.map((category) => ({
-		label: category,
-		value: category
-	}));
 </script>
 
 {#if $modalStore[0]}
@@ -83,20 +67,20 @@
 					required
 					type="text"
 					id="driver-edit-name"
-					bind:value={values.name}
+					bind:value={driverEdit.name}
 				/>
 			</div>
-			<IdNumberInput bind:value={values.id_number} />
+			<IdNumberInput bind:value={driverEdit.id_number} />
 			<div class="col-span-1">
 				<label for="driver-edit-address">{i18n.t('label.address')}</label>
 				<textarea
-					class="textarea px-2 max-h-[157px]"
+					class="textarea px-2 h-full max-h-[157px]"
 					placeholder={i18n.t('placeholder.address')}
 					id="driver-edit-address"
-					bind:value={values.address}
+					bind:value={driverEdit.address}
 				/>
 			</div>
-			<DropdownMultiple options={categories} bind:values={selectedCategories} required>
+			<DropdownMultiple options={categories} bind:values={driverEdit.license_categories} required>
 				{i18n.t('label.licenseCategory')}
 			</DropdownMultiple>
 		</BaseForm>

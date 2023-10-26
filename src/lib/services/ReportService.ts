@@ -1,20 +1,27 @@
 import { PUBLIC_APP_NAME } from '$env/static/public';
+import type { CarAndDate } from '$lib/components/Modals/Reports/types';
 import i18n, { getTranslatedHeader } from '$lib/i18n';
+import { PROXY_GET } from '$lib/services/Base/ProxyService';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import dayjs, { Dayjs } from 'dayjs';
 import jsPDF, { type jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { carService, driverService, requestService, situationService } from '.';
+import { makeParams } from './Base/BaseService';
 import type { ICar } from './CarService';
 import type { IDriver } from './DriverService';
-import type { ICarSituation, IDriverSituation } from './SituationService';
-import { PROXY_GET } from '$lib/services/Base/ProxyService';
 import type { IRequest } from './RequestService';
-import type { CarAndDate } from '$lib/components/Modals/Reports/types';
-import { makeParams } from './Base/BaseService';
+import type { ICarSituation, IDriverSituation } from './SituationService';
 const DOWNLOAD_PDFS = true;
 const OPEN_PDFS = true;
 
+export interface IRequestModification {
+	id_request: number;
+	modified_key: string;
+	old_value: string;
+	new_value: string;
+	modification_datetime: string | Date;
+}
 export interface IRoadmapProgram {
 	start: string | Date;
 	id_group: number;
@@ -201,10 +208,10 @@ export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: Ca
 		`/cars/${carAndDate.car.id_car}/roadmap`,
 		makeParams({ date: dayjs(carAndDate.date).format('YYYY-MM-DD') })
 	);
-	console.log(roadmap?.programs?.length === 0)
+	console.log(roadmap?.programs?.length === 0);
 	if (roadmap?.programs?.length === 0) {
 		triggerNoDataForReport(toastStore, i18n.t('flashes.noDataForThisReport'));
-		return
+		return;
 	}
 	const title = i18n.t('label.reports.routingSheets');
 	const extraData: { label: string; value: string }[] = [
@@ -218,7 +225,7 @@ export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: Ca
 		'end_time',
 		'country',
 		'tourist_amount',
-		'program_name',
+		'program_name'
 	];
 	generatePDF(roadmap.programs, headers, title, extraData);
 };
@@ -226,12 +233,28 @@ export const routingSheetsReport = async (toastStore: ToastStore, carAndDate: Ca
 //TODO request interface tho it should be the id
 export const requestModificationsReport = async (toastStore: ToastStore, request: IRequest) => {
 	const title = i18n.t('label.reports.requestModifications');
-	const data: any[] = [];
+	let data: IRequestModification[] = await PROXY_GET(
+		`/requests/${request.id_request}/modifications`
+	);
+	if (data.length === 0) {
+		triggerNoDataForReport(toastStore, i18n.t('flashes.noModificationsForRequest'));
+		return;
+	}
+	const headers: (keyof IRequestModification)[] = [
+		'modified_key',
+		'old_value',
+		'new_value',
+		'modification_datetime'
+	];
+	data = data.map((value) => ({
+		...value,
+		modification_datetime: dayjs(value.modification_datetime).format('YYYY-MM-DD HH:mm:ss')
+	}));
 	//TODO
-	// generatePDF(data, title);
+	generatePDF(data, headers, title);
 };
 
-export const generatePDF = (
+const generatePDF = (
 	data: any[],
 	headers: string[],
 	title: string,
