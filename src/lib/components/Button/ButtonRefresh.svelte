@@ -1,10 +1,10 @@
 <script>
-	import { refresh } from '$lib/icons';
+	import Refresh from '$lib/components/Icons/Refresh.svelte';
 </script>
 
 <button class="btn variant-filled gap-2 w-fit p-2" on:click>
 	<div class="flex-none">
-		{@html refresh}
+		<Refresh />
 	</div>
 </button>
 

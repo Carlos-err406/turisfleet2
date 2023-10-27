@@ -1,7 +1,7 @@
 <script lang="ts">
+	import Globe from '$lib/components/Icons/Globe.svelte';
 	import { Modals } from '$lib/components/Modals';
 	import i18n from '$lib/i18n';
-	import { globe } from '$lib/icons';
 	import { lang } from '$lib/stores';
 	import { getFlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
@@ -20,6 +20,6 @@
 	type="button"
 	class="btn flex flex-col text-xs font-semibold items-center app-rail-wrapper bg-primary-hover-token"
 >
-	{@html globe}
+	<Globe />
 	{i18n.t('button.lang')} ({$lang})
 </button>

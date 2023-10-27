@@ -2,8 +2,9 @@
 	import { goto } from '$app/navigation';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { triggerErrorToast } from '$lib/CustomError';
+	import Lock from '$lib/components/Icons/Lock.svelte';
+	import User from '$lib/components/Icons/User.svelte';
 	import i18n from '$lib/i18n';
-	import { lock, user } from '$lib/icons';
 	import { authService } from '$lib/services';
 	import { isAgent, isDriver, loading, loggedUser } from '$lib/stores';
 	import { focusTrap, getToastStore } from '@skeletonlabs/skeleton';
@@ -46,7 +47,7 @@
 			</label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
-					{@html user}
+					<User />
 				</span>
 				<input
 					required
@@ -64,7 +65,7 @@
 			</label>
 			<div class="flex gap-0 items-center input w-full">
 				<span class="px-2">
-					{@html lock}
+					<Lock />
 				</span>
 				<input
 					required

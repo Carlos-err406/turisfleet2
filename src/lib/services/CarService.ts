@@ -1,20 +1,7 @@
 import type { IPagination } from '$lib/stores/pagination';
-import type { LicenseCategory } from '$lib/types/LicenseTypes';
+import type { ICar, ICarCreate, ICarEdit } from '$lib/types/CarTypes';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
-
-export interface ICarCreate {
-	plate_number: string;
-	brand: string;
-	seat_amount: number;
-	available_km?: number;
-	id_driver?: number;
-	category: LicenseCategory;
-}
-export interface ICar extends ICarCreate {
-	id_car: number;
-}
-export interface ICarEdit extends ICarCreate {}
 
 export const getCars = async (
 	pagination: IPagination,

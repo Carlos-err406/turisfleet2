@@ -1,19 +1,16 @@
 <script lang="ts">
-	import type { DropdownOption } from '$lib/components/Inputs/Dropdown.svelte';
+	import { triggerErrorFlash } from '$lib/CustomError';
 	import DropdownMultiple from '$lib/components/Inputs/DropdownMultiple.svelte';
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
 	import i18n from '$lib/i18n';
 	import { driverService } from '$lib/services';
-	import type { IDriverCreate } from '$lib/services/DriverService';
 	import { loading } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
+	import type { IDriverCreate } from '$lib/types/DriverTypes';
 	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import dayjs from 'dayjs';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import { triggerErrorFlash } from '$lib/CustomError';
-	import flashStore from '$lib/stores/flashes';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const categories = Object.entries(LicenseCategory).map(([key, value]) => ({

@@ -1,20 +1,17 @@
 <script lang="ts">
-	import {
-		toastSuccessfullyCreated,
-		toastSuccessfullyDeleted
-	} from '$lib';
+	import { toastSuccessfullyCreated, toastSuccessfullyDeleted } from '$lib';
 	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
-	import type { ICarSituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { ICarSituation } from '$lib/types/SituationTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -34,7 +31,6 @@
 		plate_number: string;
 		situation_name: string;
 	};
-	let data: ICarSituation[] = [];
 	let flattenData: FlattenDataType[] = [];
 	const headers: (keyof FlattenDataType)[] = [
 		'plate_number',
@@ -68,17 +64,15 @@
 	onMount(getAll);
 
 	const handleCreateCarSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION_CAR, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_SITUATION_CAR, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
-	
-
 	const handleDeleteCarSituation = ({ detail }: CustomEvent<ICarSituation>) => {
 		const target = `([${detail.car.plate_number}] ${detail.car.brand}) -> ${detail.situation.situation_name}`;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await situationService.deleteCarSituation(
@@ -114,6 +108,7 @@
 				break;
 			case 'plate_number':
 				header = 'car';
+				break;
 			case 'situation_name':
 				header = 'situation';
 				break;

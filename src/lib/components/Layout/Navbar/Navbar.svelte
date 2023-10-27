@@ -2,8 +2,9 @@
 	import { page } from '$app/stores';
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { getDrawerSettings } from '$lib';
+	import Logout from '$lib/components/Icons/Logout.svelte';
+	import Menu from '$lib/components/Icons/Menu.svelte';
 	import i18n from '$lib/i18n';
-	import { logout, menu } from '$lib/icons';
 	import { isDriver, loggedUser, navHeight } from '$lib/stores';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
@@ -19,7 +20,7 @@
 		<svelte:fragment slot="lead">
 			<div class="flex gap-2 sm:gap-5 2xl items-center">
 				<button type="button" class="flex md:hidden btn btn-icon" on:click={handleShowMenuClick}>
-					{@html menu}
+					<Menu />
 				</button>
 				<div class="flex-none">
 					<img src="/logo.png" alt="logo" width="40" />
@@ -45,7 +46,7 @@
 				</div>
 			</a>
 			<button type="button" class="btn hidden md:flex gap-2 items-center" on:click={handleLogout}>
-				{@html logout}
+				<Logout />
 				<span>{i18n.t('button.logout')} </span>
 			</button>
 		</svelte:fragment>

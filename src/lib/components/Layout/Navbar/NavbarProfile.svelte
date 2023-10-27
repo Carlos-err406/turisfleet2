@@ -2,16 +2,11 @@
 	import { PUBLIC_APP_NAME } from '$env/static/public';
 	import { getDrawerSettings } from '$lib';
 	import i18n from '$lib/i18n';
-	import { logout, menu } from '$lib/icons';
+	import Logout from '$lib/components/Icons/Logout.svelte';
 	import { isDriver, loggedUser, navHeight } from '$lib/stores';
 	import { handleLogout } from '$lib/utils';
 	import { AppBar, getDrawerStore } from '@skeletonlabs/skeleton';
-	import LangButton from '../Panel/LangButton.svelte';
-	import { page } from '$app/stores';
 	const drawer = getDrawerStore();
-	const handleShowMenuClick = () => {
-		!$drawer.open && drawer.open(getDrawerSettings());
-	};
 </script>
 
 <div bind:clientHeight={$navHeight}>
@@ -41,7 +36,7 @@
 				</a>
 			{/if}
 			<button type="button" class="btn gap-2 items-center" on:click={handleLogout}>
-				{@html logout}
+				<Logout />
 				<span class="hidden md:block">{i18n.t('button.logout')} </span>
 			</button>
 		</svelte:fragment>

@@ -1,17 +1,16 @@
 import type { IPagination } from '$lib/stores/pagination';
-import type { CollectLineNumbers } from 'vitest';
+import type {
+	IProgram,
+	IProgramCreate,
+	IProgramEdit,
+	ISpecificProgram,
+	ISpecificProgramCreate
+} from '$lib/types/ProgramTypes';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
 
 //------------------
 //START PROGTAMS
-export interface IProgramCreate {
-	program_name: string;
-}
-export interface IProgram extends IProgramCreate {
-	id_program: number;
-}
-export interface IProgramEdit extends IProgramCreate {}
 
 export const getPrograms = async (
 	pagination: IPagination,
@@ -39,18 +38,6 @@ export const getAllPrograms = async (): Promise<IProgram[]> => {
 
 //------------------
 //START SPECIFIC PROGRAMS
-interface ISpecificProgramBase {
-	description: string;
-	start: string;
-	duration: string;
-	km: number;
-}
-export interface ISpecificProgramCreate extends ISpecificProgramBase {}
-export interface ISpecificProgram extends ISpecificProgramBase {
-	id_specific_program: number;
-	program: IProgram;
-}
-export interface ISpecificProgramEdit extends ISpecificProgramCreate {}
 
 export const getSpecificPrograms = async (
 	pagination: IPagination,

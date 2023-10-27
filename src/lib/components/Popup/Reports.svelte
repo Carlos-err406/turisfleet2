@@ -1,9 +1,9 @@
 <script lang="ts">
 	import i18n from '$lib/i18n';
-	import { fileText } from '$lib/icons';
 	import { isAdmin, isAgent, isDriver, isSupport } from '$lib/stores';
 	import type { Placement } from '@floating-ui/dom';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
+	import FileText from '../Icons/FileText.svelte';
 	import Popup from './Popup.svelte';
 	import PopupItem from './PopupItem.svelte';
 	import {
@@ -25,7 +25,7 @@
 {#if !$isSupport}
 	<Popup {placement}>
 		<svelte:fragment slot="icon">
-			{@html fileText}
+			<FileText />
 		</svelte:fragment>
 		<svelte:fragment slot="title">{i18n.t('label.reports.item')}</svelte:fragment>
 		{#if $isAdmin || $isAgent}

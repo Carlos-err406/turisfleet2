@@ -9,13 +9,13 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { requestService } from '$lib/services';
-	import type { IRequest } from '$lib/services/RequestService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { IRequest } from '$lib/types/RequestTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import dayjs from 'dayjs';
 	import { onMount, setContext } from 'svelte';
@@ -29,7 +29,6 @@
 	setContext('pagination', paginationStore);
 	setContext('totalElements', totalElementsStore);
 	setContext('query', queryStore);
-	let requests: IRequest[] = [];
 	type FlattenDataType = IRequest & {
 		car_flat: string;
 		country: string;
@@ -58,7 +57,6 @@
 				$paginationStore,
 				$queryStore
 			);
-			requests = data;
 			$totalElementsStore = total;
 			$paginationStore.page = page;
 			$paginationStore.page_size = page_size;
@@ -81,22 +79,22 @@
 	onMount(getAll);
 
 	const handleCreateRequest = () => {
-		handleCreate(modalStore, Modals.CREATE_REQUEST, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_REQUEST, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditRequest = ({ detail }: CustomEvent) => {
-		handleEdit(modalStore, Modals.EDIT_REQUEST, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_REQUEST, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
 	const handleDeleteRequest = ({ detail }: CustomEvent<IRequest>) => {
-		const target = detail.date as string; 
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		const target = detail.date as string;
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await requestService.deleteRequest(detail.id_request);

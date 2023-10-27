@@ -10,13 +10,13 @@
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { programService } from '$lib/services';
-	import type { ISpecificProgram } from '$lib/services/ProgramService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { ISpecificProgram } from '$lib/types/ProgramTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -62,14 +62,14 @@
 
 	onMount(getAll);
 	const handleCreateSpecificProgram = () => {
-		handleCreate(modalStore, Modals.CREATE_PROGRAM_SPECIFIC, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_PROGRAM_SPECIFIC, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditSpecificProgram = ({ detail }: CustomEvent<ISpecificProgram>) => {
-		handleEdit(modalStore, Modals.EDIT_PROGRAM_SPECIFIC, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_PROGRAM_SPECIFIC, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -77,7 +77,7 @@
 
 	const handleDeleteSpecificProgram = ({ detail }: CustomEvent<ISpecificProgram>) => {
 		const target = detail.description;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await programService.deleteSpecificProgram(

@@ -47,7 +47,7 @@ export const getAll = async <T>(
 ) => {
 	let entries: T[] = [];
 	let requestPage = 1;
-	let page_size = chunkSize;
+	const page_size = chunkSize;
 	while (true) {
 		try {
 			const { data, total_pages, page } = await getter({ page_size, page: requestPage });

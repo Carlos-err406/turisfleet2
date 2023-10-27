@@ -8,8 +8,7 @@ export async function PROXY_GET<T>(endpoint: string, searchParams = '', route = 
 	headers.append(ENDPOINT_HEADER, endpoint);
 	const options: RequestInit = { method: 'GET', headers };
 	const url = buildUrl(searchParams, route);
-	let response: Response;
-	response = await fetchWrapper(url, options);
+	const response = await fetchWrapper(url, options);
 	return await handleResponse<T>(response);
 }
 
@@ -18,8 +17,7 @@ export async function PROXY_DELETE<T>(endpoint: string, searchParams = '', route
 	headers.append(ENDPOINT_HEADER, endpoint);
 	const options: RequestInit = { method: 'DELETE', headers };
 	const url = buildUrl(searchParams, route);
-	let response: Response;
-	response = await fetchWrapper(url, options);
+	const response = await fetchWrapper(url, options);
 	return await handleResponse<T>(response);
 }
 export async function PROXY_POST<T>(
@@ -33,8 +31,7 @@ export async function PROXY_POST<T>(
 	headers.append(ENDPOINT_HEADER, endpoint);
 	const options: RequestInit = { headers, method: 'POST', body };
 	const url = buildUrl(searchParams, route);
-	let response: Response;
-	response = await fetchWrapper(url, options);
+	const response = await fetchWrapper(url, options);
 	return await handleResponse<T>(response);
 }
 export async function PROXY_PUT<T>(
@@ -48,8 +45,7 @@ export async function PROXY_PUT<T>(
 	headers.append(ENDPOINT_HEADER, endpoint);
 	const options: RequestInit = { headers, method: 'PUT', body };
 	const url = buildUrl(searchParams, route);
-	let response: Response;
-	response = await fetchWrapper(url, options);
+	const response = await fetchWrapper(url, options);
 	return await handleResponse<T>(response);
 }
 export async function PROXY_PATCH<T>(
@@ -63,7 +59,6 @@ export async function PROXY_PATCH<T>(
 	headers.append(ENDPOINT_HEADER, endpoint);
 	const options: RequestInit = { headers, method: 'PUT', body };
 	const url = buildUrl(searchParams, route);
-	let response: Response;
-	response = await fetchWrapper(url, options);
+	const response = await fetchWrapper(url, options);
 	return await handleResponse<T>(response);
 }

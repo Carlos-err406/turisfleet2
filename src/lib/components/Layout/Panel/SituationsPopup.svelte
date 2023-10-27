@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import Info from '$lib/components/Icons/Info.svelte';
 	import Popup from '$lib/components/Popup/Popup.svelte';
 	import PopupItem from '$lib/components/Popup/PopupItem.svelte';
 	import i18n from '$lib/i18n';
-	import { info } from '$lib/icons';
 	const routes = {
 		situations: '/app/situations',
 		carSituations: '/app/situations/car',
@@ -27,7 +27,7 @@
 
 <Popup placement="right" {active}>
 	<svelte:fragment slot="icon">
-		{@html info}
+		<Info />
 	</svelte:fragment>
 	<svelte:fragment slot="title">{i18n.t('label.situations')}</svelte:fragment>
 	<PopupItem active={situationsActive} on:click={handleSituationsClick}>

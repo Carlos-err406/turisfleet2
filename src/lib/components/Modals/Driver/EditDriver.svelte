@@ -4,9 +4,9 @@
 	import IdNumberInput from '$lib/components/Inputs/IDNumberInput.svelte';
 	import i18n from '$lib/i18n';
 	import { driverService } from '$lib/services';
-	import type { IDriver, IDriverEdit } from '$lib/services/DriverService';
 	import { loading } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
+	import type { IDriver, IDriverEdit } from '$lib/types/DriverTypes';
 	import { LicenseCategory } from '$lib/types/LicenseTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';

@@ -9,13 +9,13 @@
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { userService } from '$lib/services';
-	import type { IUser } from '$lib/services/UserService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { IUser } from '$lib/types/UserTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -53,14 +53,14 @@
 	onMount(getAll);
 
 	const handleCreateUser = () => {
-		handleCreate(modalStore, Modals.CREATE_USER, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_USER, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditUser = ({ detail }: CustomEvent<IUser>) => {
-		handleEdit(modalStore, Modals.EDIT_USER, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_USER, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -68,7 +68,7 @@
 
 	const handleDeleteUser = ({ detail }: CustomEvent<IUser>) => {
 		const target = detail.username;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await userService.deleteUser(detail.id_user);

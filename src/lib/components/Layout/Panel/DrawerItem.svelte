@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	export let icon: string;
 	export let href: string;
 </script>
 
@@ -10,7 +9,7 @@
 	class:bg-primary-active-token={$page.url.pathname === href}
 >
 	<div class="flex flex-col items-center justify-center gap-1 font-semibold text-xs aspect-auto">
-		{@html icon}
+		<slot name="icon" />
 		<span><slot /></span>
 	</div>
 </a>

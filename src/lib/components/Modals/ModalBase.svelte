@@ -2,7 +2,7 @@
 	import { springDimensions } from '$lib/utils';
 	let wrapper: HTMLDivElement;
 	let heightSpring, widthSpring;
-	export let modalW: 'w-modal' | 'w-modal-slim' | 'w-modal-wide'|'w-full' = 'w-modal';
+	export let modalW: 'w-modal' | 'w-modal-slim' | 'w-modal-wide' | 'w-full' = 'w-modal';
 	$: if (wrapper) {
 		[heightSpring, widthSpring] = springDimensions(wrapper);
 	}

@@ -1,16 +1,20 @@
 <script lang="ts">
-	import i18n, { getTranslatedHeader } from '$lib/i18n';
-	import { downSimple, edit, trash } from '$lib/icons';
+	import { getTranslatedHeader } from '$lib/i18n';
 	import { actionsHeight, navHeight } from '$lib/stores';
 	import type { PaginationStore } from '$lib/stores/pagination';
-	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings, getToastStore } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher, getContext } from 'svelte';
-	import type { ColumnOrientation } from './Table.svelte';
 	import type { Writable } from 'svelte/store';
+	import Edit from '../Icons/Edit.svelte';
+	import Trash from '../Icons/Trash.svelte';
+	import type { ColumnOrientation } from './Table.svelte';
+	import DownSimple from '../Icons/DownSimple.svelte';
+	import UpSimple from '../Icons/UpSimple.svelte';
 	export let headers: string[];
 	export let data: any[];
 	let tableElement: HTMLTableElement;
 	const dispatch = createEventDispatcher();
+	const toastStore = getToastStore();
 
 	const pagination: PaginationStore = getContext('pagination');
 	const size: Writable<number> = getContext('totalElements');
@@ -18,6 +22,11 @@
 	const handleEdit = (item: (typeof data)[0]) => dispatch('edit', item);
 	const handleDelete = (item: (typeof data)[0]) => dispatch('delete', item);
 	const handleOrderByChange = (header: string) => {
+		toastStore.trigger({
+			//TODO
+			message: 'Feature not implemented',
+			background: 'variant-filled-warning'
+		});
 		let orientation: ColumnOrientation = 'asc';
 		const allButtons = tableElement.querySelectorAll('.order-by-button');
 		const button = tableElement.querySelector(`#order-by-button-${header}`) as HTMLButtonElement;
@@ -48,17 +57,16 @@
 	<table class="relative" bind:this={tableElement}>
 		<thead class="sticky top-0">
 			{#each headers as th}
-				<!-- <th class="cursor-pointer" on:click={() => handleOrderByChange(th)}> -->
-				<th>
+				<th class="cursor-pointer" on:click={() => handleOrderByChange(th)}>
 					<div class="flex items-center justify-start gap-0">
 						<span class="px-2">{getTranslatedHeader(th)}</span>
-						<!-- <span
+						<span
 							id="order-by-button-{th}"
 							tabindex="-1"
 							class="order-by-button py-0 px-2 flex items-center gap-2 transition-transform duration-200"
 						>
-							{@html downSimple}
-						</span> -->
+							<UpSimple />
+						</span>
 					</div>
 				</th>
 			{/each}
@@ -80,11 +88,11 @@
 						<div class="flex items-center justify-end gap-3">
 							{#if canEdit}
 								<button type="button" tabindex="-1" class="btn p-0" on:click={() => handleEdit(tr)}>
-									{@html edit}
+									<Edit />
 								</button>
 							{/if}
 							<button type="button" tabindex="-1" class="btn p-0" on:click={() => handleDelete(tr)}>
-								{@html trash}
+								<Trash />
 							</button>
 						</div>
 					</td>

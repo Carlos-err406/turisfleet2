@@ -9,13 +9,13 @@
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
-	import type { ISituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { ISituation } from '$lib/types/SituationTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -30,7 +30,6 @@
 	setContext('query', queryStore);
 
 	type FlattenDataType = ISituation & { situation_type_i18n: string };
-	let data: ISituation[] = [];
 	let flattenData: FlattenDataType[] = [];
 
 	const headers: (keyof FlattenDataType)[] = ['situation_name', 'situation_type_i18n'];
@@ -58,21 +57,21 @@
 	onMount(getAll);
 
 	const handleCreateSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_SITUATION, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditSituation = ({ detail }: CustomEvent<ISituation>) => {
-		handleEdit(modalStore, Modals.EDIT_SITUATION, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_SITUATION, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
 	};
 
 	const handleDeleteSituation = ({ detail }: CustomEvent<ISituation>) => {
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, detail.situation_name, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, detail.situation_name, async () => {
 			$loading = true;
 			try {
 				await situationService.deleteSituation(detail.id_situation);

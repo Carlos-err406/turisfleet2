@@ -10,7 +10,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 export const GET: RequestHandler = async ({ url, request, cookies }) => {
 	const { headers } = request;
 	const { search } = url;
-	let endpoint = headers.get(ENDPOINT_HEADER) || '';
+	const endpoint = headers.get(ENDPOINT_HEADER) || '';
 	return await fetch(buildURL(endpoint, search), {
 		method: 'GET',
 		headers: {

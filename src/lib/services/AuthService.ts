@@ -1,13 +1,13 @@
 import CustomError from '$lib/CustomError';
-import * as proxy from './Base/ProxyService';
-import type { RoleType } from './UserService';
+import type { ILoggedUser, ILogin } from '$lib/types/AuthTypes';
+import { ENDPOINT_HEADER, PROXY_DELETE, URL, buildUrl } from './Base/ProxyService';
 
 export const login = async (auth: ILogin): Promise<ILoggedUser> => {
-	const response = await fetch(proxy.URL, {
+	const response = await fetch(URL, {
 		method: 'POST',
 		body: JSON.stringify(auth),
 		headers: {
-			[proxy.ENDPOINT_HEADER]: '/security/login',
+			[ENDPOINT_HEADER]: '/security/login',
 			'Content-Type': 'application/json'
 		}
 	}).then((response) => {
@@ -18,25 +18,14 @@ export const login = async (auth: ILogin): Promise<ILoggedUser> => {
 };
 
 export const refresh = async () => {
-	return fetch(proxy.buildUrl('', '/refresh'), {
+	return fetch(buildUrl('', '/refresh'), {
 		body: null,
 		method: 'POST',
-		headers: { [proxy.ENDPOINT_HEADER]: '/security/refresh' }
+		headers: { [ENDPOINT_HEADER]: '/security/refresh' }
 	});
 };
 
 export const logout = async () => {
 	await refresh();
-	return proxy.PROXY_DELETE('/security/logout');
+	return PROXY_DELETE('/security/logout');
 };
-
-export interface ILogin {
-	username: string;
-	password: string;
-}
-export interface ILoggedUser {
-	id_user: number;
-	role: RoleType;
-	username: string;
-	email: string;
-}

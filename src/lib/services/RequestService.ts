@@ -1,34 +1,8 @@
 import type { IPagination } from '$lib/stores/pagination';
+import type { IRequest, IRequestCreate, IRequestEdit } from '$lib/types/RequestTypes';
 import type { Dayjs } from 'dayjs';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
-import type { ICar } from './CarService';
-import type { IDriver } from './DriverService';
-import type { IGroup } from './GroupService';
-import type { ISpecificProgram } from './ProgramService';
-
-interface IRequestBase {
-	date: string | Date;
-	tourist_amount: number;
-}
-export interface IRequestCreate extends IRequestBase {
-	id_group: number;
-	id_specific_program: number;
-}
-export interface IRequest extends IRequestBase {
-	id_request: number;
-	specific_program: ISpecificProgram;
-	group: IGroup;
-	car: ICar;
-	copilot?: IDriver;
-	driver: IDriver;
-	return_date: string | Date;
-}
-export interface IRequestEdit {
-	date: string | Date;
-	tourist_amount: number;
-	id_specific_program: number;
-}
 
 export const getRequests = async (
 	pagination: IPagination,
@@ -60,15 +34,16 @@ export const getAllRequests = async (chunkSize = 200): Promise<IRequest[]> => {
 export const getAllRequestsOnDate = async (date: Dayjs): Promise<IRequest[]> => {
 	let requests: IRequest[] = [];
 	let requestPage = 1;
-	let page_size = 200;
-	while (true) {
+	const page_size = 200;
+	let gotAll = false;
+	while (!gotAll) {
 		const { data, total_pages, page } = await getRequests(
 			{ page_size, page: requestPage },
 			undefined,
 			date.format('YYYY-MM-DD')
 		);
 		requests = [...requests, ...data];
-		if (page == total_pages || data.length === 0) break;
+		if (page == total_pages || data.length === 0) gotAll = true;
 		requestPage++;
 	}
 	return requests;

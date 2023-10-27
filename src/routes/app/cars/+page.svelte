@@ -9,13 +9,13 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { carService } from '$lib/services';
-	import type { ICar } from '$lib/services/CarService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { ICar } from '$lib/types/CarTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -58,14 +58,14 @@
 	onMount(getAll);
 
 	const handleCreateCar = () => {
-		handleCreate(modalStore, Modals.CREATE_CAR, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_CAR, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditCar = ({ detail }: CustomEvent<ICar>) => {
-		handleEdit(modalStore, Modals.EDIT_CAR, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_CAR, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -73,7 +73,7 @@
 
 	const handleDeleteCar = ({ detail }: CustomEvent<ICar>) => {
 		const target = `[${detail.plate_number}] ${detail.brand}`;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await carService.deleteCar(detail.id_car);
@@ -95,7 +95,7 @@
 		paginationStore.setLimit(detail);
 		await getAll();
 	};
-	const handleOrderChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = () => {};
 </script>
 
 <div class="overflow-hidden">

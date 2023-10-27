@@ -1,6 +1,6 @@
 <script lang="ts">
 	import i18n from '$lib/i18n';
-	import { search } from '$lib/icons';
+	import Search from '$lib/components/Icons/Search.svelte';
 	import { createEventDispatcher, getContext } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	const dispatch = createEventDispatcher();
@@ -20,6 +20,6 @@
 		bind:value={$query}
 	/>
 	<button {disabled} class="btn variant-filled p-2 rounded-l-none">
-		{@html search}
+		<Search />
 	</button>
 </form>

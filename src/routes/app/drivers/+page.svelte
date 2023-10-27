@@ -61,15 +61,15 @@
 	onMount(getAll);
 
 	const handleCreateDriver = () => {
-		handleCreate(modalStore, Modals.CREATE_DRIVER, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_DRIVER, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditDriver = ({ detail }: CustomEvent<IDriver>) => {
-		console.log(detail)
-		handleEdit(modalStore, Modals.EDIT_DRIVER, detail, async (edited) => {
+		console.log(detail);
+		handleEdit(modalStore, Modals.EDIT_DRIVER, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -77,7 +77,7 @@
 
 	const handleDeleteDriver = ({ detail }: CustomEvent<IDriver>) => {
 		const target = detail.name;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await driverService.deleteDriver(detail.id_driver);

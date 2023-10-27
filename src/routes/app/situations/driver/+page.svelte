@@ -1,20 +1,17 @@
 <script lang="ts">
-	import {
-		toastSuccessfullyCreated,
-		toastSuccessfullyDeleted
-	} from '$lib';
+	import { toastSuccessfullyCreated, toastSuccessfullyDeleted } from '$lib';
 	import { triggerErrorToast } from '$lib/CustomError';
 	import { Modals, handleCreate, handleDelete } from '$lib/components/Modals';
 	import Table, { type ColumnOrientation } from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { situationService } from '$lib/services';
-	import type { IDriverSituation } from '$lib/services/SituationService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { IDriverSituation } from '$lib/types/SituationTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 
@@ -34,7 +31,6 @@
 		id_number: string;
 		situation_name: string;
 	};
-	let data: IDriverSituation[] = [];
 	let flattenData: FlattenDataType[] = [];
 	const headers: (keyof FlattenDataType)[] = [
 		'name',
@@ -68,7 +64,7 @@
 	onMount(getAll);
 
 	const handleCreateDriverSituation = () => {
-		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_SITUATION_DRIVER, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
@@ -76,7 +72,7 @@
 
 	const handleDeleteDriverSituation = ({ detail }: CustomEvent<IDriverSituation>) => {
 		const target = detail.driver.name;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await situationService.deleteDriverSituation(

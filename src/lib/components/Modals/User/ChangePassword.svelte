@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { triggerErrorFlash } from '$lib/CustomError';
 	import i18n from '$lib/i18n';
+	import { userService } from '$lib/services';
+	import { isAdmin, isSupport, loading } from '$lib/stores';
 	import type { FlashStore } from '$lib/stores/flashes';
+	import type { IUser, IUserChangePassword } from '$lib/types/UserTypes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import BaseForm from '../BaseForm.svelte';
 	import ModalBase from '../ModalBase.svelte';
-	import type { IUser, IUserChangePassword } from '$lib/services/UserService';
-	import { triggerErrorFlash } from '$lib/CustomError';
-	import { isAdmin, isSupport, loading, loggedUser } from '$lib/stores';
-	import { userService } from '$lib/services';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
 	const user: IUser = $modalStore[0].meta.values;

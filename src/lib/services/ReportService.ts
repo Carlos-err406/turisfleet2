@@ -2,42 +2,21 @@ import { PUBLIC_APP_NAME } from '$env/static/public';
 import type { CarAndDate } from '$lib/components/Modals/Reports/types';
 import i18n, { getTranslatedHeader } from '$lib/i18n';
 import { PROXY_GET } from '$lib/services/Base/ProxyService';
+import type { ICar } from '$lib/types/CarTypes';
+import type { IDriver } from '$lib/types/DriverTypes';
+import type { IRequestModification, IRoadmap, IRoadmapProgram } from '$lib/types/ReportTypes';
+import type { IRequest } from '$lib/types/RequestTypes';
+import type { ICarSituation, IDriverSituation } from '$lib/types/SituationTypes';
 import type { ToastStore } from '@skeletonlabs/skeleton';
 import dayjs, { Dayjs } from 'dayjs';
 import jsPDF, { type jsPDFOptions } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { carService, driverService, requestService, situationService } from '.';
 import { makeParams } from './Base/BaseService';
-import type { ICar } from './CarService';
-import type { IDriver } from './DriverService';
-import type { IRequest } from './RequestService';
-import type { ICarSituation, IDriverSituation } from './SituationService';
+
 const DOWNLOAD_PDFS = true;
 const OPEN_PDFS = true;
 
-export interface IRequestModification {
-	id_request: number;
-	modified_key: string;
-	old_value: string;
-	new_value: string;
-	modification_datetime: string | Date;
-}
-export interface IRoadmapProgram {
-	start: string | Date;
-	id_group: number;
-	country: string;
-	tourist_amount: number;
-	program_name: string;
-	end_time: string | Date;
-}
-export interface IRoadmap {
-	programs: IRoadmapProgram[];
-	plate_number: string;
-	brand: string;
-	available_km: number;
-	km_remaining: number;
-	driver_name: string;
-}
 export const triggerNoDataForReport = (toastStore: ToastStore, message: string) => {
 	toastStore.trigger({
 		message: message,
@@ -268,7 +247,7 @@ const generatePDF = (
 	doc.addImage(img, 'png', 75, 5, 25, 25);
 	doc.text(PUBLIC_APP_NAME, 105, 20);
 	doc.text(title, 10, 50);
-	let initialPosition = { x: 10, y: 70 };
+	const initialPosition = { x: 10, y: 70 };
 	if (extraData) {
 		extraData.forEach((value) => {
 			doc.text(`${value.label}: ${value.value}`, initialPosition.x, initialPosition.y);

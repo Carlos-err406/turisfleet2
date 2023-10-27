@@ -7,9 +7,9 @@
 <script lang="ts">
 	import ModalBase from '$lib/components/Modals/ModalBase.svelte';
 	import i18n from '$lib/i18n';
-	import { alertTriangle } from '$lib/icons';
 	import type { FlashStore } from '$lib/stores/flashes';
 	import { getModalStore } from '@skeletonlabs/skeleton';
+	import AlertTriangle from '../Icons/AlertTriangle.svelte';
 	import BaseForm from './BaseForm.svelte';
 	const modalStore = getModalStore();
 	const flashes: FlashStore = $modalStore[0].meta.flashes;
@@ -29,7 +29,7 @@
 	<ModalBase>
 		<div class="hidden sm:block relative">
 			<div class="absolute right-2">
-				{@html alertTriangle}
+				<AlertTriangle />
 			</div>
 		</div>
 		<BaseForm footerCols={1} {flashes} on:submit={confirm} on:secondary={close}>

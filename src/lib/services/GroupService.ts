@@ -1,15 +1,7 @@
 import type { IPagination } from '$lib/stores/pagination';
+import type { IGroup, IGroupCreate, IGroupEdit } from '$lib/types/GroupService';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
-
-export interface IGroupCreate {
-	country: string;
-	tourist_amount: number;
-}
-export interface IGroup extends IGroupCreate {
-	id_group: number;
-}
-export interface IGroupEdit extends IGroupCreate {}
 
 export const getGroups = (
 	pagination: IPagination,

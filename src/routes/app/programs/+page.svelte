@@ -9,13 +9,13 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { programService } from '$lib/services';
-	import type { IProgram } from '$lib/services/ProgramService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { IProgram } from '$lib/types/ProgramTypes';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 	const toastStore = getToastStore();
@@ -51,14 +51,14 @@
 	onMount(getAll);
 
 	const handleCreateProgram = () => {
-		handleCreate(modalStore, Modals.CREATE_PROGRAM, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_PROGRAM, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditProgram = ({ detail }: CustomEvent<IProgram>) => {
-		handleEdit(modalStore, Modals.EDIT_PROGRAM, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_PROGRAM, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -66,7 +66,7 @@
 
 	const handleDeleteProgram = ({ detail }: CustomEvent<IProgram>) => {
 		const target = detail.program_name;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await programService.deleteProgram(detail.id_program);
@@ -88,7 +88,7 @@
 		paginationStore.gotoPage(1);
 		await getAll();
 	};
-	const handleOrderChange = ({ detail }: CustomEvent) => {};
+	const handleOrderChange = () => {};
 </script>
 
 <div class="overflow-hidden">

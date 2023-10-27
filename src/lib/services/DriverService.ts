@@ -1,20 +1,8 @@
 import type { IPagination } from '$lib/stores/pagination';
-import type { LicenseCategory } from '$lib/types/LicenseTypes';
+import type { IDriver, IDriverCreate, IDriverEdit } from '$lib/types/DriverTypes';
 import dayjs from 'dayjs';
 import { getAll, makeParams, type PaginatedResponse } from './Base/BaseService';
 import { PROXY_DELETE, PROXY_GET, PROXY_POST, PROXY_PUT } from './Base/ProxyService';
-
-export interface IDriverCreate {
-	id_number: string;
-	name: string;
-	address: string;
-	license_categories: LicenseCategory[];
-}
-export interface IDriver extends IDriverCreate {
-	id_driver: number;
-}
-
-export interface IDriverEdit extends IDriverCreate {}
 
 export const getDrivers = (
 	pagination: IPagination,

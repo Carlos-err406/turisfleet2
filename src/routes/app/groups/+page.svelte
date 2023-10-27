@@ -9,13 +9,13 @@
 	import Table from '$lib/components/Table/Table.svelte';
 	import i18n from '$lib/i18n';
 	import { groupService } from '$lib/services';
-	import type { IGroup } from '$lib/services/GroupService';
 	import { loading } from '$lib/stores';
 	import {
 		getPaginationStore,
 		getQueryStringStore,
 		getTotalElementsStore
 	} from '$lib/stores/pagination';
+	import type { IGroup } from '$lib/types/GroupService';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { onMount, setContext } from 'svelte';
 	const toastStore = getToastStore();
@@ -51,14 +51,14 @@
 	onMount(getAll);
 
 	const handleCreateGroup = () => {
-		handleCreate(modalStore, Modals.CREATE_GROUP, async (created) => {
+		handleCreate(modalStore, Modals.CREATE_GROUP, async () => {
 			await getAll();
 			toastSuccessfullyCreated(toastStore);
 		});
 	};
 
 	const handleEditGroup = ({ detail }: CustomEvent<IGroup>) => {
-		handleEdit(modalStore, Modals.EDIT_GROUP, detail, async (edited) => {
+		handleEdit(modalStore, Modals.EDIT_GROUP, detail, async () => {
 			await getAll();
 			toastSuccessfullyEdited(toastStore);
 		});
@@ -66,7 +66,7 @@
 
 	const handleDeleteGroup = ({ detail }: CustomEvent<IGroup>) => {
 		const target = detail.country;
-		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async (deleted) => {
+		handleDelete(modalStore, Modals.DELETE_CONFIRMATION, target, async () => {
 			$loading = true;
 			try {
 				await groupService.deleteGroup(detail.id_group);
@@ -88,7 +88,7 @@
 		paginationStore.gotoPage(1);
 		await getAll();
 	};
-	const handleOrderChange = async ({ detail }: CustomEvent) => {};
+	const handleOrderChange = async () => {};
 </script>
 
 <div class="overflow-hidden">

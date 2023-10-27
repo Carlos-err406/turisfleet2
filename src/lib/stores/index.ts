@@ -29,7 +29,6 @@ export const loggedUser = persist(
 	'tf-user'
 );
 
-
 export const isAdmin = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'administrator');
 export const isSupport = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'support');
 export const isAgent = derived(loggedUser, ($loggedUser) => $loggedUser?.role === 'agent');
