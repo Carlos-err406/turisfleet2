@@ -57,6 +57,36 @@ export const createOneFromToast = (config: CreateOneFromToastConfig) => {
 		onResolve,
 		meta
 	} = config;
+	const modalToReopenResponse = (r2: any) => {
+		if (r2) {
+			onResolve(r2);
+		}
+	};
+	const creationModalResponse = (r1: any) => {
+		if (modalToReopen) {
+			if (r1) {
+				modal.trigger({
+					type: 'component',
+					component: modalToReopen,
+					meta: { flashes: getFlashStore(), ...meta, onResolve },
+					response: modalToReopenResponse
+				});
+			}
+		} else {
+			onResolve(r1);
+		}
+	};
+	const actionResponse = () => {
+		modal.update((updater) => [
+			{
+				type: 'component',
+				component: creationModal,
+				meta: { flashes: getFlashStore() },
+				response: creationModalResponse
+			},
+			...updater
+		]);
+	};
 	toast.trigger({
 		message: toastMessage,
 		background: 'variant-filled-surface',
@@ -64,34 +94,7 @@ export const createOneFromToast = (config: CreateOneFromToastConfig) => {
 		hoverable: true,
 		action: {
 			label: i18n.t('label.createOne'),
-			response: () => {
-				modal.update((updater) => [
-					{
-						type: 'component',
-						component: creationModal,
-						meta: { flashes: getFlashStore() },
-						response: (r1) => {
-							if (modalToReopen) {
-								if (r1) {
-									modal.trigger({
-										type: 'component',
-										component: modalToReopen,
-										meta: { flashes: getFlashStore(), ...meta, onResolve },
-										response: (r2) => {
-											if (r2) {
-												onResolve(r2);
-											}
-										}
-									});
-								}
-							} else {
-								onResolve(r1);
-							}
-						}
-					},
-					...updater
-				]);
-			}
+			response: actionResponse
 		}
 	});
 };

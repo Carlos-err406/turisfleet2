@@ -6,9 +6,9 @@ import { Modals } from '../Modals';
 import { getFlashStore } from '$lib/stores/flashes';
 import { triggerErrorToast } from '$lib/CustomError';
 import { loading } from '$lib/stores';
-import type { IRequest } from '$lib/services/RequestService';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import type { IRequest } from '$lib/types/RequestTypes';
 
 export const handleRoutingSheets = async (toastStore: ToastStore, modalStore: ModalStore) => {
 	const cars = await carService.getAllCars();
